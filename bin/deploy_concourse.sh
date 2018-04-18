@@ -2,17 +2,16 @@
 
 set -eu
 
-: ${VARS_FILE}
-: ${VARS_STORE}
-: ${STATE_FILE}
+: $VARS_FILE
+: $CREDS_FILE
+: $STATE_FILE
 
 SUBMODULE=concourse-bosh-deployment
 
-bosh create-env "$SUBMODULE" \
-  -o "$SUBMODULE"/infrastructures/aws.yml \
-  -o concourse/concourse-opts.yml \
+bosh create-env "$SUBMODULE"/lite/concourse.yml \
+  -o "$SUBMODULE"/lite/infrastructures/aws.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$VARS_FILE" \
-  --vars-store "$VARS_STORE" \
+  --vars-store "$CREDS_FILE" \
   --state "$STATE_FILE"
   

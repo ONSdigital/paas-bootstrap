@@ -4,3 +4,6 @@ variable "region" {
   default = "eu-west-1"
 }
 variable "environment_name" {}
+variable "az" {
+  default = "eu-west-1a"
+}

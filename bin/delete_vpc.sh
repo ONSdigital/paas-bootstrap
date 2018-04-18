@@ -3,7 +3,7 @@
 set -eu
 
 : $VAR_FILE
-: $STATE_FILE
+: ${STATE_FILE:=vpc.tfstate.json}
 
 TERRAFORM_DIR=terraform/aws
 
