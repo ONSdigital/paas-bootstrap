@@ -1,2 +1,6 @@
 **/*state.json
+**/*state.json.backup
 **/.*.sw?
+**/.terraform
+
+*.tfvars
