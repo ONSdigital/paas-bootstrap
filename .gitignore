@@ -5,3 +5,7 @@
 secret.yml
 
 *.tfvars
+
+*.pem
+*.pem.*
+*.creds.yml

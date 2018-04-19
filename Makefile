@@ -11,13 +11,18 @@
 VAR_FILE = ${ENVIRONMENT}_vpc.tfvars
 VPC_STATE_FILE = ${ENVIRONMENT}_vpc.tfstate.json
 CONCOURSE_TERRAFORM_STATE_FILE = ${ENVIRONMENT}_concourse.tfstate.json
+CONCOURSE_STATE_FILE = ${ENVIRONMENT}_concourse.state.json
+CONCOURSE_CREDS_FILE = ${ENVIRONMENT}_concourse.creds.yml
 PRIVATE_KEY_FILE = ${ENVIRONMENT}_concourse.pem
 PUBLIC_KEY_FILE = ${PRIVATE_KEY_FILE}.pub
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-vpc: ## Setup a VPC to deploy concourse to
+require_vars:
+	@bin/require_vars.sh
+
+vpc: require_vars ## Setup a VPC to deploy concourse to
 	@bin/create_vpc.sh
 
 keypair: ## Create the SSH key pair used to log into the VMs
@@ -27,7 +32,4 @@ concourse_network: vpc keypair ## Setup networks for concourse to consume
 	@bin/create_concourse_network.sh
 
 concourse: concourse_network ## Deploy concourse with all prereqs
-	@bin/deploy_concourse.sh
-
-concourse_only: ## Just deploy concourse, skipping terraform
 	@bin/deploy_concourse.sh
