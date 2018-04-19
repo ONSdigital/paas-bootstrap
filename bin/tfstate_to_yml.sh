@@ -2,7 +2,7 @@
 
 # This script will translate terraform outputs into .tfvars
 
-set -eu
+set -euo pipefail
 
 : $STATE_FILE
 

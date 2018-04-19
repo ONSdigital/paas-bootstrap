@@ -2,7 +2,7 @@
 
 # Creates a wee Concourse
 
-set -eux
+set -euxo pipefail
 
 : $AWS_ACCESS_KEY
 : $AWS_SECRET_KEY

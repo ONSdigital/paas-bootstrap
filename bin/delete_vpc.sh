@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 : $VAR_FILE
 : ${STATE_FILE:=vpc.tfstate.json}

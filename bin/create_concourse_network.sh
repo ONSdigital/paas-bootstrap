@@ -2,7 +2,7 @@
 
 # Creates the Concourse AWS network environment, using the outputs from the create_vpc.sh step
 
-set -eu
+set -euo pipefail
 
 : ${VPC_STATE_FILE:=vpc.tfstate.json}
 : ${STATE_FILE:=concourse.tfstate.json}
