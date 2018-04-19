@@ -1,7 +1,7 @@
 resource "aws_internet_gateway" "default" {
   vpc_id = "${var.vpc_id}"
   tags {
-    Name = "${var.environment_name}"
+    Name = "${var.environment}"
   }
 }
 
@@ -15,16 +15,16 @@ resource "aws_subnet" "default" {
   vpc_id                  = "${var.vpc_id}"
   cidr_block              = "10.0.1.0/24"
   tags {
-    Name = "${var.environment_name}"
+    Name = "${var.environment}"
   }
 }
 
 resource "aws_security_group" "default" {
-  name        = "${var.environment_name}_concourse_elb_security_group"
+  name        = "${var.environment}_concourse_elb_security_group"
   description = "Concourse public access"
   vpc_id      = "${var.vpc_id}"
   tags {
-    Name = "${var.environment_name}"
+    Name = "${var.environment}"
   }
 
   # HTTP access from anywhere
@@ -61,12 +61,12 @@ resource "aws_security_group" "default" {
 resource "aws_eip" "atc" {
     vpc = true
     tags {
-        Name = "${var.environment_name}"
+        Name = "${var.environment}"
     }
     depends_on = ["aws_internet_gateway.default"]
 }
 
 resource "aws_key_pair" "default" {
-    key_name = "${var.environment_name}_default_ssh_key"
+    key_name = "${var.environment}_default_ssh_key"
     public_key = "${var.public_key}"
 }

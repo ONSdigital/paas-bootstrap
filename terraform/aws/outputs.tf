@@ -14,6 +14,6 @@ output "default_route_table_id" {
   value = "${aws_vpc.default.main_route_table_id}"
 }
 
-output "environment_name" {
-  value = "${var.environment_name}"
+output "environment" {
+  value = "${var.environment}"
 }

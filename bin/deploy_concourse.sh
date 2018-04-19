@@ -4,17 +4,18 @@
 
 set -euxo pipefail
 
-: $AWS_ACCESS_KEY
-: $AWS_SECRET_KEY
-: ${CONCOURSE_SETTINGS:=concourse.yml}
-: ${TERRAFORM_STATE_FILE:=concourse.tfstate.json}
-: ${STATE_FILE:=concourse.state.json}
-: ${CREDS_FILE:=concourse.creds.yml}
+
+: $AWS_ACCESS_KEY_ID
+: $AWS_SECRET_ACCESS_KEY
+: $CONCOURSE_SETTINGS
+: $CONCOURSE_TERRAFORM_STATE_FILE
+: $CONCOURSE_STATE_FILE
+: $CONCOURSE_CREDS_FILE
 
 # Convert the terraform outputs to YAML
-VARS_FILE=tmp.$$.yml
-trap 'rm -f $VARS_FILE' EXIT
-terraform output -state="$TERRAFORM_STATE_FILE" -json | jq 'with_entries(.value = .value.value)' | yq r - >"$VARS_FILE"
+local _vars_file=tmp.$$.yml
+trap 'rm -f $_vars_file' EXIT
+terraform output -state="$CONCOURSE_TERRAFORM_STATE_FILE" -json | jq 'with_entries(.value = .value.value)' | yq r - >"$_vars_file"
 
 SUBMODULE=concourse-bosh-deployment
 
@@ -23,9 +24,9 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -o concourse-ops.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$CONCOURSE_SETTINGS" \
-  -l "$VARS_FILE" \
-  -v access_key_id="$AWS_ACCESS_KEY" \
-  -v secret_access_key="$AWS_SECRET_KEY" \
-  --vars-store "$CREDS_FILE" \
-  --state "$STATE_FILE"
+  -l "$_vars_file" \
+  -var aws_access_key_id="$AWS_ACCESS_KEY_ID" \
+  -var aws_secret_access_key="$AWS_SECRET_ACCESS_KEY" \
+  --vars-store "$CONCOURSE_CREDS_FILE" \
+  --state "$CONCOURSE_STATE_FILE"
   

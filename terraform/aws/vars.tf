@@ -1,9 +1,9 @@
-variable "access_key" {}
-variable "secret_key" {}
+variable "aws_access_key_id" {}
+variable "aws_secret_access_key" {}
 variable "region" {
   default = "eu-west-1"
 }
-variable "environment_name" {}
+variable "environment" {}
 variable "az" {
   default = "eu-west-1a"
 }
