@@ -7,7 +7,7 @@ output "internal_cidr" {
 }
 
 output "internal_gw" {
-    value = "${aws_internet_gateway.default.id}"
+    value = "${var.default_gw_ip}"
 }
 
 output "internal_ip" {
@@ -15,9 +15,21 @@ output "internal_ip" {
 }
 
 output "public_ip" {
-    value = "${aws_eip.atc.id}"
+    value = "${aws_eip.atc.public_ip}"
 }
 
 output "subnet_id" {
     value = "${aws_subnet.default.id}"
+}
+
+output "az" {
+    value = "${var.az}"
+}
+
+output "region" {
+    value = "${var.region}"
+}
+
+output "default_key_name" {
+    value = "${aws_key_pair.default.key_name}"
 }

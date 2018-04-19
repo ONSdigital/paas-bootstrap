@@ -29,10 +29,24 @@ resource "aws_security_group" "default" {
 
   # HTTP access from anywhere
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+      from_port   = 6868
+      to_port     = 6868
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
   }
 
   # outbound internet access
@@ -46,10 +60,13 @@ resource "aws_security_group" "default" {
 
 resource "aws_eip" "atc" {
     vpc = true
-
     tags {
         Name = "${var.environment_name}"
     }
-
     depends_on = ["aws_internet_gateway.default"]
+}
+
+resource "aws_key_pair" "default" {
+    key_name = "${var.environment_name}_default_ssh_key"
+    public_key = "${var.public_key}"
 }
