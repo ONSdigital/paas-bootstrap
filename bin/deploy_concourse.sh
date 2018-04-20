@@ -22,6 +22,7 @@ SUBMODULE=concourse-bosh-deployment
 bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -o "$SUBMODULE"/lite/infrastructures/aws.yml \
   -o operations/concourse/public-network.yml \
+  -o operations/concourse/basic-auth.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
   -v access_key_id="$AWS_ACCESS_KEY_ID" \

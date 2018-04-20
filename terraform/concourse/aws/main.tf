@@ -14,6 +14,7 @@ resource "aws_route" "internet_access" {
 resource "aws_subnet" "default" {
   vpc_id                  = "${var.vpc_id}"
   cidr_block              = "10.0.1.0/24"
+  availability_zone       = "${var.az}"
   tags {
     Name = "${var.environment}"
   }
