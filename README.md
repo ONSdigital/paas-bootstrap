@@ -15,11 +15,12 @@ We use the code in this repository to bootstrap our AWS PaaS environment. The no
 
 ## Creating a new environment
 
-You'll need to create a `<env>_vpc.tfvars` file with `az` and `region`:
+You'll need to create a `<env>_vpc.tfvars` file with `az`, `region` and `parent_dns_zone`:
 
 ```sh
 az = "eu-west-1a"
 region = "eu-west-1"
+parent_dns_zone = "<domain>."
 ```
 
 Example command:
@@ -36,13 +37,13 @@ Where:
 
 ## Connecting to Concourse
 
-The IP address of the Concourse is found by:
+The dns name of Concourse is found by:
 
 ```sh
-terraform output -state=<env>_concourse.tfstate.json public_ip
+terraform output -state=<env>_concourse.tfstate.json concourse_fqdn
 ```
 
-Go to `http://<public_ip>:8080` to login.
+Go to `http://<concourse_fqdn>:8080` to login.
 
 The username is `admin` and you can get the password through:
 

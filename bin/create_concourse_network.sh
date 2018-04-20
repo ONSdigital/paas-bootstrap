@@ -10,6 +10,7 @@ set -euo pipefail
 : $VPC_STATE_FILE
 : $CONCOURSE_TERRAFORM_STATE_FILE
 : $PUBLIC_KEY_FILE
+: $VAR_FILE
 
 _tmp_vars=tmp$$.tfvars.json
 trap 'rm -f $_tmp_vars' EXIT
@@ -21,6 +22,7 @@ terraform plan \
   -var "aws_access_key_id=$AWS_ACCESS_KEY_ID" \
   -var "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" \
   -var "public_key=$_public_key" \
+  -var-file="$VAR_FILE" \
   -var-file="$_tmp_vars" \
   -state=$CONCOURSE_TERRAFORM_STATE_FILE \
   terraform/concourse/aws
@@ -30,6 +32,7 @@ terraform apply -auto-approve \
   -var "aws_access_key_id=$AWS_ACCESS_KEY_ID" \
   -var "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" \
   -var "public_key=$_public_key" \
+  -var-file="$VAR_FILE" \
   -var-file="$_tmp_vars" \
   -state=$CONCOURSE_TERRAFORM_STATE_FILE \
   terraform/concourse/aws
