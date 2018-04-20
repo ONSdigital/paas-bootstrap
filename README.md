@@ -11,6 +11,7 @@ We use the code in this repository to bootstrap our AWS PaaS environment. The no
 
 - Terraform CLI
 - [yq](https://github.com/mikefarah/yq) (or, `brew install yq`)
+- [jq](https://stedolan.github.io/jq/) (or, `brew install jq`)
 
 ## Creating a new environment
 
@@ -32,6 +33,22 @@ Where:
 - `ENVIRONMENT` - a name for your environment
 - `AWS_ACCESS_KEY_ID` - your aws access key id
 - `AWS_SECRET_ACCESS_KEY` - your aws secret access key
+
+## Connecting to Concourse
+
+The IP address of the Concourse is found by:
+
+```sh
+terraform output -state=<env>_concourse.tfstate.json public_ip
+```
+
+Go to `http://<public_ip>:8080` to login.
+
+The username is `admin` and you can get the password through:
+
+```sh
+bosh int --path /admin_password <env>_concourse.creds.yml
+```
 
 ## LICENCE
 
