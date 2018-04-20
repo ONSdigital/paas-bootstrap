@@ -20,7 +20,7 @@ You'll need to create a `<env>_vpc.tfvars` file with `az`, `region` and `parent_
 ```sh
 az = "eu-west-1a"
 region = "eu-west-1"
-parent_dns_zone = "<domain>."
+parent_dns_zone = "<domain>"
 ```
 
 Example command:

@@ -1,5 +1,5 @@
 data "aws_route53_zone" "parent" {
-  name = "${var.parent_dns_zone}"
+  name = "${var.parent_dns_zone}."
 }
 
 resource "aws_route53_zone" "child_zone" {
@@ -27,8 +27,8 @@ resource "aws_route53_record" "child_ns" {
 resource "aws_route53_record" "concourse" {
   zone_id = "${aws_route53_zone.child_zone.zone_id}"
   name    = "ci.${var.environment}.${data.aws_route53_zone.parent.name}"
-  type    = "A"
+  type    = "CNAME"
   ttl     = "30"
 
-  records = ["${aws_eip.atc.public_ip}"]
+  records = ["${aws_elb.concourse.dns_name}"]
 }
