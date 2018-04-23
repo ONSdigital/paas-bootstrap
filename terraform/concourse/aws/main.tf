@@ -30,36 +30,42 @@ resource "aws_security_group" "default" {
   tags {
     Name = "${var.environment}"
   }
+}
 
-  # HTTP access from anywhere
-  ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = ["${aws_security_group.elb.id}"]
-  }
+resource "aws_security_group_rule" "concourse_web" {
+  security_group_id = "${aws_security_group.default.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8080
+  to_port           = 8080
+  security_groups   = ["${aws_security_group.elb.id}"]
+}
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "concourse_ssh" {
+  security_group_id = "${aws_security_group.default.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 22
+  to_port           = 22
+  cidr_blocks       = ["0.0.0.0/0"]
+}
 
-  ingress {
-    from_port   = 6868
-    to_port     = 6868
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "concourse_mbus" {
+  security_group_id = "${aws_security_group.default.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 6868
+  to_port           = 6868
+  cidr_blocks       = ["0.0.0.0/0"]
+}
 
-  # outbound internet access
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "concourse_outbound" {
+  security_group_id = "${aws_security_group.default.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 6868
+  to_port           = 6868
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_eip" "atc" {
