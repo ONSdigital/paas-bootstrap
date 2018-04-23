@@ -23,6 +23,7 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -o "$SUBMODULE"/lite/infrastructures/aws.yml \
   -o operations/concourse/public-network.yml \
   -o operations/concourse/basic-auth.yml \
+  -o operations/concourse/elb.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
   -v access_key_id="$AWS_ACCESS_KEY_ID" \
@@ -30,4 +31,3 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   --var-file private_key="$PRIVATE_KEY_FILE" \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"
-  

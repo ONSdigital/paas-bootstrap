@@ -37,3 +37,7 @@ output "default_key_name" {
 output "concourse_fqdn" {
   value = "${aws_route53_record.concourse.name}"
 }
+
+output "concourse_elb" {
+  value = "${aws_elb.concourse.name}"
+}
