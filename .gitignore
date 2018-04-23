@@ -9,3 +9,5 @@ secret.yml
 *.pem
 *.pem.*
 *.creds.yml
+
+tmp*.yml

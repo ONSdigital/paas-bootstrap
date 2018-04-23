@@ -26,7 +26,9 @@ parent_dns_zone = "<domain>"
 Example command:
 
 ```sh
-ENVIRONMENT=<choose_a_name> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_secret_key> make concourse
+git submodule update --init
+ENVIRONMENT=<choose_a_name> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_secret_key> 
+make concourse
 ```
 
 Where:
