@@ -45,7 +45,7 @@ The dns name of Concourse is found by:
 terraform output -state=<env>_concourse.tfstate.json concourse_fqdn
 ```
 
-Go to `http://<concourse_fqdn>:8080` to login.
+Go to `https://<concourse_fqdn>` to login.
 
 The username is `admin` and you can get the password through:
 
