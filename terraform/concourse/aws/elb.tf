@@ -49,10 +49,10 @@ resource "aws_security_group_rule" "concourse_elb_https" {
 }
 
 resource "aws_security_group_rule" "concourse_elb_to_web" {
-  security_group_id = "${aws_security_group.elb.id}"
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 8080
-  to_port           = 8080
-  security_groups   = ["${aws_security_group.default.id}"]
+  security_group_id        = "${aws_security_group.elb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = "${aws_security_group.default.id}"
 }
