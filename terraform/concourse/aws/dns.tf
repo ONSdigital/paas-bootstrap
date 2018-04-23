@@ -32,3 +32,12 @@ resource "aws_route53_record" "concourse" {
 
   records = ["${aws_elb.concourse.dns_name}"]
 }
+
+resource "aws_route53_record" "concourse_direct" {
+  zone_id = "${aws_route53_zone.child_zone.zone_id}"
+  name    = "concourse.${var.environment}.${data.aws_route53_zone.parent.name}"
+  type    = "A"
+  ttl     = "30"
+
+  records = ["${aws_eip.atc.public_ip}"]
+}

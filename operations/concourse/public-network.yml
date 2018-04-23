@@ -13,4 +13,4 @@
 
 - type: replace
   path: /cloud_provider/ssh_tunnel/host?
-  value: ((public_ip))
+  value: ((concourse_direct_fqdn))

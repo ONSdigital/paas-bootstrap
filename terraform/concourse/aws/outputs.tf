@@ -38,6 +38,10 @@ output "concourse_fqdn" {
   value = "${aws_route53_record.concourse.name}"
 }
 
+output "concourse_direct_fqdn" {
+  value = "${aws_route53_record.concourse_direct.name}"
+}
+
 output "concourse_elb" {
   value = "${aws_elb.concourse.name}"
 }
