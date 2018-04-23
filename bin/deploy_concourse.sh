@@ -2,7 +2,7 @@
 
 # Creates a wee Concourse
 
-set -euxo pipefail
+set -euo pipefail
 
 
 : $AWS_ACCESS_KEY_ID
