@@ -10,6 +10,7 @@ We use the code in this repository to bootstrap our AWS PaaS environment. The no
 ## Pre-requisites
 
 - Terraform CLI
+- Fly [CLI](https://concourse-ci.org/download.html)
 - [yq](https://github.com/mikefarah/yq) (or, `brew install yq`)
 - [jq](https://stedolan.github.io/jq/) (or, `brew install jq`)
 
