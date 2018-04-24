@@ -6,4 +6,4 @@ set -euo pipefail
 
 : $STATE_FILE
 
-terraform output -state="$STATE_FILE" | awk '{$3 = "\"" $3 "\""; print}'
+terraform output -state="$STATE_FILE" -json | jq 'with_entries(.value = .value.value)'

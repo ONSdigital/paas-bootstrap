@@ -12,5 +12,6 @@ variable "az" {
 }
 
 variable "ingress_whitelist" {
+  type    = "list"
   default = ["0.0.0.0/0"]
 }
