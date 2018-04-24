@@ -29,3 +29,4 @@ terraform apply -auto-approve \
   "$TERRAFORM_DIR"
 
 aws s3 cp "${VPC_STATE_FILE}" "s3://${ENVIRONMENT}-states/vpc/tfstate.json"
+aws s3 cp "${VAR_FILE}" "s3://${ENVIRONMENT}-states/vpc/vars.tfvars"
