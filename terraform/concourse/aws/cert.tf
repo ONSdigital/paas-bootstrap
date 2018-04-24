@@ -3,7 +3,8 @@ resource "aws_acm_certificate" "concourse" {
   validation_method = "DNS"
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-ci-cert"
+    Environment = "${var.environment}"
   }
 }
 

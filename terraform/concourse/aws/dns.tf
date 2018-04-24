@@ -6,7 +6,8 @@ resource "aws_route53_zone" "child_zone" {
   name = "${var.environment}.${data.aws_route53_zone.parent.name}"
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-zone"
+    Environment = "${var.environment}"
   }
 }
 

@@ -18,17 +18,19 @@ resource "aws_subnet" "default" {
   availability_zone = "${var.az}"
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-default-subnet"
+    Environment = "${var.environment}"
   }
 }
 
 resource "aws_security_group" "default" {
-  name        = "${var.environment}_concourse_elb_security_group"
+  name        = "${var.environment}_default_security_group"
   description = "Concourse public access"
   vpc_id      = "${var.vpc_id}"
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-default-security-group"
+    Environment = "${var.environment}"
   }
 }
 
@@ -72,7 +74,8 @@ resource "aws_eip" "atc" {
   vpc = true
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-atc-eip"
+    Environment = "${var.environment}"
   }
 
   depends_on = ["aws_internet_gateway.default"]

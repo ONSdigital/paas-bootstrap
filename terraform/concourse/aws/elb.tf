@@ -25,17 +25,19 @@ resource "aws_elb" "concourse" {
   connection_draining_timeout = 400
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-concourse-elb"
+    Environment = "${var.environment}"
   }
 }
 
 resource "aws_security_group" "elb" {
-  name        = "${var.environment}_concourse_public_elb_security_group"
+  name        = "${var.environment}_concourse_elb_security_group"
   description = "Concourse public access"
   vpc_id      = "${var.vpc_id}"
 
   tags {
-    Name = "${var.environment}"
+    Name        = "${var.environment}-concourse-elb-security-group"
+    Environment = "${var.environment}"
   }
 }
 
