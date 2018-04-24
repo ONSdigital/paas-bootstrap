@@ -8,7 +8,7 @@ set -euo pipefail
 
 TERRAFORM_DIR=terraform/aws
 
-aws s3 cp s3://eng2-states/vpc/tfstate.json "${VPC_STATE_FILE}" ||
+aws s3 cp "s3://${ENVIRONMENT}-states/vpc/tfstate.json" "${VPC_STATE_FILE}" ||
   echo "Remote VPC Terraform state does not exist. Assuming this is a new deployment"
 
 terraform init "$TERRAFORM_DIR"
@@ -28,4 +28,5 @@ terraform apply -auto-approve \
   -state="$VPC_STATE_FILE" \
   "$TERRAFORM_DIR"
 
-aws s3 cp "${VPC_STATE_FILE}" s3://eng2-states/vpc/tfstate.json
+aws s3 cp "${VPC_STATE_FILE}" "s3://${ENVIRONMENT}-states/vpc/tfstate.json"
+aws s3 cp "${VAR_FILE}" "s3://${ENVIRONMENT}-states/vpc/vars.tfvars"

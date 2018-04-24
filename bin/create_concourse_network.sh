@@ -17,7 +17,7 @@ trap 'rm -f $_tmp_vars' EXIT
 STATE_FILE="$VPC_STATE_FILE" bin/tfstate_to_tfvars.sh >"$_tmp_vars"
 _public_key=$(cat $PUBLIC_KEY_FILE)
 
-aws s3 cp s3://eng2-states/concourse/tfstate.json "${CONCOURSE_TERRAFORM_STATE_FILE}" ||
+aws s3 cp "s3://${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}" ||
   echo "Remote Concourse Terraform state does not exist. Assuming this is a new deployment"
 
 terraform plan \
@@ -40,4 +40,4 @@ terraform apply -auto-approve \
   -state="$CONCOURSE_TERRAFORM_STATE_FILE" \
   terraform/concourse/aws
 
-aws s3 cp "${CONCOURSE_TERRAFORM_STATE_FILE}" s3://eng2-states/concourse/tfstate.json
+aws s3 cp "${CONCOURSE_TERRAFORM_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/tfstate.json"
