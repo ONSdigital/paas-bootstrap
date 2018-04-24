@@ -12,6 +12,8 @@ set -euo pipefail
 : $CONCOURSE_CREDS_FILE
 : $PRIVATE_KEY_FILE
 
+git submodule update --init
+
 # Convert the terraform outputs to YAML
 _vars_file=tmp.$$.yml
 trap 'rm -f $_vars_file' EXIT
