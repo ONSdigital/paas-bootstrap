@@ -40,6 +40,8 @@ Where:
 
 ## Connecting to Concourse
 
+_**NOTE: Concourse access is whitelisted to the ONS Newport and Titchfield address ranges, including ONSGuest.**_
+
 The dns name of Concourse is found by:
 
 ```sh
@@ -52,6 +54,13 @@ The username is `admin` and you can get the password through:
 
 ```sh
 bosh int --path /admin_password <env>_concourse.creds.yml
+```
+
+## Testing that Concourse works
+
+```sh
+ENVIRONMENT=<env> test/deploy_test_pipeline.sh
+fly -t <env> trigger-job -j test/pipeline-test -w
 ```
 
 ## LICENCE

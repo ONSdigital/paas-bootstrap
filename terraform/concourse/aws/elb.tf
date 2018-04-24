@@ -45,7 +45,7 @@ resource "aws_security_group_rule" "concourse_elb_https" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = "${var.ingress_whitelist}"
 }
 
 resource "aws_security_group_rule" "concourse_elb_to_web" {

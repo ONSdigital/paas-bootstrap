@@ -22,3 +22,5 @@ variable "az" {
 
 variable "public_key" {}
 variable "parent_dns_zone" {}
+
+variable "ingress_whitelist" {}
