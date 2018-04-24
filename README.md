@@ -9,6 +9,7 @@ We use the code in this repository to bootstrap our AWS PaaS environment. The no
 
 ## Pre-requisites
 
+- AWS CLI
 - Terraform CLI
 - Fly [CLI](https://concourse-ci.org/download.html)
 - [yq](https://github.com/mikefarah/yq) (or, `brew install yq`)
@@ -22,6 +23,7 @@ You'll need to create a `<env>_vpc.tfvars` file with `az`, `region` and `parent_
 az = "eu-west-1a"
 region = "eu-west-1"
 parent_dns_zone = "<domain>"
+ingress_whitelist = ["0.0.0.0/0"] # put the CIDRs that may access Concourse here
 ```
 
 Example command:
@@ -39,8 +41,6 @@ Where:
 - `AWS_SECRET_ACCESS_KEY` - your aws secret access key
 
 ## Connecting to Concourse
-
-_**NOTE: Concourse access is whitelisted to the ONS Newport and Titchfield address ranges, including ONSGuest.**_
 
 The dns name of Concourse is found by:
 
