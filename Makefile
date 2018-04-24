@@ -2,7 +2,7 @@
 .EXPORT_ALL_VARIABLES:
 
 # Environment variables that you have to set yourself:
-# 
+#
 # ENVIRONMENT
 # AWS_ACCESS_KEY_ID
 # AWS_SECRET_ACCESS_KEY
@@ -33,3 +33,12 @@ concourse_network: vpc keypair ## Setup networks for concourse to consume
 
 concourse: concourse_network ## Deploy concourse with all prereqs
 	@bin/deploy_concourse.sh
+
+destroy: destroy_concourse_network ## Destroy an entire environment
+	@bin/delete_vpc.sh
+
+destroy_concourse_network: destroy_concourse ## Destroy concourse and its network
+	@bin/delete_concourse_network.sh
+
+destroy_concourse: require_vars ## Destroy concourse only
+	@bin/delete_concourse.sh
