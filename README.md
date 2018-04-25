@@ -30,7 +30,7 @@ Example command:
 
 ```sh
 git submodule update --init
-ENVIRONMENT=<choose_a_name> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_secret_key> 
+ENVIRONMENT=<choose_a_name> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_secret_key>
 make concourse
 ```
 
@@ -59,7 +59,7 @@ bosh int --path /admin_password <env>_concourse.creds.yml
 ## Testing that Concourse works
 
 ```sh
-ENVIRONMENT=<env> test/deploy_test_pipeline.sh
+ENVIRONMENT=<env> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_secret_key> make test_pipeline
 fly -t <env> trigger-job -j test/pipeline-test -w
 ```
 
