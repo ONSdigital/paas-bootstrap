@@ -22,16 +22,25 @@ resource "aws_s3_bucket" "paas_states" {
 
   policy = <<EOF
 {
-  "Version": "2008-10-17",
+  "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "PrivateAccess",
-      "Effect": "Allow",
-      "Principal": {
-          "AWS": "*"
-      },
-      "Action": "s3:*",
-      "Resource": "arn:aws:s3:::${var.environment}-states"
+      "Sid": "PrivateAclPolicy",  "Effect": "Deny",
+      "Principal": { "AWS": "*"},
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${var.environment}-states/*"
+      ],
+      "Condition": {
+        "StringNotEquals": {
+          "s3:x-amz-acl": [
+            "private"
+          ]
+        }
+      }
     }
   ]
 }

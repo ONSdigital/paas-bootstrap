@@ -41,5 +41,5 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"
 
-aws s3 cp "${CONCOURSE_CREDS_FILE}" "s3://${ENVIRONMENT}-states/concourse/creds.yml"
-aws s3 cp "${CONCOURSE_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/state.json"
+aws s3 cp "${CONCOURSE_CREDS_FILE}" "s3://${ENVIRONMENT}-states/concourse/creds.yml" --acl=private
+aws s3 cp "${CONCOURSE_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/state.json" --acl=private

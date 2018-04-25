@@ -40,4 +40,4 @@ terraform apply -auto-approve \
   -state="$CONCOURSE_TERRAFORM_STATE_FILE" \
   terraform/concourse/aws
 
-aws s3 cp "${CONCOURSE_TERRAFORM_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/tfstate.json"
+aws s3 cp "${CONCOURSE_TERRAFORM_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/tfstate.json" --acl=private
