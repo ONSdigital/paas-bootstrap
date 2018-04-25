@@ -58,7 +58,7 @@ resource "aws_security_group_rule" "concourse_mbus" {
   protocol          = "tcp"
   from_port         = 6868
   to_port           = 6868
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = "${var.ingress_whitelist}"
 }
 
 resource "aws_security_group_rule" "concourse_outbound" {
