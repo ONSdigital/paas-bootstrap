@@ -44,7 +44,7 @@ bosh delete-env "$SUBMODULE"/lite/concourse.yml \
   -o "$SUBMODULE"/lite/infrastructures/aws.yml \
   -o operations/concourse/public-network.yml \
   -o operations/concourse/basic-auth.yml \
-  -o operations/concourse/elb.yml \
+  -o operations/concourse/alb.yml \
   -o operations/concourse/fqdn.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \

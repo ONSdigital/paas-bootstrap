@@ -42,6 +42,6 @@ output "concourse_direct_fqdn" {
   value = "${aws_route53_record.concourse_direct.name}"
 }
 
-output "concourse_elb" {
-  value = "${aws_elb.concourse.name}"
+output "concourse_alb_target_group" {
+  value = "${aws_lb_target_group.concourse.name}"
 }

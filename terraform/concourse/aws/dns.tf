@@ -31,7 +31,7 @@ resource "aws_route53_record" "concourse" {
   type    = "CNAME"
   ttl     = "30"
 
-  records = ["${aws_elb.concourse.dns_name}"]
+  records = ["${aws_lb.concourse.dns_name}"]
 }
 
 resource "aws_route53_record" "concourse_direct" {
