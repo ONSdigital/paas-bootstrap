@@ -1,39 +1,3 @@
-resource "aws_internet_gateway" "default" {
-  vpc_id = "${var.vpc_id}"
-
-  tags {
-    Name = "${var.environment}"
-  }
-}
-
-resource "aws_route" "internet_access" {
-  route_table_id         = "${var.default_route_table_id}"
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.default.id}"
-}
-
-resource "aws_subnet" "az1" {
-  vpc_id            = "${var.vpc_id}"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "${var.az1}"
-
-  tags {
-    Name        = "${var.environment}-default-subnet"
-    Environment = "${var.environment}"
-  }
-}
-
-resource "aws_subnet" "az2" {
-  vpc_id            = "${var.vpc_id}"
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "${var.az2}"
-
-  tags {
-    Name        = "${var.environment}-az2-subnet"
-    Environment = "${var.environment}"
-  }
-}
-
 resource "aws_security_group" "default" {
   name        = "${var.environment}_default_security_group"
   description = "Concourse public access"
@@ -51,7 +15,7 @@ resource "aws_security_group_rule" "concourse_web" {
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
-  source_security_group_id = "${aws_security_group.elb.id}"
+  source_security_group_id = "${aws_security_group.alb.id}"
 }
 
 resource "aws_security_group_rule" "concourse_ssh" {
@@ -81,18 +45,31 @@ resource "aws_security_group_rule" "concourse_outbound" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_eip" "atc" {
-  vpc = true
+resource "aws_security_group" "alb" {
+  name        = "${var.environment}_concourse_alb_security_group"
+  description = "Concourse public access"
+  vpc_id      = "${var.vpc_id}"
 
   tags {
-    Name        = "${var.environment}-atc-eip"
+    Name        = "${var.environment}-concourse-alb-security-group"
     Environment = "${var.environment}"
   }
-
-  depends_on = ["aws_internet_gateway.default"]
 }
 
-resource "aws_key_pair" "default" {
-  key_name   = "${var.environment}_default_ssh_key"
-  public_key = "${var.public_key}"
+resource "aws_security_group_rule" "concourse_alb_https" {
+  security_group_id = "${aws_security_group.alb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = "${var.ingress_whitelist}"
+}
+
+resource "aws_security_group_rule" "concourse_alb_to_web" {
+  security_group_id        = "${aws_security_group.alb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 8080
+  to_port                  = 8080
+  source_security_group_id = "${aws_security_group.default.id}"
 }
