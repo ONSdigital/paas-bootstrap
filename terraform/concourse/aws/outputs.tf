@@ -45,3 +45,7 @@ output "concourse_direct_fqdn" {
 output "concourse_alb_target_group" {
   value = "${aws_lb_target_group.concourse.name}"
 }
+
+output "concourse_iam_instance_profile" {
+  value = "${aws_iam_instance_profile.concourse.name}"
+}

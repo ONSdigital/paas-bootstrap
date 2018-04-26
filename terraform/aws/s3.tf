@@ -25,7 +25,8 @@ resource "aws_s3_bucket" "paas_states" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "PrivateAclPolicy",  "Effect": "Deny",
+      "Sid": "PrivateAclPolicy",
+      "Effect": "Deny",
       "Principal": { "AWS": "*"},
       "Action": [
         "s3:PutObject",

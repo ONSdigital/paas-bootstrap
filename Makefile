@@ -34,8 +34,14 @@ concourse_network: vpc keypair ## Setup networks for concourse to consume
 concourse: concourse_network ## Deploy concourse with all prereqs
 	@bin/deploy_concourse.sh
 
+concourse_login: require_vars ## Logs fly into concourse
+	@bin/login_fly.sh
+
 test_pipeline: require_vars ## Deploy a test pipeline to concourse
 	@test/deploy_test_pipeline.sh
+
+test_s3_pipeline: require_vars ## Deploy a pipeline that tests S3 access to concourse
+	@test/deploy_s3_test_pipeline.sh
 
 destroy: destroy_concourse_network ## Destroy an entire environment
 	@bin/delete_vpc.sh
