@@ -16,8 +16,12 @@ variable "region" {
   default = "eu-west-1"
 }
 
-variable "az" {
+variable "az1" {
   default = "eu-west-1a"
+}
+
+variable "az2" {
+  default = "eu-west-1b"
 }
 
 variable "public_key" {}

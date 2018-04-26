@@ -3,7 +3,7 @@ output "default_security_groups" {
 }
 
 output "internal_cidr" {
-  value = "${aws_subnet.default.cidr_block}"
+  value = "${aws_subnet.az1.cidr_block}"
 }
 
 output "internal_gw" {
@@ -19,11 +19,11 @@ output "public_ip" {
 }
 
 output "subnet_id" {
-  value = "${aws_subnet.default.id}"
+  value = "${aws_subnet.az1.id}"
 }
 
 output "az" {
-  value = "${var.az}"
+  value = "${var.az1}"
 }
 
 output "region" {

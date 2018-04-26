@@ -6,8 +6,12 @@ output "region" {
   value = "${var.region}"
 }
 
-output "az" {
-  value = "${var.az}"
+output "az1" {
+  value = "${var.az1}"
+}
+
+output "az2" {
+  value = "${var.az2}"
 }
 
 output "default_route_table_id" {

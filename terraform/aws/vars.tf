@@ -7,8 +7,12 @@ variable "region" {
 
 variable "environment" {}
 
-variable "az" {
+variable "az1" {
   default = "eu-west-1a"
+}
+
+variable "az2" {
+  default = "eu-west-1b"
 }
 
 variable "ingress_whitelist" {

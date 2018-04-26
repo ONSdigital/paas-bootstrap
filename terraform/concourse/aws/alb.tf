@@ -1,6 +1,6 @@
 resource "aws_lb" "concourse" {
   name                             = "${var.environment}-concourse-alb"
-  subnets                          = ["${aws_subnet.default.id}"]
+  subnets                          = ["${aws_subnet.az1.id}", "${aws_subnet.az2.id}"]
   security_groups                  = ["${aws_security_group.elb.id}"]
   load_balancer_type               = "application"
   internal                         = false
