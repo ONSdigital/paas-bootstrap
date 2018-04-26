@@ -20,5 +20,5 @@ aws s3 cp "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" "${PUBLIC_KEY_F
 ssh-keygen -t rsa -f "$PRIVATE_KEY_FILE" -N foobar
 ssh-keygen -p -f "$PRIVATE_KEY_FILE" -P foobar -N ''
 
-aws s3 cp "${PRIVATE_KEY_FILE}" "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem"
-aws s3 cp "${PUBLIC_KEY_FILE}" "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem.pub"
+aws s3 cp "${PRIVATE_KEY_FILE}" "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" --acl=private
+aws s3 cp "${PUBLIC_KEY_FILE}" "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" --acl=private
