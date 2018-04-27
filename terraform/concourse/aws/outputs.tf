@@ -49,3 +49,7 @@ output "concourse_alb_target_group" {
 output "concourse_iam_instance_profile" {
   value = "${aws_iam_instance_profile.concourse.name}"
 }
+
+output "s3_kms_key_id" {
+  value = "${var.s3_kms_key_id}"
+}

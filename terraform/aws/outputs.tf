@@ -25,3 +25,11 @@ output "environment" {
 output "ingress_whitelist" {
   value = "${var.ingress_whitelist}"
 }
+
+output "s3_kms_key_id" {
+  value = "${aws_kms_key.paas_state_key.id}"
+}
+
+output "s3_kms_key_arn" {
+  value = "${aws_kms_key.paas_state_key.arn}"
+}
