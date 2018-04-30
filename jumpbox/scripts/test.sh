@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+: $ENVIRONMENT
+
 aws s3 cp s3://"$ENVIRONMENT"-states/jumpbox/creds.yml "$ENVIRONMENT"_creds.yml
 
 FQDN=$(bosh int --path /jumpbox_fqdn "$ENVIRONMENT"_creds.yml)
