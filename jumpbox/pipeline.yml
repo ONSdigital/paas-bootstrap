@@ -11,4 +11,6 @@ jobs:
   plan:
   - get: git-repo
   - task: verify
+    config:
+      environment: ((environment))
     file: git-repo/jumpbox/tasks/test.yml
