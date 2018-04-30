@@ -1,0 +1,15 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: { repository: armakuni/bosh-cli, tag: latest }
+
+inputs:
+- name: git-repo
+
+run:
+  path: git-repo/jumpbox/scripts/test.sh
+
+params:
+  ENVIRONMENT

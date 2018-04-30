@@ -1,0 +1,14 @@
+---
+resources:
+- name: git-repo
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/paas-bootstrap.git
+    branch: master
+
+jobs:
+- name: pipeline-test
+  plan:
+  - get: git-repo
+  - task: verify
+    file: git-repo/jumpbox/tasks/test.yml
