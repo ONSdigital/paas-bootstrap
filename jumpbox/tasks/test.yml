@@ -12,4 +12,4 @@ run:
   path: git-repo/jumpbox/scripts/test.sh
 
 params:
-  ENVIRONMENT: ((environment))
+  environment: ((environment))
