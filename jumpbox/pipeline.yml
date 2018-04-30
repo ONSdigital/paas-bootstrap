@@ -12,5 +12,5 @@ jobs:
   - get: git-repo
   - task: verify
     params:
-      environment: ((environment))
+      ENVIRONMENT: ((environment))
     file: git-repo/jumpbox/tasks/test.yml
