@@ -4,7 +4,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: master
+    branch: feature/jumpbox
 
 jobs:
 - name: pipeline-test
