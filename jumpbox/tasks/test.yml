@@ -13,3 +13,4 @@ run:
 
 params:
   ENVIRONMENT: ((environment))
+  CAT: ((dog))
