@@ -3,11 +3,11 @@ data "aws_route53_zone" "parent" {
 }
 
 data "aws_route53_zone" "child_zone" {
-  name = "${var.environment}.${data.aws_route53_zone.parent.name}."
+  name = "${var.environment}.${var.parent_dns_zone}."
 }
 
 resource "aws_route53_record" "concourse" {
-  zone_id = "${aws_route53_zone.child_zone.zone_id}"
+  zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
   name    = "ci.${var.environment}.${data.aws_route53_zone.parent.name}"
   type    = "CNAME"
   ttl     = "30"
@@ -16,7 +16,7 @@ resource "aws_route53_record" "concourse" {
 }
 
 resource "aws_route53_record" "concourse_direct" {
-  zone_id = "${aws_route53_zone.child_zone.zone_id}"
+  zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
   name    = "concourse.${var.environment}.${data.aws_route53_zone.parent.name}"
   type    = "A"
   ttl     = "30"
