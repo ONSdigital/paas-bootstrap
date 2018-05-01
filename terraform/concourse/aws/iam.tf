@@ -30,6 +30,7 @@ data "template_file" "iam_policy" {
   vars {
     s3_kms_key_arn = "${var.s3_kms_key_arn}"
     environment    = "${var.environment}"
+    hosted_zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
   }
 }
 

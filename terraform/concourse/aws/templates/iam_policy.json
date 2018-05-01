@@ -31,6 +31,24 @@
       "Resource": [
         "${s3_kms_key_arn}"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:GetHostedZone",
+        "route53:ChangeResourceRecordSets",
+        "route53:GetHealthCheck",
+        "route53:UpdateHealthCheck",
+        "route53:DeleteHealthCheck",
+        "route53:ListTagsForResource",
+        "route53:CreateHealthCheck",
+        "route53:ChangeTagsForResource",
+        "route53:ListResourceRecordSets"
+      ],
+      "Resource": [
+        "arn:aws:route53:::hostedzone/${hosted_zone_id}",
+        "arn:aws:route53:::healthcheck/*"
+      ]
     }
   ]
 }
