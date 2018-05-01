@@ -15,7 +15,6 @@
     {
       "Effect": "Allow",
       "Action": [
-        "s3:ListObject",
         "s3:GetObject",
         "s3:GetObjectVersion"
       ],
