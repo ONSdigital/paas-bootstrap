@@ -33,3 +33,7 @@ output "s3_kms_key_id" {
 output "s3_kms_key_arn" {
   value = "${aws_kms_key.paas_state_key.arn}"
 }
+
+output "dns_zone" {
+  value = "${aws_route53_zone.child_zone.name}"
+}

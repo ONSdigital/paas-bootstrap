@@ -16,6 +16,9 @@ CONCOURSE_CREDS_FILE = ${ENVIRONMENT}_concourse.creds.yml
 PRIVATE_KEY_FILE = ${ENVIRONMENT}_concourse.pem
 PUBLIC_KEY_FILE = ${PRIVATE_KEY_FILE}.pub
 
+## FIXME: delete
+JUMPBOX_TERRAFORM_STATE_FILE = ${ENVIRONMENT}_jumpbox.tfstate.json
+
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -51,3 +54,7 @@ destroy_concourse_network: destroy_concourse ## Destroy concourse and its networ
 
 destroy_concourse: require_vars ## Destroy concourse only
 	@bin/delete_concourse.sh
+
+# FIXME: delete
+jumpbox_network: vpc ## Manually deploy jumpbox network (should be done thru pipeline)
+	@jumpbox/scripts/deploy_jumpbox_vpc_objects.sh
