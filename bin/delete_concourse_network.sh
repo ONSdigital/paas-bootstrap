@@ -12,6 +12,7 @@ set -euo pipefail
 : $PUBLIC_KEY_FILE
 : $VAR_FILE
 
+TERRAFORM_DIR=terraform/concourse/aws
 
 aws s3 cp "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" "${PUBLIC_KEY_FILE}" ||
   {
@@ -30,6 +31,7 @@ _tmp_vars=tmp$$.tfvars.json
 trap 'rm -f $_tmp_vars' EXIT
 STATE_FILE="$VPC_STATE_FILE" bin/tfstate_to_tfvars.sh >"$_tmp_vars"
 
+terraform init "$TERRAFORM_DIR"
 terraform destroy -auto-approve \
   -var "environment=$ENVIRONMENT" \
   -var "aws_access_key_id=$AWS_ACCESS_KEY_ID" \
@@ -38,7 +40,7 @@ terraform destroy -auto-approve \
   -var-file="$VAR_FILE" \
   -var-file="$_tmp_vars" \
   -state="$CONCOURSE_TERRAFORM_STATE_FILE" \
-  terraform/concourse/aws
+  "$TERRAFORM_DIR"
 
 aws s3 rm "s3://${ENVIRONMENT}-states/concourse/tfstate.json" || true
 rm "${CONCOURSE_TERRAFORM_STATE_FILE}" || true
