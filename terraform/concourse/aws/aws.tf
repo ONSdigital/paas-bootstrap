@@ -3,3 +3,5 @@ provider "aws" {
   secret_key = "${var.aws_secret_access_key}"
   region     = "${var.region}"
 }
+
+provider "template" {}

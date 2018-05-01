@@ -24,30 +24,18 @@ resource "aws_iam_role" "concourse" {
 EOF
 }
 
+data "template_file" "iam_policy" {
+  template = "${file("${path.module}/templates/iam_policy.json")}"
+
+  vars {
+    s3_kms_key_arn = "${var.s3_kms_key_arn}"
+    environment    = "${var.environment}"
+  }
+}
+
 resource "aws_iam_role_policy" "concourse" {
   name = "${var.environment}_concourse_policy"
   role = "${aws_iam_role.concourse.id}"
 
-  policy = <<EOA
-{
-    "Version": "2012-10-17",
-    "Statement": [
-     {
-       "Effect": "Allow",
-       "Action": ["s3:ListBucket", "s3:ListBucketVersions", "s3:GetBucketVersioning"],
-       "Resource": ["arn:aws:s3:::${var.environment}-states"]
-     },
-     {
-       "Effect": "Allow",
-       "Action": ["s3:ListObject", "s3:GetObject", "s3:GetObjectVersion"],
-       "Resource": ["arn:aws:s3:::${var.environment}-states/*"]
-     },
-     {
-        "Effect": "Allow",
-        "Action": ["kms:Decrypt"],
-        "Resource": ["${var.s3_kms_key_arn}"]
-      }
-    ]
-}
-EOA
+  policy = "${data.template_file.iam_policy.rendered}"
 }
