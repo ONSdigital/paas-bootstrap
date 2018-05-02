@@ -45,6 +45,17 @@
         "arn:aws:route53:::hostedzone/${hosted_zone_id}",
         "arn:aws:route53:::healthcheck/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:ReleaseAddress",
+        "ec2:DisassociateAddress",
+        "ec2:DescribeAddresses",
+        "ec2:AssociateAddress",
+        "ec2:AllocateAddress"
+      ],
+      "Resource": "*"
     }
   ]
 }
