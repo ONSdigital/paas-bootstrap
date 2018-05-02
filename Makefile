@@ -46,6 +46,9 @@ test_pipeline: require_vars ## Deploy a test pipeline to concourse
 test_s3_pipeline: require_vars ## Deploy a pipeline that tests S3 access to concourse
 	@test/deploy_s3_test_pipeline.sh
 
+jumpbox_pipeline: require_vars ## Deploy the pipeline that creates the jumpbox
+	@jumpbox/deploy_jumpbox_pipeline.sh
+
 docker_image:  ## Build the general-purpose tooled docker image for Concourse tasks
 	@bin/create_docker_image.sh
 

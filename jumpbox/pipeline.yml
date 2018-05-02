@@ -7,10 +7,20 @@ resources:
     branch: feature/jumpbox
 
 jobs:
-- name: pipeline-test
+- name: create-network
   plan:
   - get: git-repo
-  - task: verify
+  - task: terraform-make
+    file: git-repo/jumpbox/tasks/terraform.yml
     params:
       ENVIRONMENT: ((environment))
+
+- name: verify-jumpbox
+  plan:
+  - get: git-repo
+    passed: [create-network]
+  - task: verify
     file: git-repo/jumpbox/tasks/test.yml
+    params:
+      ENVIRONMENT: ((environment))
+

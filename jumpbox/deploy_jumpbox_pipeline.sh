@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
-
+set -x
 : $ENVIRONMENT
 
 bin/login_fly.sh
