@@ -46,6 +46,9 @@ test_pipeline: require_vars ## Deploy a test pipeline to concourse
 test_s3_pipeline: require_vars ## Deploy a pipeline that tests S3 access to concourse
 	@test/deploy_s3_test_pipeline.sh
 
+docker_image:  ## Build the general-purpose tooled docker image for Concourse tasks
+	@bin/create_docker_image.sh
+
 destroy: destroy_concourse_network ## Destroy an entire environment
 	@bin/delete_vpc.sh
 
