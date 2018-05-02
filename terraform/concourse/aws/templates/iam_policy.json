@@ -70,6 +70,7 @@
       "Resource": "arn:aws:ec2:${region}:${account_id}:security-group/*",
       "Condition": {
         "StringEquals": {
+          "ec2:ResourceTag/Environment": "${environment}",
           "ec2:ResourceTag/Name": "${environment}-jumpbox-security-group"
         }
       }
@@ -78,6 +79,72 @@
       "Effect": "Allow",
       "Action": [
         "ec2:CreateSecurityGroup",
+        "ec2:DescribeSecurityGroups"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:TagKeys": [
+            "Name",
+            "Environment"
+          ]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DetachVolume",
+        "ec2:AttachVolume",
+        "ec2:DeleteVolume",
+        "ec2:TerminateInstances",
+        "ec2:CreateVolume"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:instance/*",
+        "arn:aws:ec2:${region}:${account_id}:volume/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "ec2:ResourceTag/Name": "jumpbox",
+          "ec2:ResourceTag/Environment": "${environment}",
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateTags",
+        "ec2:RunInstances"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:instance/*",
+        "arn:aws:ec2:${region}:${account_id}:subnet/*",
+        "arn:aws:ec2:${region}:${account_id}:volume/*",
+        "arn:aws:ec2:${region}:${account_id}:network-interface/*",
+        "arn:aws:ec2:*::image/*",
+        "arn:aws:ec2:${region}:${account_id}:security-group/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "ec2:ResourceTag/Name": "jumpbox",
+          "ec2:Vpc": "${vpc_arn}",
+          "ec2:ResourceTag/Environment": "${environment}",
+          "ec2:Region": "${region}",
+          "ec2:Subnet": "${subnet_arn}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeImages",
+        "ec2:DescribeInstances",
+        "ec2:DescribeAvailabilityZones",
+        "ec2:DescribeRegions",
+        "ec2:DescribeVolumes",
+        "ec2:DescribeSubnets",
         "ec2:DescribeSecurityGroups"
       ],
       "Resource": "*",
