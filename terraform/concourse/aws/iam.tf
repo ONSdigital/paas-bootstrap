@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_instance_profile" "concourse" {
   name = "${var.environment}_concourse_profile"
   role = "${aws_iam_role.concourse.name}"
@@ -31,6 +33,8 @@ data "template_file" "iam_policy" {
     s3_kms_key_arn = "${var.s3_kms_key_arn}"
     environment    = "${var.environment}"
     hosted_zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
+    region         = "${var.region}"
+    account_id     = "${data.aws_caller_identity.current.account_id}"
   }
 }
 
