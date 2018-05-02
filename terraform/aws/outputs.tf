@@ -41,19 +41,3 @@ output "dns_zone" {
 output "parent_dns_zone" {
   value = "${var.parent_dns_zone}"
 }
-
-output "az1" {
-  value = "${var.az1}"
-}
-
-output "az2" {
-  value = "${var.az2}"
-}
-
-output "region" {
-  value = "${var.region}"
-}
-
-output "ingress_whitelist" {
-  value = "${var.ingress_whitelist}"
-}
