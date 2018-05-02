@@ -37,3 +37,23 @@ output "s3_kms_key_arn" {
 output "dns_zone" {
   value = "${aws_route53_zone.child_zone.name}"
 }
+
+output "parent_dns_zone" {
+  value = "${var.parent_dns_zone}"
+}
+
+output "az1" {
+  value = "${var.az1}"
+}
+
+output "az2" {
+  value = "${var.az2}"
+}
+
+output "region" {
+  value = "${var.region}"
+}
+
+output "ingress_whitelist" {
+  value = "${var.ingress_whitelist}"
+}

@@ -35,7 +35,7 @@ jobs:
     params:
       terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
       env_name: ((environment))
-      var_files: vpc-vars/vars.json
+      var_files: [vpc-vars/vars.json]
       plan_only: true
 
 - name: verify-jumpbox
