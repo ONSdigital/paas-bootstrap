@@ -12,5 +12,5 @@ outputs:
 - name: vpc-vars
 
 run:
-  path: git-repo/jumpbox/scripts/get_terraform_vars.sh
+  path: paas-bootstrap-git/jumpbox/scripts/get_terraform_vars.sh
 
