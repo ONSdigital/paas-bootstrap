@@ -1,26 +1,49 @@
 ---
+resource_types:
+- name: terraform
+  type: docker-image
+  source:
+    repository: robertgruber/terraform-resource
+
 resources:
-- name: git-repo
+- name: paas-bootstrap-git
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
     branch: feature/jumpbox
 
+- name: jumpbox-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ((environment))-states
+      bucket_path: jumpbox/
+      use_ec2_role: true
+      region_name: ((region))
+      sse_kms_key_id: ((s3_kms_key_id))
+
 jobs:
 - name: create-network
   plan:
-  - get: git-repo
-  - task: terraform-make
-    file: git-repo/jumpbox/tasks/terraform.yml
+  - get: paas-bootstrap-git
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/jumpbox/tasks/get_terraform_vars.yml
     params:
       ENVIRONMENT: ((environment))
+      S3_KMS_KEY_ID: ((s3_kms_key_id))
+  - put: jumpbox-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
+      env_name: ((environment))
+      var_files: vpc-vars/vars.json
+      plan_only: true
 
 - name: verify-jumpbox
   plan:
-  - get: git-repo
+  - get: paas-bootstrap-git
     passed: [create-network]
   - task: verify
-    file: git-repo/jumpbox/tasks/test.yml
+    file: paas-bootstrap-git/jumpbox/tasks/test.yml
     params:
       ENVIRONMENT: ((environment))
 

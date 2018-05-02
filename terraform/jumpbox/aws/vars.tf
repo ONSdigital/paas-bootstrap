@@ -27,8 +27,3 @@ variable "parent_dns_zone" {}
 variable "ingress_whitelist" {
   "type" = "list"
 }
-
-# FIXME: delete
-variable "aws_access_key_id" {}
-
-variable "aws_secret_access_key" {}
