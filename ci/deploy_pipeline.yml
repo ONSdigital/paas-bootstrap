@@ -48,8 +48,9 @@ jobs:
   serial_groups: [main]
   serial: true
   plan:
-  - get: vpc-tfstate-s3
-  - get: paas-bootstrap-git
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: paas-bootstrap-git
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
   - put: jumpbox-terraform
