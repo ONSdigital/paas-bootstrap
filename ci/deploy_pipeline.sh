@@ -17,6 +17,6 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v environment="$ENVIRONMENT" \
     -v region="$REGION" \
     -v s3_kms_key_id="$S3_KMS_KEY_ID" \
-    -c jumpbox/pipeline.yml -p jumpbox -n
-fly -t "$ENVIRONMENT" unpause-pipeline -p jumpbox 
+    -c ci/deploy_pipeline.yml -p deploy_pipeline -n
+fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline 
 

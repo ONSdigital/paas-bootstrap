@@ -28,7 +28,7 @@ jobs:
   plan:
   - get: paas-bootstrap-git
   - task: get-terraform-vars
-    file: paas-bootstrap-git/jumpbox/tasks/get_terraform_vars.yml
+    file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
       S3_KMS_KEY_ID: ((s3_kms_key_id))
@@ -44,6 +44,6 @@ jobs:
     passed: [terraform-jumpbox]
     trigger: true
   - task: verify
-    file: paas-bootstrap-git/jumpbox/tasks/test.yml
+    file: paas-bootstrap-git/ci/tasks/jumpbox/test/task.yml
     params:
       ENVIRONMENT: ((environment))

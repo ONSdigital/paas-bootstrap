@@ -8,8 +8,12 @@ image_resource:
 inputs:
 - name: paas-bootstrap-git
 
+outputs:
+- name: vpc-vars
+
 run:
-  path: paas-bootstrap-git/jumpbox/scripts/test.sh
+  path: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.sh
 
 params:
   ENVIRONMENT:
+  S3_KMS_KEY_ID:
