@@ -24,7 +24,7 @@ resources:
       sse_kms_key_id: ((s3_kms_key_id))
 
 jobs:
-- name: create-network
+- name: terraform-jumpbox
   plan:
   - get: paas-bootstrap-git
   - task: get-terraform-vars
@@ -41,9 +41,9 @@ jobs:
 - name: verify-jumpbox
   plan:
   - get: paas-bootstrap-git
-    passed: [create-network]
+    passed: [terraform-jumpbox]
+    trigger: true
   - task: verify
     file: paas-bootstrap-git/jumpbox/tasks/test.yml
     params:
       ENVIRONMENT: ((environment))
-

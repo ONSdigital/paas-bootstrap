@@ -12,4 +12,4 @@ run:
   path: paas-bootstrap-git/jumpbox/scripts/test.sh
 
 params:
-  ENVIRONMENT: ((environment))
+  ENVIRONMENT:

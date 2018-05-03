@@ -14,3 +14,6 @@ outputs:
 run:
   path: paas-bootstrap-git/jumpbox/scripts/get_terraform_vars.sh
 
+params:
+  ENVIRONMENT:
+  S3_KMS_KEY_ID:
