@@ -9,7 +9,7 @@ inputs:
 - name: paas-bootstrap-git
 
 run:
-  path: paas-bootstrap-git/jumpbox/scripts/test.sh
+  path: paas-bootstrap-git/ci/tasks/jumpbox/test/task.sh
 
 params:
-  ENVIRONMENT: ((environment))
+  ENVIRONMENT:
