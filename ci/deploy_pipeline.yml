@@ -5,6 +5,11 @@ resource_types:
   source:
     repository: robertgruber/terraform-resource
 
+- name: s3-iam
+  type: docker-image
+  source:
+    repository: governmentpaas/s3-resource
+
 resources:
 - name: paas-bootstrap-git
   type: git
@@ -28,17 +33,25 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: vpc-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: vpc/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 jobs:
 - name: terraform-jumpbox
   serial_groups: [main]
   serial: true
   plan:
+  - get: vpc-tfstate-s3
   - get: paas-bootstrap-git
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-      S3_KMS_KEY_ID: ((s3_kms_key_id))
   - put: jumpbox-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
