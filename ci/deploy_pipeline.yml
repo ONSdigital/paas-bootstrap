@@ -12,6 +12,11 @@ resources:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
     branch: feature/jumpbox
 
+- name: jumpbox-deployment-git
+  type: git
+  source:
+    uri: https://github.com/cppforlife/jumpbox-deployment.git
+
 - name: jumpbox-terraform
   type: terraform
   source:
@@ -25,6 +30,8 @@ resources:
 
 jobs:
 - name: terraform-jumpbox
+  serial_groups: [main]
+  serial: true
   plan:
   - get: paas-bootstrap-git
   - task: get-terraform-vars
@@ -38,7 +45,23 @@ jobs:
       env_name: ((environment))
       var_files: [vpc-vars/vars.json]
 
+- name: create-jumpbox
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      passed: [terraform-jumpbox]
+      trigger: true
+    - get: jumpbox-deployment-git
+      version: { ref: ((jumbox_commit_ref)) }
+    - get: jumpbox-terraform
+      passed: [terraform-jumpbox]
+  - task: interpolate-jumpbox
+    file: paas-bootstrap-git/ci/tasks/jumpbox/interpolate/task.yml
+
 - name: verify-jumpbox
+  serial: true
   plan:
   - get: paas-bootstrap-git
     passed: [terraform-jumpbox]
