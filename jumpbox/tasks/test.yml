@@ -6,10 +6,10 @@ image_resource:
   source: { repository: onsdigital/paas-ci-gp, tag: latest }
 
 inputs:
-- name: git-repo
+- name: paas-bootstrap-git
 
 run:
-  path: git-repo/jumpbox/scripts/test.sh
+  path: paas-bootstrap-git/jumpbox/scripts/test.sh
 
 params:
   ENVIRONMENT: ((environment))
