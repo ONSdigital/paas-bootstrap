@@ -38,6 +38,15 @@
     {
       "Effect": "Allow",
       "Action": [
+        "kms:GenerateDataKey"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "route53:GetHostedZone",
         "route53:ChangeResourceRecordSets",
         "route53:GetHealthCheck",

@@ -36,9 +36,15 @@ resource "aws_s3_bucket" "paas_states" {
         "arn:aws:s3:::${var.environment}-states/*"
       ],
       "Condition": {
-        "StringNotEquals": {
+        "StringEquals": {
           "s3:x-amz-acl": [
-            "private"
+            "public-read",
+            "public-read-write",
+            "aws-exec-read",
+            "authenticated-read",
+            "bucket-owner-read",
+            "bucket-owner-full-control",
+            "log-delivery-write"
           ]
         }
       }

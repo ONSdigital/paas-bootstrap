@@ -20,6 +20,7 @@ resources:
       bucket_path: jumpbox/
       use_ec2_role: true
       region_name: ((region))
+      server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
 jobs:
@@ -36,7 +37,6 @@ jobs:
       terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
       env_name: ((environment))
       var_files: [vpc-vars/vars.json]
-      plan_only: true
 
 - name: verify-jumpbox
   plan:
