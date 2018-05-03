@@ -30,13 +30,14 @@ data "template_file" "iam_policy" {
   template = "${file("${path.module}/templates/iam_policy.json")}"
 
   vars {
-    s3_kms_key_arn = "${var.s3_kms_key_arn}"
-    environment    = "${var.environment}"
-    hosted_zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
-    region         = "${var.region}"
-    account_id     = "${data.aws_caller_identity.current.account_id}"
-    vpc_arn        = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:vpc/${var.vpc_id}"
-    subnet_arn     = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:subnet/${aws_subnet.az1.id}"
+    s3_kms_key_arn        = "${var.s3_kms_key_arn}"
+    environment           = "${var.environment}"
+    hosted_zone_id        = "${data.aws_route53_zone.child_zone.zone_id}"
+    parent_hosted_zone_id = "${data.aws_route53_zone.parent.zone_id}"
+    region                = "${var.region}"
+    account_id            = "${data.aws_caller_identity.current.account_id}"
+    vpc_arn               = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:vpc/${var.vpc_id}"
+    subnet_arn            = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:subnet/${aws_subnet.az1.id}"
   }
 }
 

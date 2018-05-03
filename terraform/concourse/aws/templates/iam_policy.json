@@ -16,7 +16,10 @@
       "Effect": "Allow",
       "Action": [
         "s3:GetObject",
-        "s3:GetObjectVersion"
+        "s3:GetObjectVersion",
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:PutObjectVersionAcl"
       ],
       "Resource": [
         "arn:aws:s3:::${environment}-states/*"
@@ -25,7 +28,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "kms:Encrypt"
       ],
       "Resource": [
         "${s3_kms_key_arn}"
@@ -45,6 +49,22 @@
         "arn:aws:route53:::hostedzone/${hosted_zone_id}",
         "arn:aws:route53:::healthcheck/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:GetHostedZone"
+      ],
+      "Resource": [
+        "arn:aws:route53:::hostedzone/${parent_hosted_zone_id}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ListHostedZones"
+      ],
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
