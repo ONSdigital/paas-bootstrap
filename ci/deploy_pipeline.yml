@@ -54,7 +54,7 @@ jobs:
       passed: [terraform-jumpbox]
       trigger: true
     - get: jumpbox-deployment-git
-      version: { ref: ((jumbox_commit_ref)) }
+      version: { ref: ((jumpbox_commit_ref)) }
     - get: jumpbox-terraform
       passed: [terraform-jumpbox]
   - task: interpolate-jumpbox
@@ -64,7 +64,7 @@ jobs:
   serial: true
   plan:
   - get: paas-bootstrap-git
-    passed: [terraform-jumpbox]
+    passed: [create-jumpbox]
     trigger: true
   - task: verify
     file: paas-bootstrap-git/ci/tasks/jumpbox/test/task.yml
