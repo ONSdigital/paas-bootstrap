@@ -196,7 +196,7 @@
       ],
       "Condition": {
         "StringEquals": {
-          "ec2:ResourceTag/Name": "jumpbox",
+          "ec2:ResourceTag/Name": "jumpbox/0",
           "ec2:Vpc": "${vpc_arn}",
           "ec2:ResourceTag/Environment": "${environment}",
           "ec2:Region": "${region}",
