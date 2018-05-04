@@ -4,9 +4,9 @@ set -euo pipefail
 
 cp jumpbox-vars-s3/jumpbox-variables.yml jumpbox-manifests/jumpbox-variables.yml
 
-cat vpc-tfstate-s3/tfstate.json | jq '.modules[0].outputs | with_entries(.value = .value.value)' > concourse-vars/vars.json
+cat concourse-tfstate-s3/tfstate.json | jq '.modules[0].outputs | with_entries(.value = .value.value)' > concourse-vars.json
 
-jq -r .internal_cidr < concourse-vars/vars.json
+jq -r .internal_cidr < concourse-vars.json
 
 # bosh int \
 #   ./jumpbox-deployment-git/jumpbox.yml \
