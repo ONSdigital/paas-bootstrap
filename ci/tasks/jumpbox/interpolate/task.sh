@@ -18,6 +18,7 @@ bosh int \
   -v az="$(jq -r .az < concourse-vars.json)" \
   -v subnet_id="$(jq -r .subnet_id < concourse-vars.json)" \
   -v default_key_name="$(jq -r .default_key_name < concourse-vars.json)" \
+  -v environment="${ENVIRONMENT}" \
   --var-file private_key=ssh-private-key-s3/ssh-key.pem \
   -o ./paas-bootstrap-git/operations/jumpbox/aws_cpi.yml \
   -o ./paas-bootstrap-git/operations/jumpbox/tags.yml > jumpbox-manifests/jumpbox.yml

@@ -8,7 +8,9 @@ inputs:
   - name: paas-bootstrap-git
   - name: jumpbox-state-s3
   - name: jumpbox-manifests
+
 outputs:
   - name: jumpbox-state
+
 run:
   path: paas-bootstrap-git/ci/tasks/jumpbox/deploy/task.sh
