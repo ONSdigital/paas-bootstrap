@@ -1,4 +1,4 @@
 ---
 - type: replace
   path: /tags?/Environment?
-  value: ((enviroment))
+  value: ((environment))
