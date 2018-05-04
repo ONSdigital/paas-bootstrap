@@ -7,6 +7,8 @@ inputs:
   - name: paas-bootstrap-git
   - name: jumpbox-terraform
   - name: jumpbox-deployment-git
+  - name: jumpbox-vars-s3
+  - name: ssh-private-key-s3
 outputs:
   - name: jumpbox-manifests
 run:
