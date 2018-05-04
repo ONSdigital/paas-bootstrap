@@ -40,7 +40,8 @@
       "Effect": "Allow",
       "Action": [
         "kms:Decrypt",
-        "kms:Encrypt"
+        "kms:Encrypt",
+        "kms:DescribeKey"
       ],
       "Resource": [
         "${s3_kms_key_arn}"
