@@ -63,6 +63,16 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
+- name: jumpbox-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: jumpbox/jumpbox.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 - name: ssh-private-key-s3
   type: s3-iam
   source:
@@ -106,10 +116,14 @@ jobs:
     - get: concourse-tfstate-s3
   - task: interpolate-jumpbox
     file: paas-bootstrap-git/ci/tasks/jumpbox/interpolate/task.yml
-    # on_success:
-    #   put: jumpbox-vars-s3
-    #   params:
-    #     jumpbox-manifests/jumpbox-variables.yml
+    on_success:
+      aggregate:
+      - put: jumpbox-vars-s3
+        params:
+          file: jumpbox-manifests/jumpbox-variables.yml
+      - put: jumpbox-manifest-s3
+        params:
+          file: jumpbox-manifests/jumpbox.yml
 
 - name: verify-jumpbox
   serial: true
