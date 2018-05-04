@@ -1,0 +1,5 @@
+---
+# Configure sizes
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/ephemeral_disk/size
+  value: 100_000

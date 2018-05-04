@@ -27,3 +27,7 @@ variable "parent_dns_zone" {}
 variable "ingress_whitelist" {
   "type" = "list"
 }
+
+variable "state_bucket_id" {}
+
+variable "s3_kms_key_arn" {}

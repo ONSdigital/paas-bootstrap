@@ -16,7 +16,8 @@
       "Effect": "Allow",
       "Action": [
         "s3:GetObject",
-        "s3:GetObjectVersion"
+        "s3:GetObjectVersion",
+        "s3:GetObjectTagging"
       ],
       "Resource": [
         "arn:aws:s3:::${environment}-states/*"
@@ -41,10 +42,20 @@
       "Effect": "Allow",
       "Action": [
         "kms:Decrypt",
-        "kms:Encrypt"
+        "kms:Encrypt",
+        "kms:DescribeKey"
       ],
       "Resource": [
         "${s3_kms_key_arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "${default_s3_kms_key_arn}"
       ]
     },
     {

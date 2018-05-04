@@ -5,6 +5,11 @@ resource_types:
   source:
     repository: robertgruber/terraform-resource
 
+- name: s3-iam
+  type: docker-image
+  source:
+    repository: governmentpaas/s3-resource
+
 resources:
 - name: paas-bootstrap-git
   type: git
@@ -28,6 +33,66 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: vpc-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: vpc/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: concourse-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: concourse/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: jumpbox-vars-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: jumpbox/jumpbox-variables.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: jumpbox-state-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: jumpbox/jumpbox-state.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: jumpbox-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: jumpbox/jumpbox.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: ssh-private-key-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: concourse/ssh-key.pem
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 - name: bosh-terraform
   type: terraform
   source:
@@ -44,12 +109,11 @@ jobs:
   serial_groups: [main]
   serial: true
   plan:
-  - get: paas-bootstrap-git
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: paas-bootstrap-git
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-      S3_KMS_KEY_ID: ((s3_kms_key_id))
   - put: jumpbox-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
@@ -68,8 +132,30 @@ jobs:
       version: { ref: ((jumpbox_commit_ref)) }
     - get: jumpbox-terraform
       passed: [terraform-jumpbox]
+    - get: jumpbox-vars-s3
+    - get: jumpbox-state-s3
+    - get: ssh-private-key-s3
+    - get: concourse-tfstate-s3
   - task: interpolate-jumpbox
     file: paas-bootstrap-git/ci/tasks/jumpbox/interpolate/task.yml
+    on_success:
+      aggregate:
+      - put: jumpbox-vars-s3
+        params:
+          file: jumpbox-manifests/jumpbox-variables.yml
+      - put: jumpbox-manifest-s3
+        params:
+          file: jumpbox-manifests/jumpbox.yml
+  - task: deploy-jumpbox
+    file: paas-bootstrap-git/ci/tasks/jumpbox/deploy/task.yml
+    on_success:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json
+    on_failure:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json
 
 - name: verify-jumpbox
   serial: true
