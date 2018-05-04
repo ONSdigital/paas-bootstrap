@@ -207,6 +207,21 @@
     {
       "Effect": "Allow",
       "Action": [
+        "ec2:CreateTags",
+        "ec2:RunInstances"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:key-pair/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "ec2:DescribeImages",
         "ec2:DescribeInstances",
         "ec2:DescribeAvailabilityZones",

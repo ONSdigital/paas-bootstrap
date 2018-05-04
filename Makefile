@@ -61,6 +61,5 @@ destroy_concourse_network: destroy_concourse ## Destroy concourse and its networ
 destroy_concourse: require_vars ## Destroy concourse only
 	@bin/delete_concourse.sh
 
-# FIXME: delete
-jumpbox_network: vpc ## Manually deploy jumpbox network (should be done thru pipeline)
-	@jumpbox/scripts/deploy_jumpbox_vpc_objects.sh
+decode_aws_error:
+	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
