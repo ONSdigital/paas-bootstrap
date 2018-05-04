@@ -34,6 +34,7 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -o operations/concourse/alb.yml \
   -o operations/concourse/fqdn.yml \
   -o operations/concourse/iam_instance_profile.yml \
+  -o operations/concourse/ephemeral_disk.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
   -v access_key_id="$AWS_ACCESS_KEY_ID" \
