@@ -10,7 +10,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: feature/jumpbox
+    branch: bosh-vpc-config
 
 - name: jumpbox-deployment-git
   type: git

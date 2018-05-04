@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefails
+set -euo pipefail
 
 : $ENVIRONMENT
 
