@@ -54,6 +54,10 @@ output "s3_kms_key_id" {
   value = "${var.s3_kms_key_id}"
 }
 
+output "s3_kms_key_arn" {
+  value = "${var.s3_kms_key_arn}"
+}
+
 output "state_bucket_id" {
   value = "${var.state_bucket_id}"
 }

@@ -30,4 +30,4 @@ variable "ingress_whitelist" {
 
 variable "state_bucket_id" {}
 
-variable "s3_kms_key_id" {}
+variable "s3_kms_key_arn" {}
