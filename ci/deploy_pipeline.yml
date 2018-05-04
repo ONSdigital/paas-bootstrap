@@ -63,6 +63,16 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
+- name: jumpbox-state-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: jumpbox/jumpbox-state.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 - name: jumpbox-manifest-s3
   type: s3-iam
   source:
@@ -112,6 +122,7 @@ jobs:
     - get: jumpbox-terraform
       passed: [terraform-jumpbox]
     - get: jumpbox-vars-s3
+    - get: jumpbox-state-s3
     - get: ssh-private-key-s3
     - get: concourse-tfstate-s3
   - task: interpolate-jumpbox
@@ -124,6 +135,16 @@ jobs:
       - put: jumpbox-manifest-s3
         params:
           file: jumpbox-manifests/jumpbox.yml
+  - task: deploy-jumpbox
+    file: paas-bootstrap-git/ci/tasks/jumpbox/deploy/task.yml
+    on_success:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json
+    on_failure:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json
 
 - name: verify-jumpbox
   serial: true
