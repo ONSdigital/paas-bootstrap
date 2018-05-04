@@ -140,7 +140,10 @@
       "Effect": "Allow",
       "Action": [
         "ec2:CreateSecurityGroup",
-        "ec2:DescribeSecurityGroups"
+        "ec2:DescribeSecurityGroups",
+        "ec2:CreateSubnet",
+        "ec2:DeleteSubnet",
+        "ec2:DescribeSubnets"
       ],
       "Resource": "*",
       "Condition": {
