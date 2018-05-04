@@ -9,6 +9,7 @@ inputs:
   - name: jumpbox-deployment-git
   - name: jumpbox-vars-s3
   - name: ssh-private-key-s3
+  - name: concourse-tfstate-s3
 outputs:
   - name: jumpbox-manifests
 run:
