@@ -3,7 +3,7 @@ platform: linux
 
 image_resource:
   type: docker-image
-  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+  source: { repository: governmentpaas/bosh-cli-v2, tag: latest }
 
 inputs:
 - name: paas-bootstrap-git
