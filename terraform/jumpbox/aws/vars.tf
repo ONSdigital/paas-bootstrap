@@ -27,3 +27,5 @@ variable "parent_dns_zone" {}
 variable "ingress_whitelist" {
   "type" = "list"
 }
+
+variable "state_bucket_id" {}

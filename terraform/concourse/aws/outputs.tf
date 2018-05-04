@@ -53,3 +53,7 @@ output "concourse_iam_instance_profile" {
 output "s3_kms_key_id" {
   value = "${var.s3_kms_key_id}"
 }
+
+output "state_bucket_id" {
+  value = "${var.state_bucket_id}"
+}

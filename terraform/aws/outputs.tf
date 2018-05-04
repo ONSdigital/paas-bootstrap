@@ -41,3 +41,7 @@ output "dns_zone" {
 output "parent_dns_zone" {
   value = "${var.parent_dns_zone}"
 }
+
+output "state_bucket_id" {
+  value = "${aws_s3_bucket.paas_states.id}"
+}

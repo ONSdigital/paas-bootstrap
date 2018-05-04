@@ -64,6 +64,7 @@ resources:
     sse_kms_key_id: ((s3_kms_key_id))
 
 - name: ssh-private-key-s3
+  type: s3-iam
   source:
     bucket: ((environment))-states
     private: true
