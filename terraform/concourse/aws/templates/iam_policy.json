@@ -203,11 +203,26 @@
       ],
       "Condition": {
         "StringEquals": {
-          "ec2:ResourceTag/Name": "jumpbox",
+          "ec2:ResourceTag/Name": "jumpbox/0",
           "ec2:Vpc": "${vpc_arn}",
           "ec2:ResourceTag/Environment": "${environment}",
           "ec2:Region": "${region}",
           "ec2:Subnet": "${subnet_arn}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateTags",
+        "ec2:RunInstances"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:key-pair/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": "${region}"
         }
       }
     },

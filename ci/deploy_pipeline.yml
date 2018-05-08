@@ -138,6 +138,8 @@ jobs:
     - get: concourse-tfstate-s3
   - task: interpolate-jumpbox
     file: paas-bootstrap-git/ci/tasks/jumpbox/interpolate/task.yml
+    params:
+      ENVIRONMENT: ((environment))
     on_success:
       aggregate:
       - put: jumpbox-vars-s3
