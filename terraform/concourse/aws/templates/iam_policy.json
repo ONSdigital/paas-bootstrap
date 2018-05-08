@@ -209,7 +209,7 @@
         "arn:aws:ec2:${region}:${account_id}:volume/*",
         "arn:aws:ec2:${region}:${account_id}:network-interface/*",
         "arn:aws:ec2:*::image/*",
-        "arn:aws:ec2:${region}:${account_id}:security-group/${security_group_id}"
+        "arn:aws:ec2:${region}:${account_id}:security-group/*"
       ],
       "Condition": {
         "StringEquals": {
@@ -227,15 +227,7 @@
       ],
       "Condition": {
         "StringEquals": {
-          "ec2:Region": "${region}",
-          "aws:RequestTag/Name": "jumpbox/0",
-          "aws:RequestTag/Environment": "${environment}"
-        },
-        "ForAllValues:StringEquals": {
-          "aws:TagKeys": [
-            "Environment",
-            "Name"
-          ]
+          "ec2:Region": "${region}"
         }
       }
     },
