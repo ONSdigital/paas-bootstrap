@@ -21,4 +21,5 @@ bosh int \
   -v environment="${ENVIRONMENT}" \
   --var-file private_key=ssh-private-key-s3/ssh-key.pem \
   -o ./paas-bootstrap-git/operations/jumpbox/aws_cpi.yml \
+  -o ./paas-bootstrap-git/operations/jumpbox/private_mbus.yml \
   -o ./paas-bootstrap-git/operations/jumpbox/tags.yml > jumpbox-manifests/jumpbox.yml
