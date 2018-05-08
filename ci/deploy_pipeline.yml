@@ -99,6 +99,7 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: concourse-tfstate-s3
     - get: vpc-tfstate-s3
     - get: paas-bootstrap-git
   - task: get-terraform-vars
@@ -107,7 +108,9 @@ jobs:
     params:
       terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
       env_name: ((environment))
-      var_files: [vpc-vars/vars.json]
+      var_files:
+      - concourse-vars/vars.json
+      - vpc-vars/vars.json
 
 - name: create-jumpbox
   serial_groups: [main]
