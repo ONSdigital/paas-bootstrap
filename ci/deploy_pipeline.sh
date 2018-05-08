@@ -21,6 +21,6 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v s3_kms_key_id="$S3_KMS_KEY_ID" \
     -v jumpbox_commit_ref="$jumpbox_commit_ref" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
-fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline 
+fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline
 
 fly -t "$ENVIRONMENT" check-resource -r deploy_pipeline/jumpbox-deployment-git --from "ref:${jumpbox_commit_ref}"

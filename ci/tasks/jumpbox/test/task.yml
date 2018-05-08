@@ -8,6 +8,7 @@ image_resource:
 inputs:
 - name: paas-bootstrap-git
 - name: jumpbox-vars-s3
+- name: jumpbox-manifests
 
 run:
   path: paas-bootstrap-git/ci/tasks/jumpbox/test/task.sh
