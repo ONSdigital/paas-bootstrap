@@ -183,8 +183,7 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ec2:CreateTags",
-        "ec2:RunInstances"
+        "ec2:CreateTags"
       ],
       "Resource": [
         "arn:aws:ec2:${region}:${account_id}:instance/*",
@@ -196,11 +195,47 @@
       ],
       "Condition": {
         "StringEquals": {
-          "ec2:ResourceTag/Name": "jumpbox/0",
-          "ec2:Vpc": "${vpc_arn}",
-          "ec2:ResourceTag/Environment": "${environment}",
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:RunInstances"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:subnet/${subnet_id}",
+        "arn:aws:ec2:${region}:${account_id}:volume/*",
+        "arn:aws:ec2:${region}:${account_id}:network-interface/*",
+        "arn:aws:ec2:*::image/*",
+        "arn:aws:ec2:${region}:${account_id}:security-group/${security_group_id}"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:RunInstances"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:instance/*"
+      ],
+      "Condition": {
+        "StringEquals": {
           "ec2:Region": "${region}",
-          "ec2:Subnet": "${subnet_arn}"
+          "aws:RequestTag/Name": "jumpbox/0",
+          "aws:RequestTag/Environment": "${environment}"
+        },
+        "ForAllValues:StringEquals": {
+          "aws:TagKeys": [
+            "Environment",
+            "Name"
+          ]
         }
       }
     },

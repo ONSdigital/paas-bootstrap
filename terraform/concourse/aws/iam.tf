@@ -41,8 +41,8 @@ data "template_file" "iam_policy" {
     parent_hosted_zone_id  = "${data.aws_route53_zone.parent.zone_id}"
     region                 = "${var.region}"
     account_id             = "${data.aws_caller_identity.current.account_id}"
-    vpc_arn                = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:vpc/${var.vpc_id}"
-    subnet_arn             = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:subnet/${aws_subnet.az1.id}"
+    subnet_id              = "${aws_subnet.az1.id}"
+    security_group_id      = "${aws_security_group.default.id}"
   }
 }
 
