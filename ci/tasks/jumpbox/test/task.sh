@@ -7,7 +7,7 @@ set -x
 
 USERNAME=jumpbox
 SSH_KEY=$(bosh int --path /jumpbox_ssh/private_key jumpbox-vars-s3/jumpbox-variables.yml)
-INTERNAL_IP=$(bosh int --path /instance_groups/name=jumpbox/networks/name=private/static_ips/0 jumpbox-manifests-s3/jumpbox.yml)
+INTERNAL_IP=$(bosh int --path /instance_groups/name=jumpbox/networks/name=private/static_ips/0 jumpbox-manifest-s3/jumpbox.yml)
 
 _keyfile=/var/tmp/tmp$$
 echo "$SSH_KEY" > $_keyfile
