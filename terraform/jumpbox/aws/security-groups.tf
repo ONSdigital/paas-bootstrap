@@ -18,15 +18,6 @@ resource "aws_security_group_rule" "jumpbox_ssh" {
   cidr_blocks       = "${var.ingress_whitelist}"
 }
 
-resource "aws_security_group_rule" "jumpbox_internal_access" {
-  security_group_id = "${aws_security_group.jumpbox.id}"
-  type              = "egress"
-  protocol          = "all"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = ["10.0.0.0/16"]
-}
-
 resource "aws_security_group_rule" "jumpbox_mbus" {
   security_group_id        = "${aws_security_group.jumpbox.id}"
   type                     = "ingress"
