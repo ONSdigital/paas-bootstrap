@@ -158,7 +158,7 @@ jobs:
     passed: [create-jumpbox]
     trigger: true
   - get: jumpbox-vars-s3
-  - get: jumpbox-manifests
+  - get: jumpbox-manifests-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/jumpbox/test/task.yml
     params:
