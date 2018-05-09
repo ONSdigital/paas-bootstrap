@@ -31,3 +31,5 @@ variable "ingress_whitelist" {
 variable "state_bucket_id" {}
 
 variable "s3_kms_key_arn" {}
+
+variable "concourse_security_group_id" {}

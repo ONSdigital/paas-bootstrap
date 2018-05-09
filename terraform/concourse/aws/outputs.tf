@@ -61,3 +61,7 @@ output "s3_kms_key_arn" {
 output "state_bucket_id" {
   value = "${var.state_bucket_id}"
 }
+
+output "concourse_security_group_id" {
+  value = "${aws_security_group.default.id}"
+}
