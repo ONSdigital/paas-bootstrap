@@ -22,6 +22,11 @@ resources:
   source:
     uri: https://github.com/cppforlife/jumpbox-deployment.git
 
+# - name: bosh-deployment-git
+#   type: git
+#   source:
+#     uri: https://github.com/cloudfoundry/bosh-deployment.git
+
 - name: jumpbox-terraform
   type: terraform
   source:
@@ -179,17 +184,19 @@ jobs:
   serial_groups: [main]
   serial: true
   plan:
-  - get: paas-bootstrap-git
+  - aggregate:
+    - get: concourse-tfstate-s3
+    - get: vpc-tfstate-s3
+    - get: paas-bootstrap-git
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-      S3_KMS_KEY_ID: ((s3_kms_key_id))
   - put: bosh-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/bosh/aws
       env_name: ((environment))
-      var_files: [vpc-vars/vars.json]
+      var_files:
+      - concourse-vars/vars.json
+      - vpc-vars/vars.json
 
 - name: verify-bosh
   serial: true
