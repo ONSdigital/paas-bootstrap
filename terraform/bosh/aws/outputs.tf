@@ -1,5 +1,5 @@
 output "default_security_groups" {
-  value = ["${aws_security_group.default.id}"]
+  value = ["${aws_security_group.bosh.id}"]
 }
 
 output "internal_cidr" {
