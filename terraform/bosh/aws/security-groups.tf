@@ -18,13 +18,22 @@ resource "aws_security_group_rule" "bosh_mbus" {
   cidr_blocks       = ["${var.jumpbox_ip}/32", "${var.concourse_ip}/32"]
 }
 
+resource "aws_security_group_rule" "bosh_uaa" {
+  security_group_id = "${aws_security_group.bosh.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8443
+  to_port           = 8443
+  cidr_blocks       = ["${var.jumpbox_ip}/32", "${var.concourse_ip}/32"]
+}
+
 resource "aws_security_group_rule" "bosh_ssh" {
   security_group_id = "${aws_security_group.bosh.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 22
   to_port           = 22
-  cidr_blocks       = ["${var.jumpbox_ip}/32"]
+  cidr_blocks       = ["${var.jumpbox_ip}/32", "${var.concourse_ip}/32"]
 }
 
 resource "aws_security_group_rule" "bosh_director" {
