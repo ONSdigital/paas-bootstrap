@@ -287,6 +287,19 @@
       "Resource": [
         "arn:aws:iam::${account_id}:role/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateInstanceProfile",
+        "iam:DeleteInstanceProfile",
+        "iam:GetInstanceProfile",
+        "iam:AddRoleToInstanceProfile",
+        "iam:RemoveRoleFromInstanceProfile"
+      ],
+      "Resource": [
+        "arn:aws:iam::${account_id}:instance-profile/*"
+      ]
     }
   ]
 }
