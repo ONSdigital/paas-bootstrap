@@ -27,7 +27,9 @@ EOF
 data "template_file" "iam_policy" {
   template = "${file("${path.module}/templates/iam_policy.json")}"
 
-  vars {}
+  vars {
+    region = "${var.region}"
+  }
 }
 
 resource "aws_iam_role_policy" "bosh" {
