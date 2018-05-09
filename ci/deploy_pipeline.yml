@@ -109,6 +109,36 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: bosh-vars-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh/bosh-variables.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+# - name: bosh-state-s3
+#   type: s3-iam
+#   source:
+#     bucket: ((environment))-states
+#     private: true
+#     region_name: ((region))
+#     versioned_file: bosh/bosh-state.json
+#     server_side_encryption: 'aws:kms'
+#     sse_kms_key_id: ((s3_kms_key_id))
+
+- name: bosh-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh/bosh.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 jobs:
 - name: terraform-jumpbox
   serial_groups: [main]
@@ -173,8 +203,9 @@ jobs:
   - get: paas-bootstrap-git
     passed: [create-jumpbox]
     trigger: true
-  - get: jumpbox-vars-s3
-  - get: jumpbox-manifest-s3
+  - aggregate:
+    - get: jumpbox-vars-s3
+    - get: jumpbox-manifest-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/jumpbox/test/task.yml
     params:
@@ -204,7 +235,8 @@ jobs:
   - get: paas-bootstrap-git
     passed: [terraform-bosh]
     trigger: true
+  - aggregate:
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
-    params:
-      ENVIRONMENT: ((environment))
