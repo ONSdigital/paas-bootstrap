@@ -272,7 +272,7 @@ jobs:
   serial: true
   plan:
   - get: paas-bootstrap-git
-    passed: [terraform-bosh]
+    passed: [create-bosh]
     trigger: true
   - aggregate:
     - get: bosh-vars-s3
