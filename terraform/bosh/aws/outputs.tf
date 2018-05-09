@@ -29,3 +29,11 @@ output "bosh_iam_instance_profile" {
 output "bosh_security_group_id" {
   value = "${aws_security_group.bosh.id}"
 }
+
+output "s3_kms_key_id" {
+  value = "${var.s3_kms_key_id}"
+}
+
+output "s3_kms_key_arn" {
+  value = "${var.s3_kms_key_arn}"
+}
