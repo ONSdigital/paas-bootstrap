@@ -279,7 +279,10 @@
       "Action": [
         "iam:CreateRole",
         "iam:DeleteRole",
-        "iam:GetRole"
+        "iam:GetRole",
+        "iam:DeleteRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:GetRolePolicy"
       ],
       "Resource": [
         "arn:aws:iam::${account_id}:role/*"
