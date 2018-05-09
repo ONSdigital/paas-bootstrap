@@ -22,10 +22,10 @@ resources:
   source:
     uri: https://github.com/cppforlife/jumpbox-deployment.git
 
-# - name: bosh-deployment-git
-#   type: git
-#   source:
-#     uri: https://github.com/cloudfoundry/bosh-deployment.git
+- name: bosh-deployment-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/bosh-deployment.git
 
 - name: jumpbox-terraform
   type: terraform
@@ -119,15 +119,15 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
-# - name: bosh-state-s3
-#   type: s3-iam
-#   source:
-#     bucket: ((environment))-states
-#     private: true
-#     region_name: ((region))
-#     versioned_file: bosh/bosh-state.json
-#     server_side_encryption: 'aws:kms'
-#     sse_kms_key_id: ((s3_kms_key_id))
+- name: bosh-state-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh/bosh-state.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
 
 - name: bosh-manifest-s3
   type: s3-iam
@@ -228,6 +228,45 @@ jobs:
       var_files:
       - concourse-vars/vars.json
       - vpc-vars/vars.json
+
+- name: create-bosh
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      passed: [terraform-bosh]
+      trigger: true
+    - get: bosh-deployment-git
+      version: { ref: ((bosh_commit_ref)) }
+    - get: bosh-terraform
+      passed: [terraform-bosh]
+    - get: bosh-vars-s3
+    - get: bosh-state-s3
+    - get: ssh-private-key-s3
+    - get: concourse-tfstate-s3
+  - task: interpolate-bosh
+    file: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+    on_success:
+      aggregate:
+      - put: bosh-vars-s3
+        params:
+          file: bosh-manifests/bosh-variables.yml
+      - put: bosh-manifest-s3
+        params:
+          file: bosh-manifests/bosh.yml
+  - task: deploy-bosh
+    file: paas-bootstrap-git/ci/tasks/bosh/deploy/task.yml
+    on_success:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
+    on_failure:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
 
 - name: verify-bosh
   serial: true

@@ -7,6 +7,7 @@ set -euo pipefail
 bin/login_fly.sh
 
 jumpbox_commit_ref="32c162b16f2a5a2639c78d905ba852487b93d507"
+bosh_commit_ref="010bd498bb97dee707c167e60469b0f5d2cc90fb"
 
 # Grab pre-requisite files from S3
 aws s3 cp "s3://${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}"
@@ -20,7 +21,9 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v region="$REGION" \
     -v s3_kms_key_id="$S3_KMS_KEY_ID" \
     -v jumpbox_commit_ref="$jumpbox_commit_ref" \
+    -v bosh_commit_ref="$bosh_commit_ref" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
 fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline
 
 fly -t "$ENVIRONMENT" check-resource -r deploy_pipeline/jumpbox-deployment-git --from "ref:${jumpbox_commit_ref}"
+fly -t "$ENVIRONMENT" check-resource -r deploy_pipeline/bosh-deployment-git --from "ref:${bosh_commit_ref}"
