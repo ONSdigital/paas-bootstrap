@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_instance_profile" "bosh" {
   name = "${var.environment}_bosh_profile"
   role = "${aws_iam_role.bosh.name}"
@@ -28,7 +30,8 @@ data "template_file" "iam_policy" {
   template = "${file("${path.module}/templates/iam_policy.json")}"
 
   vars {
-    region = "${var.region}"
+    region     = "${var.region}"
+    account_id = "${data.aws_caller_identity.current.account_id}"
   }
 }
 
