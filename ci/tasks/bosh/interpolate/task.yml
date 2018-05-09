@@ -1,0 +1,21 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+  - name: paas-bootstrap-git
+  - name: bosh-terraform
+  - name: bosh-deployment-git
+  - name: bosh-vars-s3
+  - name: ssh-private-key-s3
+  - name: concourse-tfstate-s3
+outputs:
+  - name: bosh-manifests
+
+run:
+  path: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.sh
+
+params:
+  ENVIRONMENT:
