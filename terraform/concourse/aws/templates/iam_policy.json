@@ -278,7 +278,8 @@
       "Effect": "Allow",
       "Action": [
         "iam:CreateRole",
-        "iam:DeleteRole"
+        "iam:DeleteRole",
+        "iam:GetRole"
       ],
       "Resource": [
         "arn:aws:iam::${account_id}:role/*"
