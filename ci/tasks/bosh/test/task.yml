@@ -7,6 +7,7 @@ image_resource:
 
 inputs:
 - name: paas-bootstrap-git
+- name: bosh-manifest-s3
 
 run:
   path: paas-bootstrap-git/ci/tasks/bosh/test/task.sh
