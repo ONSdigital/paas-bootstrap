@@ -181,7 +181,28 @@
       ],
       "Condition": {
         "StringEquals": {
-          "ec2:ResourceTag/Name": ["jumpbox/0", "bosh/0"],
+          "ec2:ResourceTag/Name": "jumpbox/0",
+          "ec2:ResourceTag/Environment": "${environment}",
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DetachVolume",
+        "ec2:AttachVolume",
+        "ec2:DeleteVolume",
+        "ec2:TerminateInstances",
+        "ec2:CreateVolume"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:instance/*",
+        "arn:aws:ec2:${region}:${account_id}:volume/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "ec2:ResourceTag/Name": "bosh/0",
           "ec2:ResourceTag/Environment": "${environment}",
           "ec2:Region": "${region}"
         }
