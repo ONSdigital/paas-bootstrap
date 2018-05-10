@@ -11,7 +11,7 @@ bosh int \
   --vars-store bosh-manifests/bosh-variables.yml \
   -o bosh-deployment-git/aws/cpi.yml \
   -o bosh-deployment-git/aws/cli-iam-instance-profile.yml \
-  -o ./paas-bootstrap-git/operations/bosh/tags.yml 
+  -o paas-bootstrap-git/operations/bosh/tags.yml \
   -v director_name=bosh \
   -v internal_cidr="$(jq -r .internal_cidr < bosh-vars.json)" \
   -v internal_gw="$(jq -r .internal_cidr < bosh-vars.json | sed 's#0/24#1#')" \
