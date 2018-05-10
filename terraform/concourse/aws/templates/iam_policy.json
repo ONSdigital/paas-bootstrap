@@ -181,7 +181,7 @@
       ],
       "Condition": {
         "StringEquals": {
-          "ec2:ResourceTag/Name": "jumpbox/0",
+          "ec2:ResourceTag/Name": ["jumpbox/0", "bosh/0"],
           "ec2:ResourceTag/Environment": "${environment}",
           "ec2:Region": "${region}"
         }
@@ -212,7 +212,7 @@
         "ec2:RunInstances"
       ],
       "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:subnet/${subnet_id}",
+        "arn:aws:ec2:${region}:${account_id}:subnet/*",
         "arn:aws:ec2:${region}:${account_id}:volume/*",
         "arn:aws:ec2:${region}:${account_id}:network-interface/*",
         "arn:aws:ec2:*::image/*",
