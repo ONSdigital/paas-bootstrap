@@ -4,8 +4,7 @@ set -euo pipefail
 
 cp bosh-vars-s3/bosh-variables.yml bosh-manifests/bosh-variables.yml
 
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < concourse-tfstate-s3/tfstate.json > concourse-vars.json
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < bosh-tfstate-s3/tfstate.json > bosh-vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "bosh-tfstate-s3/${ENVIRONMENT}.tfstate" > bosh-vars.json
 
 bosh int \
   ./bosh-deployment-git/bosh.yml \
