@@ -11,6 +11,7 @@ bosh int \
   ./bosh-deployment-git/bosh.yml \
   --vars-store bosh-manifests/bosh-variables.yml \
   -o bosh-deployment-git/aws/cpi.yml \
+  -o bosh-deployment-git/aws/cli-iam-instance-profile.yml \
   -o paas-bootstrap-git/operations/bosh/iam-instance-profile.yml \
   -o paas-bootstrap-git/operations/bosh/tags.yml \
   -v director_name=bosh \
