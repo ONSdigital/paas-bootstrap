@@ -190,20 +190,34 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ec2:DetachVolume",
         "ec2:AttachVolume",
-        "ec2:DeleteVolume",
-        "ec2:TerminateInstances",
-        "ec2:CreateVolume"
+        "ec2:DetachVolume",
+        "ec2:TerminateInstances"
       ],
       "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:instance/*",
-        "arn:aws:ec2:${region}:${account_id}:volume/*"
+        "arn:aws:ec2:${region}:${account_id}:instance/*"
       ],
       "Condition": {
         "StringEquals": {
           "ec2:ResourceTag/Name": "bosh/0",
           "ec2:ResourceTag/Environment": "${environment}",
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DeleteVolume",
+        "ec2:CreateVolume",
+        "ec2:AttachVolume",
+        "ec2:DetachVolume"
+      ],
+      "Resource": [
+        "arn:aws:ec2:${region}:${account_id}:volume/*"
+      ],
+      "Condition": {
+        "StringEquals": {
           "ec2:Region": "${region}"
         }
       }
