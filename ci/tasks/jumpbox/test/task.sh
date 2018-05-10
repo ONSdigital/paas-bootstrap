@@ -14,5 +14,5 @@ echo "$SSH_KEY" > $_keyfile
 chmod 600 $_keyfile
 trap 'rm -f $_keyfile' EXIT
 
-ssh -o BatchMode=yes -i $_keyfile "${USERNAME}@${INTERNAL_IP}" "date"
+ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i $_keyfile "${USERNAME}@${INTERNAL_IP}" "date"
 
