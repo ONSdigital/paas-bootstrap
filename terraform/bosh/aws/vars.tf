@@ -15,7 +15,7 @@ variable "concourse_ip" {
 }
 
 variable "jumpbox_ip" {
-  default = "10.0.1.11"
+  default = "10.0.1.5"
 }
 
 variable "default_gw_ip" {
