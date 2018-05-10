@@ -227,16 +227,20 @@ jobs:
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
+    - get: jumpbox-terraform
     - get: vpc-tfstate-s3
     - get: paas-bootstrap-git
+      passed: [verify-jumpbox]
+      trigger: true
   - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
+    file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
   - put: bosh-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/bosh/aws
       env_name: ((environment))
       var_files:
       - concourse-vars/vars.json
+      - jumpbox-terraform/metadata
       - vpc-vars/vars.json
 
 - name: create-bosh
