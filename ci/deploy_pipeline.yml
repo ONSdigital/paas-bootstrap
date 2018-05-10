@@ -109,6 +109,16 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: bosh-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh/((environment)).tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 - name: bosh-vars-s3
   type: s3-iam
   source:
@@ -241,6 +251,7 @@ jobs:
       version: { ref: ((bosh_commit_ref)) }
     - get: bosh-terraform
       passed: [terraform-bosh]
+    - get: bosh-tfstate-s3
     - get: bosh-vars-s3
     - get: bosh-state-s3
     - get: ssh-private-key-s3
