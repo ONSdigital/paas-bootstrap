@@ -150,6 +150,34 @@ resources:
     sse_kms_key_id: ((s3_kms_key_id))
 
 jobs:
+- name: verify-concourse
+  serial: true
+  plan:
+  - get: paas-bootstrap-git
+    trigger: true
+  - aggregate:
+    - task: ensure world cannot connect to concourse on port 22
+      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
+      params:
+        HOST: concourse
+        DOMAIN: ((domain))
+        PORT: 22
+        EXPECTED_OUTCOME: failure
+    - task: ensure world cannot connect to concourse on port 6868
+      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
+      params:
+        HOST: concourse
+        DOMAIN: ((domain))
+        PORT: 6868
+        EXPECTED_OUTCOME: failure
+    - task: ensure world cannot connect to concourse (ci) on port 443
+      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
+      params:
+        HOST: ci
+        DOMAIN: ((domain))
+        PORT: 443
+        EXPECTED_OUTCOME: failure
+
 - name: terraform-jumpbox
   serial_groups: [main]
   serial: true
@@ -227,14 +255,14 @@ jobs:
         HOST: jumpbox
         DOMAIN: ((domain))
         PORT: 22
-        EXPECTED_RESULT: failure
+        EXPECTED_OUTCOME: failure
     - task: ensure world cannot connect to jumpbox on port 6868
       file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
       params:
         HOST: jumpbox
         DOMAIN: ((domain))
         PORT: 6868
-        EXPECTED_RESULT: failure
+        EXPECTED_OUTCOME: failure
 
 - name: terraform-bosh
   serial_groups: [main]
