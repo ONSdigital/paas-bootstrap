@@ -15,7 +15,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: feature/check_public_access
 
 - name: jumpbox-deployment-git
   type: git
