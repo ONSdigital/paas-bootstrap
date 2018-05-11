@@ -227,12 +227,14 @@ jobs:
         HOST: jumpbox
         DOMAIN: ((domain))
         PORT: 22
+        EXPECTED_RESULT: failure
     - task: ensure world cannot connect to jumpbox on port 6868
       file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
       params:
         HOST: jumpbox
         DOMAIN: ((domain))
         PORT: 6868
+        EXPECTED_RESULT: failure
 
 - name: terraform-bosh
   serial_groups: [main]
