@@ -15,7 +15,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: chore/rename_default_security_group
 
 - name: jumpbox-deployment-git
   type: git
