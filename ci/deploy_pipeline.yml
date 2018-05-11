@@ -15,6 +15,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
+    branch: feature/check_public_access
 
 - name: jumpbox-deployment-git
   type: git
@@ -215,10 +216,23 @@ jobs:
   - aggregate:
     - get: jumpbox-vars-s3
     - get: jumpbox-manifest-s3
-  - task: verify
-    file: paas-bootstrap-git/ci/tasks/jumpbox/test/task.yml
-    params:
-      ENVIRONMENT: ((environment))
+  - aggregate:
+    - task: ensure concourse can SSH to jumpbox
+      file: paas-bootstrap-git/ci/tasks/jumpbox/test/task.yml
+      params:
+        ENVIRONMENT: ((environment))
+    - task: ensure world cannot connect to jumpbox on port 22
+      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
+      params:
+        HOST: jumpbox
+        DOMAIN: ((domain))
+        PORT: 22
+    - task: ensure world cannot connect to jumpbox on port 6868
+      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
+      params:
+        HOST: jumpbox
+        DOMAIN: ((domain))
+        PORT: 6868
 
 - name: terraform-bosh
   serial_groups: [main]
