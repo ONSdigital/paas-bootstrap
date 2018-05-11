@@ -1,16 +1,16 @@
-resource "aws_security_group" "default" {
-  name        = "${var.environment}_default_security_group"
+resource "aws_security_group" "concourse" {
+  name        = "${var.environment}_concourse_security_group"
   description = "Concourse public access"
   vpc_id      = "${var.vpc_id}"
 
   tags {
-    Name        = "${var.environment}-default-security-group"
+    Name        = "${var.environment}-concourse-security-group"
     Environment = "${var.environment}"
   }
 }
 
 resource "aws_security_group_rule" "concourse_web" {
-  security_group_id        = "${aws_security_group.default.id}"
+  security_group_id        = "${aws_security_group.concourse.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 8080
@@ -19,7 +19,7 @@ resource "aws_security_group_rule" "concourse_web" {
 }
 
 resource "aws_security_group_rule" "concourse_ssh" {
-  security_group_id = "${aws_security_group.default.id}"
+  security_group_id = "${aws_security_group.concourse.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 22
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "concourse_ssh" {
 }
 
 resource "aws_security_group_rule" "concourse_mbus" {
-  security_group_id = "${aws_security_group.default.id}"
+  security_group_id = "${aws_security_group.concourse.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 6868
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "concourse_mbus" {
 }
 
 resource "aws_security_group_rule" "concourse_outbound" {
-  security_group_id = "${aws_security_group.default.id}"
+  security_group_id = "${aws_security_group.concourse.id}"
   type              = "egress"
   protocol          = "all"
   from_port         = 0
@@ -71,5 +71,5 @@ resource "aws_security_group_rule" "concourse_alb_to_web" {
   protocol                 = "tcp"
   from_port                = 8080
   to_port                  = 8080
-  source_security_group_id = "${aws_security_group.default.id}"
+  source_security_group_id = "${aws_security_group.concourse.id}"
 }

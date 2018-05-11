@@ -42,7 +42,7 @@ data "template_file" "iam_policy" {
     region                 = "${var.region}"
     account_id             = "${data.aws_caller_identity.current.account_id}"
     subnet_id              = "${aws_subnet.az1.id}"
-    security_group_id      = "${aws_security_group.default.id}"
+    security_group_id      = "${aws_security_group.concourse.id}"
   }
 }
 

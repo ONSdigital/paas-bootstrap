@@ -1,5 +1,5 @@
 output "default_security_groups" {
-  value = ["${aws_security_group.default.id}"]
+  value = ["${aws_security_group.concourse.id}"]
 }
 
 output "internal_cidr" {
@@ -63,5 +63,5 @@ output "state_bucket_id" {
 }
 
 output "concourse_security_group_id" {
-  value = "${aws_security_group.default.id}"
+  value = "${aws_security_group.concourse.id}"
 }
