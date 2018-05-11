@@ -66,6 +66,32 @@ ENVIRONMENT=<env> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_se
 fly -t <env> trigger-job -j test/pipeline-test -w
 ```
 
+## Installing the deployment pipeline
+
+The `deploy_pipeline` pipeline will spin up the jump box and BOSH director.
+
+```sh
+ENVIRONMENT=<env> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_secret_key> make deploy_pipeline
+fly -t <env> trigger-job -j deploy_pipeline/terraform-jumpbox -w
+```
+
+## Logging in to BOSH
+
+Once the deployment pipeline has run to completion, you can set up your connection to BOSH easily using:
+
+```sh
+  bin/bosh_credentials.sh -e <env> -f
+  # spins up a subshell with a Socks5 proxy connection via jump box to BOSH
+```
+
+or
+
+```sh
+  source bin/bosh_credentials.sh -e <env>
+  # sets up the Socks5 proxy connection as above, but it's now your job to kill it
+  # it also sets BOSH_CLIENT, BOSH_CLIENT_SECRET environment variables
+```
+
 ## LICENCE
 
 Copyright (c) 2018 Crown Copyright (Office for National Statistics)
