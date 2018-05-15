@@ -8,7 +8,7 @@ set -eu
 
 FQDN="$HOST.$DOMAIN"
 RESOLVE=$(host "$FQDN" | awk '/has address/ { print $4 }')
-CI_EIP=$(terraform output -state="concourse/tfstate.json" -json | jq -r 'with_entries(.value = .value.value) | .public_ip')
+CI_EIP=$(cat concourse-tfstate-s3/tfstate.json | jq -r ".modules[].outputs | with_entries(.value = .value.value) | .public_ip")
 
 if [ "$RESOLVE" == "$CI_EIP" ]; then
   RESULT="success"
@@ -23,4 +23,3 @@ else
   echo "Failed to match $HOST.$DOMAIN to its advertised IP address."
   exit 1
 fi
-
