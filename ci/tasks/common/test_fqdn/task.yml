@@ -7,7 +7,7 @@ image_resource:
 
 inputs:
 - name: paas-bootstrap-git
-
+- name: jumpbox-manifest-s3
 
 run:
   path: paas-bootstrap-git/ci/tasks/common/test_fqdn/task.sh
