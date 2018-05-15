@@ -3,7 +3,7 @@
 **/.*.sw?
 **/.terraform
 secret.yml
-
+*.tfstate
 *.tfvars
 
 *.pem

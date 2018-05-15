@@ -262,6 +262,12 @@ jobs:
         DOMAIN: ((domain))
         PORT: 6868
         EXPECTED_OUTCOME: failure
+    - task: ensure that FQDN of jumpbox matches its endpoint
+      file: paas-bootstrap-git/ci/tasks/common/test_fqdn/task.yml
+      params:
+        HOST: jumpbox
+        DOMAIN: ((domain))
+        EXPECTED_OUTCOME: success
 
 - name: terraform-bosh
   serial_groups: [main]
