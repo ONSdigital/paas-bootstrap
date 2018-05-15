@@ -155,6 +155,7 @@ jobs:
   plan:
   - get: paas-bootstrap-git
     trigger: true
+  - get: concourse-tfstate-s3
   - aggregate:
     - task: ensure world cannot connect to concourse on port 22
       file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
@@ -177,6 +178,12 @@ jobs:
         DOMAIN: ((domain))
         PORT: 443
         EXPECTED_OUTCOME: failure
+    - task: ensure that direct FQDN of concourse matches its endpoint
+      file: paas-bootstrap-git/ci/tasks/concourse/test_fqdn/task.yml
+      params:
+        HOST: ci
+        DOMAIN: ((domain))
+        EXPECTED_OUTCOME: success
 
 - name: terraform-jumpbox
   serial_groups: [main]
