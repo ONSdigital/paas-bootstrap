@@ -10,7 +10,7 @@ inputs:
 - name: jumpbox-manifest-s3
 
 run:
-  path: paas-bootstrap-git/ci/tasks/common/test_fqdn/task.sh
+  path: paas-bootstrap-git/ci/tasks/jumpbox/test_fqdn/task.sh
 
 params:
   HOST:
