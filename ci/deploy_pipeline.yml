@@ -181,7 +181,7 @@ jobs:
     - task: ensure that direct FQDN of concourse matches its endpoint
       file: paas-bootstrap-git/ci/tasks/concourse/test_fqdn/task.yml
       params:
-        HOST: ci
+        HOST: concourse
         DOMAIN: ((domain))
         EXPECTED_OUTCOME: success
 
