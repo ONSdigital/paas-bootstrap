@@ -183,7 +183,6 @@ jobs:
       params:
         HOST: concourse
         DOMAIN: ((domain))
-        EXPECTED_OUTCOME: success
 
 - name: terraform-jumpbox
   serial_groups: [main]
@@ -275,7 +274,6 @@ jobs:
       params:
         HOST: jumpbox
         DOMAIN: ((domain))
-        EXPECTED_OUTCOME: success
 
 - name: terraform-bosh
   serial_groups: [main]

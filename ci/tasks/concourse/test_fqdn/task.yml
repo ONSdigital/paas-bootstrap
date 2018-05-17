@@ -15,4 +15,3 @@ run:
 params:
   HOST:
   DOMAIN:
-  EXPECTED_RESULT: success
