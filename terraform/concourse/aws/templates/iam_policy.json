@@ -35,7 +35,8 @@
       ],
       "Resource": [
         "arn:aws:s3:::${environment}-states/jumpbox/*",
-        "arn:aws:s3:::${environment}-states/bosh/*"
+        "arn:aws:s3:::${environment}-states/bosh/*",
+        "arn:aws:s3:::${environment}-states/cf/*"
       ]
     },
     {
