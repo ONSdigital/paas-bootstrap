@@ -15,7 +15,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: feature/157509548 
+    branch: master 
 
 - name: jumpbox-deployment-git
   type: git
