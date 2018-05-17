@@ -15,7 +15,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: master 
+    branch: ((branch))
 
 - name: jumpbox-deployment-git
   type: git
@@ -104,6 +104,17 @@ resources:
     storage:
       bucket: ((environment))-states
       bucket_path: bosh/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ((environment))-states
+      bucket_path: cf/
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
@@ -348,3 +359,20 @@ jobs:
     - get: bosh-manifest-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
+
+- name: terraform-cf
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
+  - put: cf-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/cf/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json

@@ -3,6 +3,7 @@
 set -euo pipefail
 
 : $ENVIRONMENT
+: ${BRANCH:=master}
 
 bin/login_fly.sh
 
@@ -20,6 +21,7 @@ DOMAIN=$(jq '.modules[0].outputs | with_entries(.value = .value.value)' "${VPC_S
 
 fly -t "$ENVIRONMENT" set-pipeline \
     -v environment="$ENVIRONMENT" \
+    -v branch="$BRANCH" \
     -v region="$REGION" \
     -v domain="$DOMAIN" \
     -v s3_kms_key_id="$S3_KMS_KEY_ID" \
