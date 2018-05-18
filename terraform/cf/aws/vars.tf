@@ -17,3 +17,7 @@ variable "region" {
 }
 
 variable "environment" {}
+
+variable "ingress_whitelist" {
+  "type" = "list"
+}
