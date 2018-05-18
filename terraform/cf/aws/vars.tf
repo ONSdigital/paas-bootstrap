@@ -21,3 +21,5 @@ variable "environment" {}
 variable "ingress_whitelist" {
   "type" = "list"
 }
+
+variable "parent_dns_zone" {}
