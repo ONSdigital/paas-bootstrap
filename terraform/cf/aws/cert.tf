@@ -16,8 +16,7 @@ resource "aws_route53_record" "cf_system_validation" {
   ttl     = 30
 }
 
-# resource "aws_acm_certificate_validation" "concourse" {
-#   certificate_arn         = "${aws_acm_certificate.concourse.arn}"
-#   validation_record_fqdns = ["${aws_route53_record.concourse_validation.fqdn}"]
-# }
-
+resource "aws_acm_certificate_validation" "cf_system" {
+  certificate_arn         = "${aws_acm_certificate.cf_system.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cf_system_validation.fqdn}"]
+}
