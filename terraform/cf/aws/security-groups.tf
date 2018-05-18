@@ -8,12 +8,3 @@ resource "aws_security_group" "cf_alb" {
     Environment = "${var.environment}"
   }
 }
-
-resource "aws_security_group_rule" "cf_alb_outbound" {
-  security_group_id = "${aws_security_group.cf_alb.id}"
-  type              = "egress"
-  protocol          = "all"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
-}

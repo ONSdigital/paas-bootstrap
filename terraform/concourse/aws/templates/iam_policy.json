@@ -129,7 +129,8 @@
           "ec2:ResourceTag/Environment": "${environment}",
           "ec2:ResourceTag/Name": [
             "${environment}-jumpbox-security-group",
-            "${environment}-bosh-security-group"
+            "${environment}-bosh-security-group",
+            "${environment}-cf-alb-security-group"
           ]
         }
       }
@@ -338,6 +339,34 @@
       "Resource": [
         "arn:aws:iam::${account_id}:instance-profile/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+          "elasticloadbalancing:CreateLoadBalancer",
+          "elasticloadbalancing:ModifyLoadBalancerAttributes",
+          "elasticloadbalancing:SetSecurityGroups"
+                ],
+      "Resource": [
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:DescribeTags",
+        "elasticloadbalancing:DescribeLoadBalancerAttributes"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ForAllValues:StringEquals": {
+          "aws:TagKeys": [
+            "Name",
+            "Environment"
+          ]
+        }
+      }
     }
   ]
 }
