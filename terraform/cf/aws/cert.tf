@@ -1,6 +1,7 @@
 resource "aws_acm_certificate" "cf_system" {
-  domain_name       = "*.system.${var.environment}.${var.parent_dns_zone}"
-  validation_method = "DNS"
+  domain_name               = "*.system.${var.environment}.${var.parent_dns_zone}"
+  validation_method         = "DNS"
+  subject_alternative_names = ["*.system.${var.environment}.${var.parent_dns_zone}", "*.apps.${var.environment}.${var.parent_dns_zone}"]
 
   tags {
     Name        = "${var.environment}-cf-system-cert"
