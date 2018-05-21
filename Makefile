@@ -52,7 +52,7 @@ deploy_pipeline: require_vars ## Deploy the CF deployment pipeline
 docker_image:  ## Build the general-purpose tooled docker image for Concourse tasks
 	@bin/create_docker_image.sh
 
-destroy: destroy_concourse_network ## Destroy an entire environment
+destroy: destroy_bosh_network destroy_concourse_network ## Destroy an entire environment
 	@bin/delete_vpc.sh
 
 destroy_concourse_network: destroy_concourse ## Destroy concourse and its network
@@ -60,6 +60,12 @@ destroy_concourse_network: destroy_concourse ## Destroy concourse and its networ
 
 destroy_concourse: require_vars ## Destroy concourse only
 	@bin/delete_concourse.sh
+
+destroy_bosh_network: destroy_bosh ## Destroy BOSH and its network
+	@bin/delete_bosh_network.sh
+
+destroy_bosh: require_vars ## Destroy BOSH only
+	@bin/delete_bosh.sh
 
 decode_aws_error:
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
