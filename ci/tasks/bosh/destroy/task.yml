@@ -13,4 +13,4 @@ outputs:
   - name: bosh-state
 
 run:
-  path: paas-bootstrap-git/ci/tasks/bosh/deploy/task.sh
+  path: paas-bootstrap-git/ci/tasks/bosh/destroy/task.sh
