@@ -12,12 +12,14 @@
 # In the second, you are responsible for killing the SSH proxy.
 
 usage() {
-    echo "Usage: [source] $(basename $0) -e <env> [-p ssh_port] [-f]"
+    echo "Usage: [source] $(basename $0) -e <env> [-p ssh_port] [-f] [command]"
     echo
     echo "Options:"
     echo "          -e  Connect to this environment, e.g. eng2 (ENVIRONMENT)"
     echo "          -p  Have SSH proxy listen on this port (BOSH_PROXY_PORT)"
     echo "          -f  Run this session in a shell, when you exit, the SSH proxy will be killed"
+    echo
+    echo "              If you specify a command, it will run, then detach the proxy"
     exit 1
 }
 
@@ -32,6 +34,9 @@ while getopts 'e:p:f' option; do
     *) usage;;
   esac
 done
+
+shift $((OPTIND-1))
+COMMAND=$*
 
 VARS=/var/tmp/tmp$$
 mkdir -p "$VARS"
@@ -49,26 +54,34 @@ JUMPBOX_TARGET="jumpbox.${ZONE}"
 chmod 600 "$VARS/jumpbox.key"
 DIRECTOR_IP=$(bosh int --path '/cloud_provider/ssh_tunnel/host' "$VARS/bosh.yml")
 
-
-if ! netstat -na | grep -q 127.0.0.1.${BOSH_PROXY_PORT}; then
+if ! netstat -na | grep -q "127.0.0.1.${BOSH_PROXY_PORT}.*LISTEN"; then
   ssh -4 -D $BOSH_PROXY_PORT -fNC jumpbox@${JUMPBOX_TARGET} -i "${VARS}/jumpbox.key" && STARTED_SSH=true
 fi
 
 bosh int --path /default_ca/ca "$VARS/bosh-variables.yml" > "${VARS}/bosh_ca.pem"
-BOSH_CA_CERT="${VARS}/bosh_ca.pem"
-
+export BOSH_CA_CERT="${VARS}/bosh_ca.pem"
 export BOSH_CLIENT=admin
 export BOSH_CLIENT_SECRET=$(bosh int --path /admin_password "$VARS/bosh-variables.yml")
 export BOSH_ALL_PROXY=socks5://localhost:$BOSH_PROXY_PORT/
+export BOSH_ENVIRONMENT="$ENVIRONMENT"
 
 bosh alias-env "${ENVIRONMENT}" -e "${DIRECTOR_IP}"
+
+kill_tunnel() {
+  if [ -n "$STARTED_SSH" ]; then
+    echo "Killing the SSH proxy on $BOSH_PROXY_PORT"
+    kill $(ps -ef | awk "/ssh -4 -D $BOSH_PROXY_PORT/ && ! /awk/ { print \$2 }")
+  fi
+}
+
+if [ "$FOREGROUND" = true -o -n "$COMMAND" ]; then
+  trap 'kill_tunnel' EXIT
+fi
 
 if [ "$FOREGROUND" = true ]; then
   echo "OK, you are set up"
   export PS1="BOSH<$ENVIRONMENT>:\W \u\$ "
   bash
-  if [ -n "$STARTED_SSH" ]; then
-    echo "Killing the SSH proxy on $BOSH_PROXY_PORT"
-    kill $(ps -ef | awk "/ssh -4 -D $BOSH_PROXY_PORT/ && ! /awk/ { print \$2 }")
-  fi
+elif [ -n "$COMMAND" ]; then
+  ""$COMMAND""
 fi
