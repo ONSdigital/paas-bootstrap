@@ -7,7 +7,7 @@ image_resource:
 inputs:
   - name: paas-bootstrap-git
   - name: bosh-state-s3
-  - name: bosh-manifests
+  - name: bosh-manifest-s3
 
 outputs:
   - name: bosh-state
