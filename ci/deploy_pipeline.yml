@@ -376,3 +376,26 @@ jobs:
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
+
+- name: destroy-bosh
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: bosh-deployment-git
+      version: { ref: ((bosh_commit_ref)) }
+    - get: bosh-terraform
+    - get: bosh-tfstate-s3
+    - get: bosh-vars-s3
+    - get: bosh-state-s3
+  - task: destroy-bosh
+    file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
+    on_success:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
+    on_failure:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
