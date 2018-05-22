@@ -400,3 +400,15 @@ jobs:
       put: bosh-state-s3
       params:
         file: bosh-state/bosh-state.json
+
+  - name: delete-bosh-state
+    serial_groups: [main]
+    serial: true
+    plan:
+      - get: paas-bootstrap-git
+        passed: [destroy-bosh]
+      - task: delete-bosh-state
+        file: paas-bootstrap-git/ci/tasks/common/delete_s3/task.yml
+        params:
+          BUCKET: ((environment))-states
+          FILE: bosh/bosh-state.json
