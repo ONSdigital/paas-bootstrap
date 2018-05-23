@@ -61,11 +61,5 @@ destroy_concourse_network: destroy_concourse ## Destroy concourse and its networ
 destroy_concourse: require_vars ## Destroy concourse only
 	@bin/delete_concourse.sh
 
-destroy_bosh_network: destroy_bosh ## Destroy BOSH and its network
-	@bin/delete_bosh_network.sh
-
-destroy_bosh: require_vars ## Destroy BOSH only
-	@bin/delete_bosh.sh
-
 decode_aws_error:
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .

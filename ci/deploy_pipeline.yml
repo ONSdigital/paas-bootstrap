@@ -336,10 +336,10 @@ jobs:
     - get: bosh-terraform
       passed: [terraform-bosh]
     - get: bosh-tfstate-s3
-    - get: bosh-vars-s3
+    - get: bosh-vars-s3    
     - get: bosh-state-s3
     - get: ssh-private-key-s3
-    - get: concourse-tfstate-s3
+    - get: concourse-tfstate-s3  
   - task: interpolate-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.yml
     params:
@@ -355,10 +355,6 @@ jobs:
   - task: deploy-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/deploy/task.yml
     on_success:
-      put: bosh-state-s3
-      params:
-        file: bosh-state/bosh-state.json
-    on_failure:
       put: bosh-state-s3
       params:
         file: bosh-state/bosh-state.json
@@ -409,13 +405,7 @@ jobs:
   - task: destroy-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
     on_success:
-      task: delete bosh state from s3
-      file: paas-bootstrap-git/ci/tasks/common/delete_s3/task.yml
-      params:
-        BUCKET: ((environment))-states
-        FILE: bosh/bosh-state.json
-    on_failure:
       put: bosh-state-s3
-            params:
-              file: bosh-state/bosh-state.json
+      params:
+        file: bosh-state/bosh-state.json  
 
