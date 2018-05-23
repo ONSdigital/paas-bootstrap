@@ -13,7 +13,6 @@ groups:
 - name: development
   jobs:
     - destroy-bosh
-    - delete-bosh-state
 
 resource_types:
 - name: terraform
@@ -410,22 +409,24 @@ jobs:
   - task: destroy-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
     on_success:
-      put: bosh-state-s3
+      task: delete bosh state from s3
+      file: paas-bootstrap-git/ci/tasks/common/delete_s3/task.yml
       params:
-        file: bosh-state/bosh-state.json
+        BUCKET: ((environment))-states
+        FILE: bosh/bosh-state.json
     on_failure:
       put: bosh-state-s3
       params:
         file: bosh-state/bosh-state.json
 
-- name: delete-bosh-state
-  serial_groups: [main]
-  serial: true
-  plan:
-    - get: paas-bootstrap-git
-      passed: [destroy-bosh]
-    - task: delete-bosh-state
-      file: paas-bootstrap-git/ci/tasks/common/delete_s3/task.yml
-      params:
-        BUCKET: ((environment))-states
-        FILE: bosh/bosh-state.json
+# - name: delete-bosh-state
+#   serial_groups: [main]
+#   serial: true
+#   plan:
+#     - get: paas-bootstrap-git
+#       passed: [destroy-bosh]
+#     - task: delete-bosh-state
+#       file: paas-bootstrap-git/ci/tasks/common/delete_s3/task.yml
+#       params:
+#         BUCKET: ((environment))-states
+#         FILE: bosh/bosh-state.json
