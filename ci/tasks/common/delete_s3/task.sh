@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 set -eu
 
 : $BUCKET
 : $FILE
 
-aws s3 rm "s3://$BUCKET/$FILE" || true
+aws s3 rm "s3://$BUCKET/$FILE" 
