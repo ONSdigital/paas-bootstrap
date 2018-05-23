@@ -9,7 +9,7 @@ inputs:
 - name: paas-bootstrap-git
 
 run:
-  path: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.sh
+  path: paas-bootstrap-git/ci/tasks/common/delete_s3/task.sh
 
 params:
   HOST:
