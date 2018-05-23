@@ -55,8 +55,7 @@ if ! netstat -na | grep -q 127.0.0.1.${BOSH_PROXY_PORT}; then
 fi
 
 bosh int --path /default_ca/ca "$VARS/bosh-variables.yml" > "${VARS}/bosh_ca.pem"
-BOSH_CA_CERT="${VARS}/bosh_ca.pem"
-
+export BOSH_CA_CERT="${VARS}/bosh_ca.pem"
 export BOSH_CLIENT=admin
 export BOSH_CLIENT_SECRET=$(bosh int --path /admin_password "$VARS/bosh-variables.yml")
 export BOSH_ALL_PROXY=socks5://localhost:$BOSH_PROXY_PORT/
