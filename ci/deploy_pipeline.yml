@@ -1,4 +1,20 @@
 ---
+groups:
+- name: main
+  jobs:
+    - verify-concourse
+    - terraform-jumpbox
+    - create-jumpbox
+    - verify-jumpbox
+    - terraform-bosh
+    - create-bosh
+    - verify-bosh
+    - terraform-cf
+- name: development
+  jobs:
+    - destroy-bosh
+    - delete-bosh-state
+
 resource_types:
 - name: terraform
   type: docker-image
@@ -359,6 +375,7 @@ jobs:
     - get: bosh-manifest-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
+    timeout: 1m
 
 - name: terraform-cf
   serial_groups: [main]
