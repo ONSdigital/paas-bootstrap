@@ -1,0 +1,16 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+  - name: paas-bootstrap-git
+  - name: jumpbox-state-s3
+  - name: jumpbox-manifest-s3
+
+outputs:
+  - name: jumpbox-state
+
+run:
+  path: paas-bootstrap-git/ci/tasks/jumbpbox/destroy/task.sh

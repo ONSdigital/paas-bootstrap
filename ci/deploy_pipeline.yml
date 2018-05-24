@@ -10,10 +10,11 @@ groups:
     - create-bosh
     - verify-bosh
     - terraform-cf
-- name: development
+- name: destruction
   jobs:
     - destroy-bosh
-  
+    - destroy-jumpbox
+
 resource_types:
 - name: terraform
   type: docker-image
@@ -70,6 +71,16 @@ resources:
     private: true
     region_name: ((region))
     versioned_file: concourse/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: jumpbox-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
@@ -409,3 +420,22 @@ jobs:
       params:
         file: bosh-state/bosh-state.json  
 
+- name: destroy-jumpbox
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: jumpbox-deployment-git
+      version: { ref: ((jumpbox_commit_ref)) }
+    - get: jumpbox-terraform
+    - get: jumpbox-tfstate-s3
+    - get: jumpbox-vars-s3
+    - get: jumpbox-state-s3
+    - get: jumpbox-manifest-s3
+  - task: destroy-jumpbox
+    file: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.yml
+    on_success:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json  
