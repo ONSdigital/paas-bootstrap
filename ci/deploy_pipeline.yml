@@ -1,4 +1,20 @@
 ---
+groups:
+- name: main
+  jobs:
+    - verify-concourse
+    - terraform-jumpbox
+    - create-jumpbox
+    - verify-jumpbox
+    - terraform-bosh
+    - create-bosh
+    - verify-bosh
+    - terraform-cf
+- name: destruction
+  jobs:
+    - destroy-bosh
+    - destroy-jumpbox
+
 resource_types:
 - name: terraform
   type: docker-image
@@ -15,7 +31,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
-    branch: master 
+    branch: ((branch))
 
 - name: jumpbox-deployment-git
   type: git
@@ -55,6 +71,16 @@ resources:
     private: true
     region_name: ((region))
     versioned_file: concourse/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: jumpbox-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
@@ -104,6 +130,17 @@ resources:
     storage:
       bucket: ((environment))-states
       bucket_path: bosh/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ((environment))-states
+      bucket_path: cf/
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
@@ -310,10 +347,10 @@ jobs:
     - get: bosh-terraform
       passed: [terraform-bosh]
     - get: bosh-tfstate-s3
-    - get: bosh-vars-s3
+    - get: bosh-vars-s3    
     - get: bosh-state-s3
     - get: ssh-private-key-s3
-    - get: concourse-tfstate-s3
+    - get: concourse-tfstate-s3  
   - task: interpolate-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.yml
     params:
@@ -332,10 +369,6 @@ jobs:
       put: bosh-state-s3
       params:
         file: bosh-state/bosh-state.json
-    on_failure:
-      put: bosh-state-s3
-      params:
-        file: bosh-state/bosh-state.json
 
 - name: verify-bosh
   serial: true
@@ -348,3 +381,61 @@ jobs:
     - get: bosh-manifest-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
+    timeout: 1m
+
+- name: terraform-cf
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
+  - put: cf-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/cf/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+
+- name: destroy-bosh
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: bosh-deployment-git
+      version: { ref: ((bosh_commit_ref)) }
+    - get: bosh-terraform
+    - get: bosh-tfstate-s3
+    - get: bosh-vars-s3
+    - get: bosh-state-s3
+    - get: bosh-manifest-s3
+  - task: destroy-bosh
+    file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
+    on_success:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json  
+
+- name: destroy-jumpbox
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: jumpbox-deployment-git
+      version: { ref: ((jumpbox_commit_ref)) }
+    - get: jumpbox-terraform
+    - get: jumpbox-tfstate-s3
+    - get: jumpbox-vars-s3
+    - get: jumpbox-state-s3
+    - get: jumpbox-manifest-s3
+  - task: destroy-jumpbox
+    file: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.yml
+    on_success:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json  

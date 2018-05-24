@@ -75,6 +75,13 @@ ENVIRONMENT=<env> AWS_ACCESS_KEY_ID=<your_key_id> AWS_SECRET_ACCESS_KEY=<your_se
 fly -t <env> trigger-job -j deploy_pipeline/terraform-jumpbox -w
 ```
 
+If you are deploying from a branch, you should also specify it with the `BRANCH` environment variable, so that the pipeline will trigger correctly.
+
+```sh
+BRANCH=<your git branch> ... make deploy_pipeline
+```
+
+
 ## Logging in to BOSH
 
 Once the deployment pipeline has run to completion, you can set up your connection to BOSH easily using:

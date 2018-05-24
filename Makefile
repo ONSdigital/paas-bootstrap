@@ -52,7 +52,7 @@ deploy_pipeline: require_vars ## Deploy the CF deployment pipeline
 docker_image:  ## Build the general-purpose tooled docker image for Concourse tasks
 	@bin/create_docker_image.sh
 
-destroy: destroy_concourse_network ## Destroy an entire environment
+destroy: destroy_bosh_network destroy_concourse_network ## Destroy an entire environment
 	@bin/delete_vpc.sh
 
 destroy_concourse_network: destroy_concourse ## Destroy concourse and its network

@@ -35,7 +35,8 @@
       ],
       "Resource": [
         "arn:aws:s3:::${environment}-states/jumpbox/*",
-        "arn:aws:s3:::${environment}-states/bosh/*"
+        "arn:aws:s3:::${environment}-states/bosh/*",
+        "arn:aws:s3:::${environment}-states/cf/*"
       ]
     },
     {
@@ -128,7 +129,8 @@
           "ec2:ResourceTag/Environment": "${environment}",
           "ec2:ResourceTag/Name": [
             "${environment}-jumpbox-security-group",
-            "${environment}-bosh-security-group"
+            "${environment}-bosh-security-group",
+            "${environment}-cf-alb-security-group"
           ]
         }
       }
@@ -136,7 +138,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ec2:CreateTags"
+        "ec2:CreateTags",
+        "ec2:DeleteTags"
       ],
       "Resource": "arn:aws:ec2:${region}:${account_id}:*",
       "Condition": {
@@ -226,7 +229,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ec2:CreateTags"
+        "ec2:CreateTags",
+        "ec2:DeleteTags"
       ],
       "Resource": [
         "arn:aws:ec2:${region}:${account_id}:instance/*",
@@ -278,6 +282,7 @@
       "Effect": "Allow",
       "Action": [
         "ec2:CreateTags",
+        "ec2:DeleteTags",
         "ec2:RunInstances"
       ],
       "Resource": [
@@ -337,6 +342,49 @@
       "Resource": [
         "arn:aws:iam::${account_id}:instance-profile/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+          "elasticloadbalancing:CreateLoadBalancer",
+          "elasticloadbalancing:ModifyLoadBalancerAttributes",
+          "elasticloadbalancing:SetSecurityGroups"
+                ],
+      "Resource": [
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:DescribeTags",
+        "elasticloadbalancing:DescribeLoadBalancerAttributes"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ForAllValues:StringEquals": {
+          "aws:TagKeys": [
+            "Name",
+            "Environment"
+          ]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "acm:RequestCertificate"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "acm:AddTagsToCertificate",
+        "acm:DescribeCertificate"
+      ],
+      "Resource": "arn:aws:acm:${region}:${account_id}:certificate/*"
     }
   ]
 }

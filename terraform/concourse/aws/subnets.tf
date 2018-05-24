@@ -4,7 +4,7 @@ resource "aws_subnet" "az1" {
   availability_zone = "${var.az1}"
 
   tags {
-    Name        = "${var.environment}-default-subnet"
+    Name        = "${var.environment}-az1-subnet"
     Environment = "${var.environment}"
   }
 }
