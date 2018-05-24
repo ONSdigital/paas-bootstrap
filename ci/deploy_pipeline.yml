@@ -10,6 +10,7 @@ groups:
     - create-bosh
     - verify-bosh
     - terraform-cf
+    - verify-cf
 - name: destruction
   jobs:
     - destroy-bosh
