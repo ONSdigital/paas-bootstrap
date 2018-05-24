@@ -13,4 +13,4 @@ outputs:
   - name: jumpbox-state
 
 run:
-  path: paas-bootstrap-git/ci/tasks/jumbpbox/destroy/task.sh
+  path: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.sh
