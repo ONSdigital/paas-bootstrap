@@ -45,6 +45,11 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/bosh-deployment.git
 
+- name: cf-deployment-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-deployment.git
+
 - name: jumpbox-terraform
   type: terraform
   source:
@@ -147,6 +152,26 @@ resources:
       region_name: ((region))
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-vars-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: cf/cf-variables.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: cf/cf.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
 
 - name: bosh-tfstate-s3
   type: s3-iam
@@ -448,6 +473,31 @@ jobs:
         DOMAIN: ((domain))
         QUERY_PATH: /info
         REQUIRE_JSON: true
+
+- name: deploy-cf
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      trigger: true
+    - get: cf-deployment-git
+    - get: vpc-tfstate-s3
+    - get: cf-vars-s3
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
+  - task: interpolate-cf
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+    on_success:
+      aggregate:
+      - put: cf-vars-s3
+        params:
+          file: cf-manifests/cf-variables.yml
+      - put: cf-manifest-s3
+        params:
+          file: cf-manifests/cf.yml
 
 - name: destroy-bosh
   serial_groups: [main]
