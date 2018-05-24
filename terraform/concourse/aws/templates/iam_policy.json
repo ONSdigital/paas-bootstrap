@@ -369,7 +369,8 @@
       "Effect": "Allow",
       "Action": [
           "elasticloadbalancing:CreateTargetGroup",
-          "elasticloadbalancing:AddTags"
+          "elasticloadbalancing:AddTags",
+          "elasticloadbalancing:ModifyTargetGroup"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/${environment}-cf-target-group/*"
