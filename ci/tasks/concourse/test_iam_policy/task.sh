@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 : ${BUCKET:=omg-this-bucket-no-existy}
 
