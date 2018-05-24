@@ -11,6 +11,7 @@ groups:
     - verify-bosh
     - terraform-cf
     - verify-cf
+    - deploy-cf
     - verify-cf-endpoints
 - name: destruction
   jobs:
@@ -400,6 +401,7 @@ jobs:
         file: bosh-state/bosh-state.json
 
 - name: verify-bosh
+  serial_groups: [main]
   serial: true
   plan:
   - get: paas-bootstrap-git
@@ -435,12 +437,12 @@ jobs:
       - bosh-vars/vars.json
 
 - name: verify-cf
+  serial_groups: [main]
   serial: true
   plan:
   - get: paas-bootstrap-git
     trigger: true
-    passed:
-      - terraform-cf
+    passed: [terraform-cf]
   - aggregate:
     - task: ensure that system FQDN is resolvable
       file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
@@ -453,27 +455,6 @@ jobs:
         HOST: test.apps
         DOMAIN: ((domain))
 
-- name: verify-cf-endpoints
-  serial: true
-  plan:
-  - get: paas-bootstrap-git
-    passed: [terraform-cf]
-    trigger: true
-  - aggregate:
-    - task: ensure CF api responds
-      file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
-      params:
-        HOST: api.system
-        DOMAIN: ((domain))
-        QUERY_PATH: /v2/info
-    - task: ensure CF UAA responds
-      file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
-      params:
-        HOST: uaa.system
-        DOMAIN: ((domain))
-        QUERY_PATH: /info
-        REQUIRE_JSON: true
-
 - name: deploy-cf
   serial_groups: [main]
   serial: true
@@ -481,6 +462,7 @@ jobs:
   - aggregate:
     - get: paas-bootstrap-git
       trigger: true
+      passed: [verify-cf]
     - get: cf-deployment-git
     - get: vpc-tfstate-s3
     - get: cf-vars-s3
@@ -498,6 +480,28 @@ jobs:
       - put: cf-manifest-s3
         params:
           file: cf-manifests/cf.yml
+
+- name: verify-cf-endpoints
+  serial_groups: [main]
+  serial: true
+  plan:
+  - get: paas-bootstrap-git
+    passed: [deploy-cf]
+    trigger: true
+  - aggregate:
+    - task: ensure CF api responds
+      file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
+      params:
+        HOST: api.system
+        DOMAIN: ((domain))
+        QUERY_PATH: /v2/info
+    - task: ensure CF UAA responds
+      file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
+      params:
+        HOST: uaa.system
+        DOMAIN: ((domain))
+        QUERY_PATH: /info
+        REQUIRE_JSON: true
 
 - name: destroy-bosh
   serial_groups: [main]
