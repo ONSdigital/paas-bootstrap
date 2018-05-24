@@ -370,7 +370,8 @@
       "Action": [
           "elasticloadbalancing:CreateTargetGroup",
           "elasticloadbalancing:AddTags",
-          "elasticloadbalancing:ModifyTargetGroup"
+          "elasticloadbalancing:ModifyTargetGroup",
+          "elasticloadbalancing:ModifyTargetGroupAttributes"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/${environment}-cf-target-group/*"
