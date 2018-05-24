@@ -220,6 +220,8 @@ jobs:
       params:
         HOST: concourse
         DOMAIN: ((domain))
+    - task: ensure concourse cannot perform disallowed action
+      file: paas-bootstrap-git/ci/tasks/concourse/test_iam_policy/task.yml
 
 - name: terraform-jumpbox
   serial_groups: [main]
