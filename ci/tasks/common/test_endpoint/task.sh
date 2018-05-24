@@ -11,5 +11,5 @@ URL="https://${HOST}.${DOMAIN}${QUERY_PATH}"
 if [ "$REQUIRE_JSON" = true ]; then
   wget -O - -nv  -t 1 -T 5 --header='Accept: application/json' "$URL"
 else
-  wget -O - -nv  -t 1 -T "$URL"
+  wget -O - -nv  -t 1 -T 5 "$URL"
 fi
