@@ -1,5 +1,5 @@
-resource "aws_acm_certificate" "cf_system" {
-  domain_name               = "*.system.${var.environment}.${var.parent_dns_zone}"
+resource "aws_acm_certificate" "cf" {
+  domain_name               = "${var.environment}.${var.parent_dns_zone}"
   validation_method         = "DNS"
   subject_alternative_names = ["*.system.${var.environment}.${var.parent_dns_zone}", "*.apps.${var.environment}.${var.parent_dns_zone}"]
 
@@ -9,15 +9,17 @@ resource "aws_acm_certificate" "cf_system" {
   }
 }
 
-resource "aws_route53_record" "cf_system_validation" {
-  name    = "${aws_acm_certificate.cf_system.domain_validation_options.0.resource_record_name}"
-  type    = "${aws_acm_certificate.cf_system.domain_validation_options.0.resource_record_type}"
+resource "aws_route53_record" "cf_validation" {
+  count = 3
+
+  name    = "${lookup(aws_acm_certificate.cf.domain_validation_options[count.index], "resource_record_name")}"
+  type    = "${lookup(aws_acm_certificate.cf.domain_validation_options[count.index], "resource_record_type")}"
   zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
-  records = ["${aws_acm_certificate.cf_system.domain_validation_options.0.resource_record_value}"]
+  records = ["${lookup(aws_acm_certificate.cf.domain_validation_options[count.index], "resource_record_value")}"]
   ttl     = 30
 }
 
-resource "aws_acm_certificate_validation" "cf_system" {
-  certificate_arn         = "${aws_acm_certificate.cf_system.arn}"
-  validation_record_fqdns = ["${aws_route53_record.cf_system_validation.fqdn}"]
+resource "aws_acm_certificate_validation" "cf" {
+  certificate_arn         = "${aws_acm_certificate.cf.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cf_validation.*.fqdn}"]
 }

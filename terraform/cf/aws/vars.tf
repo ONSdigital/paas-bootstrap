@@ -23,3 +23,5 @@ variable "ingress_whitelist" {
 }
 
 variable "parent_dns_zone" {}
+
+variable "bosh_security_group_id" {}

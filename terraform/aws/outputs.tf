@@ -45,3 +45,7 @@ output "parent_dns_zone" {
 output "state_bucket_id" {
   value = "${aws_s3_bucket.paas_states.id}"
 }
+
+output "aws_internet_gateway_id" {
+  value = "${aws_internet_gateway.default.id}"
+}

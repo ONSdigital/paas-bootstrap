@@ -8,9 +8,14 @@ image_resource:
 inputs:
 - name: paas-bootstrap-git
 - name: vpc-tfstate-s3
+- name: bosh-tfstate-s3
 
 outputs:
 - name: vpc-vars
+- name: bosh-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.sh
+
+params:
+  ENVIRONMENT:

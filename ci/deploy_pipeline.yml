@@ -349,10 +349,10 @@ jobs:
     - get: bosh-terraform
       passed: [terraform-bosh]
     - get: bosh-tfstate-s3
-    - get: bosh-vars-s3    
+    - get: bosh-vars-s3
     - get: bosh-state-s3
     - get: ssh-private-key-s3
-    - get: concourse-tfstate-s3  
+    - get: concourse-tfstate-s3
   - task: interpolate-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.yml
     params:
@@ -383,7 +383,6 @@ jobs:
     - get: bosh-manifest-s3
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
-    timeout: 1m
 
 - name: terraform-cf
   serial_groups: [main]
@@ -391,16 +390,41 @@ jobs:
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
     - get: paas-bootstrap-git
       trigger: true
+      passed:
+        - verify-bosh
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
   - put: cf-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/cf/aws
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
+      - bosh-vars/vars.json
+
+- name: verify-cf
+  serial: true
+  plan:
+  - get: paas-bootstrap-git
+    trigger: true
+    passed:
+      - terraform-cf
+  - aggregate:
+    - task: ensure that system FQDN is resolvable
+      file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
+      params:
+        HOST: test.system
+        DOMAIN: ((domain))
+    - task: ensure that apps FQDN is resolvable
+      file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
+      params:
+        HOST: test.apps
+        DOMAIN: ((domain))
 
 - name: destroy-bosh
   serial_groups: [main]
@@ -420,7 +444,7 @@ jobs:
     on_success:
       put: bosh-state-s3
       params:
-        file: bosh-state/bosh-state.json  
+        file: bosh-state/bosh-state.json
 
 - name: destroy-jumpbox
   serial_groups: [main]
@@ -440,4 +464,4 @@ jobs:
     on_success:
       put: jumpbox-state-s3
       params:
-        file: jumpbox-state/jumpbox-state.json  
+        file: jumpbox-state/jumpbox-state.json
