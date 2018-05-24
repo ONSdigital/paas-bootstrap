@@ -11,6 +11,7 @@ groups:
     - verify-bosh
     - terraform-cf
     - verify-cf
+    - verify-cf-endpoints
 - name: destruction
   jobs:
     - destroy-bosh
@@ -426,6 +427,27 @@ jobs:
       params:
         HOST: test.apps
         DOMAIN: ((domain))
+
+- name: verify-cf-endpoints
+  serial: true
+  plan:
+  - get: paas-bootstrap-git
+    passed: [terraform-cf]
+    trigger: true
+  - aggregate:
+    - task: ensure CF api responds
+      file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
+      params:
+        HOST: api.system
+        DOMAIN: ((domain))
+        QUERY_PATH: /v2/info
+    - task: ensure CF UAA responds
+      file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
+      params:
+        HOST: uaa.system
+        DOMAIN: ((domain))
+        QUERY_PATH: /info
+        REQUIRE_JSON: true
 
 - name: destroy-bosh
   serial_groups: [main]
