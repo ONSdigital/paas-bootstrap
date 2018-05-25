@@ -8,12 +8,7 @@
       ],
       "Resource": [
         "arn:aws:ec2:${region}:${account_id}:instance/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
+      ]
     }
   ]
 }

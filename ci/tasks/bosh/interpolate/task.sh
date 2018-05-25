@@ -19,6 +19,7 @@ bosh int \
   -v internal_gw="$(jq -r .internal_cidr < bosh-vars.json | sed 's#0/24#1#')" \
   -v internal_ip="$(jq -r .internal_cidr < bosh-vars.json | sed 's#0/24#6#')" \
   -v region="$(jq -r .region < bosh-vars.json)" \
+  -v bosh_iam_instance_profile="$(jq -r .bosh_iam_instance_profile < bosh-vars.json)" \
   -v az="$(jq -r .az < bosh-vars.json)" \
   -v default_key_name="$(jq -r .default_key_name < concourse-vars.json)" \
   -v default_security_groups="$(jq -r .default_security_groups < bosh-terraform/metadata)" \

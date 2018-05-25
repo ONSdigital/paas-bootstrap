@@ -8,3 +8,7 @@
 - type: replace
   path: /instance_groups/name=bosh/properties/aws/credentials_source?
   value: env_or_profile
+
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/iam_instance_profile?
+  value: ((bosh_iam_instance_profile))
