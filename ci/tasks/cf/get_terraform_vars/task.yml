@@ -8,7 +8,7 @@ image_resource:
 inputs:
 - name: paas-bootstrap-git
 - name: vpc-tfstate-s3
-# - name: bosh-tfstate-s3
+- name: bosh-tfstate-s3
 
 outputs:
 - name: vpc-vars
