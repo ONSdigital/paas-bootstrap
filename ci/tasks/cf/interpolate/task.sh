@@ -10,7 +10,6 @@ SYSTEM_DOMAIN="system.${DOMAIN}"
 bosh int \
   ./cf-deployment-git/cf-deployment.yml \
   --vars-store cf-manifests/cf-variables.yml \
-  -o paas-bootstrap-git/operations/cf/internal-gorouter-certs.yml \
   -v system_domain="${SYSTEM_DOMAIN}" \
   > cf-manifests/cf.yml
 
