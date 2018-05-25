@@ -1,0 +1,66 @@
+azs:
+- name: z1
+  cloud_properties: {availability_zone: ((az1))}
+
+vm_types:
+- name: default
+  cloud_properties:
+    instance_type: m3.medium
+    ephemeral_disk: {size: 30000, type: gp2}
+- name: minimal
+  cloud_properties:
+    instance_type: m3.large
+    ephemeral_disk: {size: 30000, type: gp2}
+- name: small
+  cloud_properties:
+    instance_type: m3.medium
+    ephemeral_disk: {size: 30000, type: gp2}
+- name: small-himem
+  cloud_properties:
+    instance_type: r3.xlarge
+    ephemeral_disk: {size: 30000, type: gp2}
+
+disk_types:
+- name: default
+  disk_size: 3000
+  cloud_properties: {encrypted: true, type: gp2}
+- name: 5GB
+  disk_size: 5_000
+  cloud_properties: {encrypted: true, type: gp2}
+- name: 10GB
+  disk_size: 10_000
+  cloud_properties: {encrypted: true, type: gp2}
+- name: 100GB
+  disk_size: 100_000
+  cloud_properties: {encrypted: true, type: gp2}
+
+vm_extensions:
+- name: 50GB_ephemeral_disk
+  cloud_properties: { disk: 50_000 }
+- name: 100GB_ephemerial_disk
+  cloud_properties: { disk: 100_000 }
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((private_subnet_cidr))
+    gateway: ((private_subnet_gateway))
+    az: z1
+    dns: [1.1.1.1]
+    cloud_properties:
+      subnet: ((private_subnet_id))
+      security_groups: [ ((internal_security_group))]
+
+compilation:
+  workers: 6
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: large
+  network: default
+  cloud_properties:
+    instance_type: default
+    ephemeral_disk:
+      size: 160_000
+      type: gp2
+    security_groups: [ ((internal_security_group))]

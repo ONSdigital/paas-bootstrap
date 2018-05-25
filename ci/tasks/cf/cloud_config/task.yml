@@ -1,0 +1,21 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+  - name: paas-bootstrap-git
+  - name: cf-deployment-git
+  - name: vpc-tfstate-s3
+  - name: cf-tfstate-s3
+
+outputs:
+  - name: cf-manifests
+
+run:
+  path: paas-bootstrap-git/ci/tasks/cf/interpolate/task.sh
+
+params:
+  ENVIRONMENT:
+  DOMAIN:
