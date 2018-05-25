@@ -484,7 +484,9 @@ jobs:
       passed: [verify-cf]
     - get: cf-deployment-git
     - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
     - get: cf-tfstate-s3
+    - get: cf-vars-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:

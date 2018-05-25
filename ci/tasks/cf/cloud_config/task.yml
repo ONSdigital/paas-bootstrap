@@ -14,7 +14,7 @@ outputs:
   - name: cf-manifests
 
 run:
-  path: paas-bootstrap-git/ci/tasks/cf/interpolate/task.sh
+  path: paas-bootstrap-git/ci/tasks/cf/cloud_config/task.sh
 
 params:
   ENVIRONMENT:
