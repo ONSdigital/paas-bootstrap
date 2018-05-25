@@ -3,7 +3,7 @@
 set -euo pipefail
 
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < cf-tfstate-s3/tfstate.json > cf-vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
 
 bosh update-cloud-config \
   ./cf-deployment-git/cf-deployment.yml \

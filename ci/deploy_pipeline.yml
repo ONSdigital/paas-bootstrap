@@ -506,6 +506,9 @@ jobs:
           file: cf-manifests/cf.yml
   - task: cloud_config
     file: paas-bootstrap-git/ci/tasks/cf/cloud_config/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      DOMAIN: ((domain))
     on_success:
       aggregate:
       - put: cf-cloud-config-s3
