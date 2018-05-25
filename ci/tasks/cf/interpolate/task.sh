@@ -5,10 +5,13 @@ set -euo pipefail
 cp cf-vars-s3/cf-variables.yml cf-manifests/cf-variables.yml
 
 # jq '.modules[0].outputs | with_entries(.value = .value.value)' < "bosh-tfstate-s3/${ENVIRONMENT}.tfstate" > bosh-vars.json
+SYSTEM_DOMAIN="system.${DOMAIN}"
 
 bosh int \
   ./cf-deployment-git/cf-deployment.yml \
   --vars-store cf-manifests/cf-variables.yml \
+  -o paas-bootstrap-git/operations/cf/internal-gorouter-certs.yml \
+  -v system_domain="${SYSTEM_DOMAIN}" \
   > cf-manifests/cf.yml
 
 
