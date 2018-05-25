@@ -88,7 +88,17 @@ resources:
     bucket: ((environment))-states
     private: true
     region_name: ((region))
-    versioned_file: bosh/((environment)).tfstate
+    versioned_file: jumpbox/((environment)).tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
