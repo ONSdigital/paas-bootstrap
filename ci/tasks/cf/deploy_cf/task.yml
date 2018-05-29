@@ -6,7 +6,7 @@ image_resource:
 
 inputs:
   - name: paas-bootstrap-git
-  - name: cf-manifests
+  - name: cf-manifest-s3
 
 outputs:
 
