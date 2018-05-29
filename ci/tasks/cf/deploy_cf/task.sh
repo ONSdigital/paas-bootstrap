@@ -2,5 +2,5 @@
 
 set -euo pipefail
 
-bosh deploy ./cf-manifests/cf.yml
+bosh deploy ./cf-manifest-s3/cf.yml
 
