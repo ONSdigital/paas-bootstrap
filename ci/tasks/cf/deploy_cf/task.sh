@@ -9,8 +9,7 @@ bosh_ip=$(bosh int --path '/cloud_provider/ssh_tunnel/host' bosh-manifest-s3/bos
 export BOSH_CLIENT=admin
 export BOSH_CLIENT_SECRET="${bosh_admin_password}"
 export BOSH_ENVIRONMENT="https://${bosh_ip}:25555"
-export BOSH_CA_CERT=bosh_ca.pem
+export BOSH_CA_CERT=$(cat bosh_ca.pem)
 
-export BOSH_LOG_LEVEL=info
+export BOSH_LOG_LEVEL=debug
 bosh -d cf deploy ./cf-manifest-s3/cf.yml
-
