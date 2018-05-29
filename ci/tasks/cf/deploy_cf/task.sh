@@ -12,5 +12,5 @@ export BOSH_ENVIRONMENT="https://${bosh_ip}:25555"
 export BOSH_CA_CERT=bosh_ca.pem
 
 export BOSH_LOG_LEVEL=info
-bosh deploy ./cf-manifest-s3/cf.yml
+bosh -d cf deploy ./cf-manifest-s3/cf.yml
 
