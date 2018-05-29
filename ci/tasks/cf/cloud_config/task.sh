@@ -15,9 +15,6 @@ export BOSH_CLIENT_SECRET="${bosh_admin_password}"
 export BOSH_ENVIRONMENT="https://${bosh_ip}:25555"
 export BOSH_CA_CERT=bosh_ca.pem
 
-# FIXME: don't upload the stemcell here
-# bosh upload-stemcell https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3468.11
-
 bosh update-cloud-config -n \
   paas-bootstrap-git/cloud-config/cf/cloud-config.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
