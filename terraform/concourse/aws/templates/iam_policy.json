@@ -428,6 +428,26 @@
         "ec2:DescribeNatGateways"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "AllowDeleteRouteTables",
+      "Effect": "Allow",
+      "Action": [
+          "ec2:DeleteRoute",
+          "ec2:DeleteRouteTable"
+      ],
+      "Resource": "arn:aws:ec2:${region}:${account_id}:route-table/*"
+  },
+  {
+      "Sid": "AllowCreateRouteTables",
+      "Effect": "Allow",
+      "Action": [
+          "ec2:CreateRoute",
+          "ec2:CreateRouteTable",
+          "ec2:DescribeRouteTables",
+          "ec2:AssociateRouteTable"
+      ],
+      "Resource": "*"
     }
   ]
 }
