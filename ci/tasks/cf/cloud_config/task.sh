@@ -5,6 +5,7 @@ set -euo pipefail
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
 
+paas-bootstrap-git/bin/bosh_credentials.sh \
 bosh update-cloud-config \
   paas-bootstrap-git/cloud-config/cf/cloud-config.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
@@ -13,4 +14,5 @@ bosh update-cloud-config \
   -v private_subnet_id="$(jq -r '."cf-internal-subnet-az1-id"' < cf-vars.json)" \
   -v private_subnet_cidr="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json)"
 
+paas-bootstrap-git/bin/bosh_credentials.sh \
 bosh cloud-config > cf-manifests/cloud-config.yml
