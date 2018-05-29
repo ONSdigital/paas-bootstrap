@@ -8,7 +8,7 @@ jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/
 
 bosh_admin_password=$(bosh int bosh-vars-s3/bosh-variables.yml --path /admin_password)
 bosh int bosh-vars-s3/bosh-variables.yml --path /default_ca/ca > bosh_ca.pem
-bosh_ip=$(jq -r .internal_cidr < terraform/metadata | sed 's#0/24#6#') # FIXME: shouldn't be hard-coding IP
+bosh_ip=$(bosh int --path '/cloud_provider/ssh_tunnel/host' bosh-state-s3/bosh.yml)
 
 export BOSH_CLIENT=admin
 export BOSH_CLIENT_SECRET="${bosh_admin_password}"

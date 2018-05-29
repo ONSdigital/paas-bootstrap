@@ -10,6 +10,7 @@ inputs:
   - name: vpc-tfstate-s3
   - name: cf-tfstate-s3
   - name: bosh-vars-s3
+  - name: bosh-state-s3
 
 outputs:
   - name: cf-manifests
