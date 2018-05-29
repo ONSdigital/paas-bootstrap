@@ -412,6 +412,22 @@
         "acm:DeleteCertificate"
       ],
       "Resource": "arn:aws:acm:${region}:${account_id}:certificate/*"
+    },
+    {
+      "Sid": "AllowCreationOfNATGateways",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateNatGateway"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowReadInfoOfNATGateways",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeNatGateways"
+      ],
+      "Resource": "*"
     }
   ]
 }
