@@ -39,3 +39,12 @@ resource "aws_route_table_association" "az1" {
   subnet_id      = "${aws_subnet.az1.id}"
   route_table_id = "${aws_route_table.az1.id}"
 }
+
+resource "aws_security_group_rule" "allow-all" {
+  security_group_id = "${aws_security_group.bosh.id}"
+  type              = "egress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+}
