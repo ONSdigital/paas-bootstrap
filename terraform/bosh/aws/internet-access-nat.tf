@@ -24,11 +24,6 @@ resource "aws_route_table" "az1" {
     create_before_destroy = true
   }
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = "${aws_nat_gateway.nat.id}"
-  }
-
   tags {
     Name        = "${var.environment}-nat-az1"
     Environment = "${var.environment}"
@@ -47,4 +42,10 @@ resource "aws_security_group_rule" "allow-all" {
   from_port         = 0
   to_port           = 0
   cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_route" "nat" {
+  route_table_id         = "${aws_route_table.az1.id)}"
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = "${aws_nat_gateway.nat.id}"
 }
