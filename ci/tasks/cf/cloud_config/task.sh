@@ -18,7 +18,7 @@ export BOSH_CA_CERT=bosh_ca.pem
 # FIXME: don't upload the stemcell here
 # bosh upload-stemcell https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3468.11
 
-bosh update-cloud-config \
+bosh update-cloud-config -n \
   paas-bootstrap-git/cloud-config/cf/cloud-config.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v private_subnet_gateway="$(jq -r '."internal_cidr"' < cf-vars.json | sed 's#0/24#1#')" \
