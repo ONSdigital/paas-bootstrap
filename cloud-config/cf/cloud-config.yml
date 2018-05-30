@@ -39,6 +39,7 @@ vm_extensions:
   cloud_properties: { disk: 50_000 }
 - name: 100GB_ephemerial_disk
   cloud_properties: { disk: 100_000 }
+- name: cf-router-network-properties
 
 networks:
 - name: default
