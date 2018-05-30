@@ -30,5 +30,4 @@ variable concourse_security_group_id {}
 variable jumpbox_security_group_id {}
 
 variable nat_id {}
-
 variable nat_private_ip {}
