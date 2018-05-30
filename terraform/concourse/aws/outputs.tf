@@ -65,3 +65,7 @@ output "state_bucket_id" {
 output "concourse_security_group_id" {
   value = "${aws_security_group.concourse.id}"
 }
+
+output "nat_id" {
+  value = "${aws_nat_gateway.nat.id}"
+}
