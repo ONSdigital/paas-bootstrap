@@ -56,7 +56,7 @@ compilation:
   workers: 6
   reuse_compilation_vms: true
   az: z1
-  vm_type: large
+  # vm_type: large
   network: default
   cloud_properties:
     instance_type: default
