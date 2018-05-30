@@ -1,3 +1,10 @@
+data "aws_subnet" "public" {
+  tags {
+    Name        = "${var.environment}-az1-subnet"
+    Environment = "${var.environment}"
+  }
+}
+
 resource "aws_eip" "nat" {
   vpc = true
 
@@ -9,7 +16,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = "${aws_eip.nat.id}"
-  subnet_id     = "${aws_subnet.az1.id}"
+  subnet_id     = "${data.aws_subnet.public.id}"
 
   tags {
     Name        = "${var.environment}-nat"
