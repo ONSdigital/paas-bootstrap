@@ -453,7 +453,9 @@
           "ec2:CreateRoute",
           "ec2:CreateRouteTable",
           "ec2:DescribeRouteTables",
-          "ec2:AssociateRouteTable"
+          "ec2:AssociateRouteTable",
+          "ec2:ReplaceRouteTableAssociation",
+          "ec2:DisassociateRouteTable"
       ],
       "Resource": "*"
     }
