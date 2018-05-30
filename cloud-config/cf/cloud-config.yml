@@ -37,7 +37,7 @@ disk_types:
 vm_extensions:
 - name: 50GB_ephemeral_disk
   cloud_properties: { disk: 50_000 }
-- name: 100GB_ephemerial_disk
+- name: 100GB_ephemeral_disk
   cloud_properties: { disk: 100_000 }
 - name: cf-router-network-properties
 - name: cf-tcp-router-network-properties
@@ -59,7 +59,6 @@ compilation:
   workers: 6
   reuse_compilation_vms: true
   az: z1
-  # vm_type: large
   network: default
   cloud_properties:
     instance_type: default
