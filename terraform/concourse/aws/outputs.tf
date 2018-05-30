@@ -69,3 +69,7 @@ output "concourse_security_group_id" {
 output "nat_id" {
   value = "${aws_nat_gateway.nat.id}"
 }
+
+output "nat_private_ip" {
+  value = "${aws_nat_gateway.nat.private_ip}"
+}
