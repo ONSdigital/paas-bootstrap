@@ -490,6 +490,7 @@ jobs:
     - get: bosh-vars-s3
     - get: bosh-manifest-s3
     - get: cf-manifest-s3
+    - get: concourse-tfstate-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
