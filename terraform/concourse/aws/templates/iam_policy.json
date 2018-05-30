@@ -430,6 +430,14 @@
       "Resource": "*"
     },
     {
+      "Sid": "AllowDeleteOfNATGateways",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DeleteNatGateway"
+      ],
+      "Resource": "*"
+    },
+    {
       "Sid": "AllowDeleteRouteTables",
       "Effect": "Allow",
       "Action": [
