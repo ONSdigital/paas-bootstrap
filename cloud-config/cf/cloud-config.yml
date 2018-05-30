@@ -6,19 +6,24 @@ vm_types:
 - name: default
   cloud_properties:
     instance_type: m3.medium
-    ephemeral_disk: {size: 30000, type: gp2}
+    ephemeral_disk: {size: 30_000, type: gp2}
 - name: minimal
   cloud_properties:
     instance_type: m3.large
-    ephemeral_disk: {size: 30000, type: gp2}
+    ephemeral_disk: {size: 30_000, type: gp2}
 - name: small
   cloud_properties:
     instance_type: m3.medium
-    ephemeral_disk: {size: 30000, type: gp2}
+    ephemeral_disk: {size: 30_000, type: gp2}
 - name: small-highmem
   cloud_properties:
     instance_type: c4.xlarge
-    ephemeral_disk: {size: 30000, type: gp2}
+    ephemeral_disk: {size: 30_000, type: gp2}
+- name: compilation
+  cloud_properties:
+    instance_type: c4.xlarge
+    ephemeral_disk: {size: 50_000, type: gp2}
+    security_groups: [ ((internal_security_group))]
 
 disk_types:
 - name: default
@@ -60,9 +65,4 @@ compilation:
   reuse_compilation_vms: true
   az: z1
   network: default
-  cloud_properties:
-    instance_type: small-highmem
-    ephemeral_disk:
-      size: 160_000
-      type: gp2
-    security_groups: [ ((internal_security_group))]
+  instance: compilation
