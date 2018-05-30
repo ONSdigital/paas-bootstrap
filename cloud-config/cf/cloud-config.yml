@@ -65,4 +65,4 @@ compilation:
   reuse_compilation_vms: true
   az: z1
   network: default
-  instance: compilation
+  vm_type: compilation
