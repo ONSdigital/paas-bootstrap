@@ -440,6 +440,7 @@ jobs:
   - aggregate:
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
+    - get: concourse-tfstate-s3
     - get: paas-bootstrap-git
       trigger: true
       # passed: [verify-bosh]
@@ -454,6 +455,7 @@ jobs:
       var_files:
       - vpc-vars/vars.json
       - bosh-vars/vars.json
+      - concourse-vars/vars.json
 
 - name: verify-cf
   serial_groups: [main]
