@@ -33,8 +33,7 @@ resource "aws_security_group_rule" "cf_alb_internal" {
   description              = "Allow access to internal services"
 }
 
-resource "aws_security_group_rule" "cf_alb_default" {
-  count             = 3
+resource "aws_security_group_rule" "cf_alb_ingress" {
   security_group_id = "${aws_security_group.cf_alb.id}"
   type              = "ingress"
   protocol          = "tcp"
@@ -42,6 +41,10 @@ resource "aws_security_group_rule" "cf_alb_default" {
   to_port           = 443
   cidr_blocks       = ["${format("%s/32", data.aws_nat_gateway.selected.public_ip)}"]
   description       = "Attach NAT gateway eip addresses"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "internal" {

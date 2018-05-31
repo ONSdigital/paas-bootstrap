@@ -10,6 +10,10 @@ resource "aws_lb" "cf" {
     Name        = "${var.environment}-cf-alb"
     Environment = "${var.environment}"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_lb_listener" "cf" {
@@ -23,6 +27,10 @@ resource "aws_lb_listener" "cf" {
   default_action {
     target_group_arn = "${aws_lb_target_group.cf.arn}"
     type             = "forward"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -45,5 +53,9 @@ resource "aws_lb_target_group" "cf" {
   tags {
     Name        = "${var.environment}-cf-target-group"
     Environment = "${var.environment}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
