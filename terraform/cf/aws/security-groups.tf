@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "cf_alb_default" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = ["${format("%s/32", aws_eip.nat.*.public_ip[count.index])}"]
+  cidr_blocks       = ["${format("%s/32", data.nat_gateway.public_ip)}"]
   description       = "Attach NAT gateway eip addresses"
 }
 

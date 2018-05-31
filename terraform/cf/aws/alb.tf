@@ -28,11 +28,14 @@ resource "aws_lb_listener" "cf" {
 
 resource "aws_lb_target_group" "cf" {
   name     = "${var.environment}-cf-target-group"
-  port     = 8080
-  protocol = "HTTP"
+  port     = 443
+  protocol = "HTTPS"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
+    path                = "/health"
+    port                = 443
+    protocol            = "HTTPS"
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 3
