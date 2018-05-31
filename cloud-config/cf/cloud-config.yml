@@ -46,8 +46,8 @@ vm_extensions:
   cloud_properties: { disk: 100_000 }
 - name: cf-router-network-properties
   cloud_properties:
-         elbs:
-         - ((cf-router-alb-name))
+    lb_target_groups:
+      - ((cf-router-target-group-name))
 - name: cf-tcp-router-network-properties
 - name: diego-ssh-proxy-network-properties
 

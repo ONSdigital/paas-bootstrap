@@ -10,6 +10,6 @@ output "cf-internal-security-group-id" {
   value = "${aws_security_group.internal.id}"
 }
 
-output "cf-router-alb-name" {
-  value = "${aws_lb.cf.name}"
+output "cf-router-target-group-name" {
+  value = "${aws_lb_target_group.cf.name}"
 }
