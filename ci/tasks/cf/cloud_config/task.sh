@@ -22,7 +22,7 @@ bosh update-cloud-config -n \
   -v reserved_cidr="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json  | sed 's#0/24#1/30#')" \
   -v internal_security_group="$(jq -r '."cf-internal-security-group-id"' < cf-vars.json)" \
   -v private_subnet_id="$(jq -r '."cf-internal-subnet-az1-id"' < cf-vars.json)" \
-  -v private_subnet_cidr="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json)"
-  -v cf-router-alb-name="$(jq -r '."cf-router-alb-name"' < cf-vars.json)" \
+  -v private_subnet_cidr="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json)" \
+  -v cf-router-alb-name="$(jq -r '."cf-router-alb-name"' < cf-vars.json)" 
 
 bosh cloud-config > cf-manifests/cloud-config.yml
