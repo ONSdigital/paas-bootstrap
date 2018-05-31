@@ -9,3 +9,7 @@ output "cf-internal-subnet-az1-cidr" {
 output "cf-internal-security-group-id" {
   value = "${aws_security_group.internal.id}"
 }
+
+output "cf-router-alb-name" {
+  value = "${aws_lb.cf.name}"
+}
