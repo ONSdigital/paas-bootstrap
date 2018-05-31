@@ -19,6 +19,7 @@ bosh update-cloud-config -n \
   paas-bootstrap-git/cloud-config/cf/cloud-config.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v private_subnet_gateway="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json | sed 's#0/24#1#')" \
+  -v reserved_cidr="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json  | sed 's#0/24#1/30#')" \
   -v internal_security_group="$(jq -r '."cf-internal-security-group-id"' < cf-vars.json)" \
   -v private_subnet_id="$(jq -r '."cf-internal-subnet-az1-id"' < cf-vars.json)" \
   -v private_subnet_cidr="$(jq -r '."cf-internal-subnet-az1-cidr"' < cf-vars.json)"
