@@ -375,7 +375,8 @@
           "elasticloadbalancing:DeleteTargetGroup"
                 ],
       "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/${environment}-cf-target-group/*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/${environment}-cf-target-group/*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/*"
       ]
     },
     {

@@ -14,5 +14,5 @@ export VERSION="3586.16"
 
 bosh upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${VERSION}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
 
-export BOSH_LOG_LEVEL=info
+export BOSH_LOG_LEVEL=debug
 bosh -d cf --non-interactive deploy ./cf-manifest-s3/cf.yml
