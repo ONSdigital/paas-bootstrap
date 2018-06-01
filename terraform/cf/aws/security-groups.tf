@@ -151,14 +151,14 @@ resource "aws_security_group" "cf_router_lb_internal_security_group" {
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    security_groups = ["${aws_security_group.alb.id}"]
+    security_groups = ["${aws_security_group.cf_alb.id}"]
     protocol        = "tcp"
     from_port       = 80
     to_port         = 80
   }
 
   ingress {
-    security_groups = ["${aws_security_group.alb.id}"]
+    security_groups = ["${aws_security_group.cf_alb.id}"]
     protocol        = "tcp"
     from_port       = 8080
     to_port         = 8080
