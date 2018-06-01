@@ -19,7 +19,7 @@ resource "aws_security_group_rule" "cf_alb_http" {
   protocol          = "tcp"
   from_port         = 80
   to_port           = 80
-  cidr_blocks       = ["${concat(var.ingress_whitelist,list(format("%s/32", data.aws_nat_gateway.selected.public_ip)))}"]
+  cidr_blocks       = ["${concat(var.ingress_whitelist,list(var.public_ip, format("%s/32", data.aws_nat_gateway.selected.public_ip)))}"]
   description       = "Whitelist administrator access for HTTP"
 }
 
@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "cf_alb_https" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = ["${concat(var.ingress_whitelist,list(format("%s/32", data.aws_nat_gateway.selected.public_ip)))}"]
+  cidr_blocks       = ["${concat(var.ingress_whitelist,list(var.public_ip, format("%s/32", data.aws_nat_gateway.selected.public_ip)))}"]
   description       = "Whitelist administrator access for HTTPS"
 }
 
@@ -39,7 +39,7 @@ resource "aws_security_group_rule" "cf_alb_4443" {
   protocol          = "tcp"
   from_port         = 4443
   to_port           = 4443
-  cidr_blocks       = ["${concat(var.ingress_whitelist,list(format("%s/32", data.aws_nat_gateway.selected.public_ip)))}"]
+  cidr_blocks       = ["${concat(var.ingress_whitelist,list(var.public_ip, format("%s/32", data.aws_nat_gateway.selected.public_ip)))}"]
   description       = "Whitelist administrator access for HTTPS/4443"
 }
 
@@ -147,6 +147,7 @@ resource "aws_security_group_rule" "bosh_mbus_cf" {
 }
 
 resource "aws_security_group" "cf_router_lb_internal_security_group" {
+  name        = "${var.environment}_cf_router_lb_internal_security_group"
   description = "CF Router Internal"
   vpc_id      = "${var.vpc_id}"
 
