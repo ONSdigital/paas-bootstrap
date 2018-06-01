@@ -524,6 +524,8 @@ jobs:
       - put: cf-cloud-config-s3
         params:
           file: cf-manifests/cloud-config.yml
+  - task: deploy-stemcell
+    file: paas-bootstrap-git/ci/tasks/cf/upload_stemcell/task.yml        
   - task: deploy_cf
     file: paas-bootstrap-git/ci/tasks/cf/deploy_cf/task.yml
 
