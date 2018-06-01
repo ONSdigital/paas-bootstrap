@@ -131,7 +131,8 @@
             "${environment}-jumpbox-security-group",
             "${environment}-bosh-security-group",
             "${environment}-cf-alb-security-group",
-            "${environment}-cf-internal-security-group"
+            "${environment}-cf-internal-security-group",
+            "${environment}-cf-router-lb-internal-security-group"
           ]
         }
       }
