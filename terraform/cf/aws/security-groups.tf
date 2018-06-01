@@ -13,39 +13,55 @@ resource "aws_security_group" "cf_alb" {
   }
 }
 
+resource "aws_security_group_rule" "cf_alb_http" {
+  security_group_id = "${aws_security_group.cf_alb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_blocks       = ["${concat(var.ingress_whitelist, format("%s/32", data.aws_nat_gateway.selected.public_ip))}"]
+  description       = "Whitelist administrator access for HTTP"
+}
+
 resource "aws_security_group_rule" "cf_alb_https" {
   security_group_id = "${aws_security_group.cf_alb.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = "${var.ingress_whitelist}"
-  description       = "Whitelist administrator access"
+  cidr_blocks       = ["${concat(var.ingress_whitelist, format("%s/32", data.aws_nat_gateway.selected.public_ip))}"]
+  description       = "Whitelist administrator access for HTTPS"
 }
 
-resource "aws_security_group_rule" "cf_alb_internal" {
-  security_group_id        = "${aws_security_group.cf_alb.id}"
-  type                     = "egress"
-  protocol                 = "-1"
-  from_port                = 0
-  to_port                  = 0
-  source_security_group_id = "${aws_security_group.internal.id}"
-  description              = "Allow access to internal services"
-}
-
-resource "aws_security_group_rule" "cf_alb_ingress" {
+resource "aws_security_group_rule" "cf_alb_4443" {
   security_group_id = "${aws_security_group.cf_alb.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_blocks       = ["${format("%s/32", data.aws_nat_gateway.selected.public_ip)}"]
-  description       = "Attach NAT gateway eip addresses"
-
-  lifecycle {
-    create_before_destroy = true
-  }
+  from_port         = 4443
+  to_port           = 4443
+  cidr_blocks       = ["${concat(var.ingress_whitelist, format("%s/32", data.aws_nat_gateway.selected.public_ip))}"]
+  description       = "Whitelist administrator access for HTTPS/4443"
 }
+
+resource "aws_security_group_rule" "cf_alb_egress_internal" {
+  security_group_id = "${aws_security_group.cf_alb.id}"
+  type              = "egress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow access to (eventually) internal services"
+}
+
+# resource "aws_security_group_rule" "cf_alb_internal" {
+#   security_group_id        = "${aws_security_group.cf_alb.id}"
+#   type                     = "egress"
+#   protocol                 = "-1"
+#   from_port                = 0
+#   to_port                  = 0
+#   source_security_group_id = "${aws_security_group.internal.id}"
+#   description              = "Allow access to internal services"
+# }
 
 resource "aws_security_group" "internal" {
   name        = "${var.environment}_cf_internal_security_group"
@@ -128,4 +144,35 @@ resource "aws_security_group_rule" "bosh_mbus_cf" {
   from_port                = 6868
   to_port                  = 6868
   source_security_group_id = "${aws_security_group.internal.id}"
+}
+
+resource "aws_security_group" "cf_router_lb_internal_security_group" {
+  description = "CF Router Internal"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    security_groups = ["${aws_security_group.alb.id}"]
+    protocol        = "tcp"
+    from_port       = 80
+    to_port         = 80
+  }
+
+  ingress {
+    security_groups = ["${aws_security_group.alb.id}"]
+    protocol        = "tcp"
+    from_port       = 8080
+    to_port         = 8080
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name        = "${var.environment}-cf-router-lb-internal-security-group"
+    Environment = "${var.environment}"
+  }
 }

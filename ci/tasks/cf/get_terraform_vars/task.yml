@@ -10,11 +10,13 @@ inputs:
 - name: vpc-tfstate-s3
 - name: bosh-tfstate-s3
 - name: concourse-tfstate-s3
+- name: cf-tfstate-s3
 
 outputs:
 - name: vpc-vars
 - name: bosh-vars
 - name: concourse-vars
+- name: cf-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.sh
