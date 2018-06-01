@@ -101,6 +101,7 @@ resources:
     versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+    
 
 - name: jumpbox-vars-s3
   type: s3-iam
@@ -183,6 +184,9 @@ resources:
     versioned_file: cf/cf.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
 
 - name: cf-cloud-config-s3
   type: s3-iam
