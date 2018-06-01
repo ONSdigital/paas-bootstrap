@@ -489,6 +489,7 @@ jobs:
       trigger: true
       passed: [verify-cf]
     - get: cf-deployment-git
+      version: { ref: ((cf_commit_ref)) }
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
     - get: cf-tfstate-s3
