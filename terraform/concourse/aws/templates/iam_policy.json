@@ -160,7 +160,8 @@
         "ec2:DescribeSecurityGroups",
         "ec2:CreateSubnet",
         "ec2:DeleteSubnet",
-        "ec2:DescribeSubnets"
+        "ec2:DescribeSubnets",
+        "ec2:DescribeNetworkInterfaces"
       ],
       "Resource": "*",
       "Condition": {
@@ -360,7 +361,8 @@
     {
       "Effect": "Allow",
       "Action": [
-          "elasticloadbalancing:ModifyListener"
+          "elasticloadbalancing:ModifyListener",
+          "elasticloadbalancing:DeleteListener"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-cf-alb/*"
