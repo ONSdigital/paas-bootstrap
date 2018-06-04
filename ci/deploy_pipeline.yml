@@ -101,7 +101,6 @@ resources:
     versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
-    
 
 - name: jumpbox-vars-s3
   type: s3-iam
@@ -445,7 +444,6 @@ jobs:
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
     - get: concourse-tfstate-s3
-    - get: cf-tfstate-s3
     - get: paas-bootstrap-git
       trigger: true
       # passed: [verify-bosh]
@@ -527,7 +525,7 @@ jobs:
         params:
           file: cf-manifests/cloud-config.yml
   - task: deploy-stemcell
-    file: paas-bootstrap-git/ci/tasks/cf/upload_stemcell/task.yml        
+    file: paas-bootstrap-git/ci/tasks/cf/upload_stemcell/task.yml
   - task: deploy_cf
     file: paas-bootstrap-git/ci/tasks/cf/deploy_cf/task.yml
 
