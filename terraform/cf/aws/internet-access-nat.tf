@@ -8,6 +8,7 @@ resource "aws_route_table" "az1" {
   tags {
     Name        = "${var.environment}-nat-az1"
     Environment = "${var.environment}"
+    Visibility  = "private"
   }
 }
 
@@ -21,6 +22,7 @@ resource "aws_route_table" "az2" {
   tags {
     Name        = "${var.environment}-nat-az2"
     Environment = "${var.environment}"
+    Visibility  = "private"
   }
 }
 
@@ -34,6 +36,7 @@ resource "aws_route_table" "az3" {
   tags {
     Name        = "${var.environment}-nat-az3"
     Environment = "${var.environment}"
+    Visibility  = "private"
   }
 }
 
