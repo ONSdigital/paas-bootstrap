@@ -52,19 +52,19 @@ resource "aws_route_table_association" "az3" {
   route_table_id = "${aws_route_table.az3.id}"
 }
 
-resource "aws_route" "nat" {
+resource "aws_route" "az1" {
   route_table_id         = "${aws_route_table.az1.id}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${var.nat_az1_id}"
 }
 
-resource "aws_route" "nat" {
+resource "aws_route" "az2" {
   route_table_id         = "${aws_route_table.az2.id}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${var.nat_az2_id}"
 }
 
-resource "aws_route" "nat" {
+resource "aws_route" "az3" {
   route_table_id         = "${aws_route_table.az3.id}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${var.nat_az3_id}"
