@@ -449,7 +449,8 @@
       "Effect": "Allow",
       "Action": [
           "ec2:DeleteRoute",
-          "ec2:DeleteRouteTable"
+          "ec2:DeleteRouteTable",
+          "ec2:ReplaceRoute"
       ],
       "Resource": "arn:aws:ec2:${region}:${account_id}:route-table/*"
   },
