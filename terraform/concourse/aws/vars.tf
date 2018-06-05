@@ -24,6 +24,10 @@ variable "az2" {
   default = "eu-west-1b"
 }
 
+variable "az3" {
+  default = "eu-west-1c"
+}
+
 variable "public_key" {}
 variable "parent_dns_zone" {}
 

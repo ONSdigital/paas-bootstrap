@@ -19,3 +19,14 @@ resource "aws_subnet" "az2" {
     Environment = "${var.environment}"
   }
 }
+
+resource "aws_subnet" "az3" {
+  vpc_id            = "${var.vpc_id}"
+  cidr_block        = "10.0.12.0/24"
+  availability_zone = "${var.az3}"
+
+  tags {
+    Name        = "${var.environment}-az3-subnet"
+    Environment = "${var.environment}"
+  }
+}

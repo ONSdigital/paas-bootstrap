@@ -66,10 +66,26 @@ output "concourse_security_group_id" {
   value = "${aws_security_group.concourse.id}"
 }
 
-output "nat_id" {
-  value = "${aws_nat_gateway.nat.id}"
+output "nat_az1_id" {
+  value = "${aws_nat_gateway.nat_az1.id}"
 }
 
-output "nat_private_ip" {
-  value = "${aws_nat_gateway.nat.private_ip}"
+output "nat_az1_private_ip" {
+  value = "${aws_nat_gateway.nat_az1.private_ip}"
+}
+
+output "nat_az2_id" {
+  value = "${aws_nat_gateway.nat_az2.id}"
+}
+
+output "nat_az2_private_ip" {
+  value = "${aws_nat_gateway.nat_az2.private_ip}"
+}
+
+output "nat_az3_id" {
+  value = "${aws_nat_gateway.nat_az3.id}"
+}
+
+output "nat_az3_private_ip" {
+  value = "${aws_nat_gateway.nat_az3.private_ip}"
 }
