@@ -13,5 +13,5 @@ inputs:
 outputs:
 
 run:
-  path: paas-bootstrap-git/ci/tasks/cf/deploy_cf/task.sh
+  path: paas-bootstrap-git/ci/tasks/cf/upload_stemcell/task.sh
 
