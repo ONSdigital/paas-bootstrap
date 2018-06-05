@@ -1,6 +1,6 @@
 resource "aws_lb" "cf" {
   name                             = "${var.environment}-cf-alb"
-  subnets                          = ["${aws_subnet.az1.id}", "${aws_subnet.az2.id}", "${aws_subnet.az3.id}"]
+  subnets                          = ["${data.aws_subnet_ids.public.ids}"]
   security_groups                  = ["${aws_security_group.cf_alb.id}"]
   load_balancer_type               = "application"
   internal                         = false

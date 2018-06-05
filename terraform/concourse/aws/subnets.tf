@@ -6,6 +6,7 @@ resource "aws_subnet" "az1" {
   tags {
     Name        = "${var.environment}-az1-subnet"
     Environment = "${var.environment}"
+    Visibility  = "public"
   }
 }
 
@@ -17,6 +18,7 @@ resource "aws_subnet" "az2" {
   tags {
     Name        = "${var.environment}-az2-subnet"
     Environment = "${var.environment}"
+    Visibility  = "public"
   }
 }
 
@@ -28,5 +30,6 @@ resource "aws_subnet" "az3" {
   tags {
     Name        = "${var.environment}-az3-subnet"
     Environment = "${var.environment}"
+    Visibility  = "public"
   }
 }

@@ -450,7 +450,8 @@
       "Action": [
           "ec2:DeleteRoute",
           "ec2:DeleteRouteTable",
-          "ec2:ReplaceRoute"
+          "ec2:ReplaceRoute",
+          "ec2:CreateTags"
       ],
       "Resource": "arn:aws:ec2:${region}:${account_id}:route-table/*"
   },
