@@ -11,3 +11,4 @@ secret.yml
 *.creds.yml
 
 tmp*.yml
+foo.yml

@@ -28,5 +28,5 @@ resource "aws_security_group_rule" "allow-all" {
 resource "aws_route" "nat" {
   route_table_id         = "${aws_route_table.az1.id}"
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = "${var.nat_id}"
+  nat_gateway_id         = "${var.nat_az1_id}"
 }
