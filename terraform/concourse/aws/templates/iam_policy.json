@@ -354,7 +354,8 @@
           "elasticloadbalancing:CreateListener",
           "elasticloadbalancing:DeleteListener",
           "elasticloadbalancing:ModifyLoadBalancerAttributes",
-          "elasticloadbalancing:SetSecurityGroups"
+          "elasticloadbalancing:SetSecurityGroups",
+          "elasticloadbalancing:SetSubnets"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*"
