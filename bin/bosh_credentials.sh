@@ -62,7 +62,7 @@ bosh int --path /default_ca/ca "$VARS/bosh-variables.yml" > "${VARS}/bosh_ca.pem
 export BOSH_CA_CERT="${VARS}/bosh_ca.pem"
 export BOSH_CLIENT=admin
 export BOSH_CLIENT_SECRET=$(bosh int --path /admin_password "$VARS/bosh-variables.yml")
-export BOSH_ALL_PROXY=socks5://localhost:$BOSH_PROXY_PORT/
+export BOSH_ALL_PROXY="socks5://localhost:$BOSH_PROXY_PORT"
 export BOSH_ENVIRONMENT="$ENVIRONMENT"
 
 bosh alias-env "${ENVIRONMENT}" -e "${DIRECTOR_IP}"
