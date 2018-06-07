@@ -9,6 +9,7 @@ inputs:
   - name: cf-manifest-s3
   - name: bosh-vars-s3
   - name: bosh-manifest-s3
+  - name: cf-manifests
 
 outputs:
 
