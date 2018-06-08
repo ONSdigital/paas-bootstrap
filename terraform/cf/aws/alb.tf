@@ -49,6 +49,24 @@ resource "aws_lb_listener" "cf_443" {
   }
 }
 
+resource "aws_lb_listener" "cf_4443" {
+  depends_on        = ["aws_acm_certificate_validation.cf"]
+  load_balancer_arn = "${aws_lb.cf.arn}"
+  port              = "4443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${aws_acm_certificate.cf.arn}"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.cf.arn}"
+    type             = "forward"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_lb_target_group" "cf" {
   name     = "${var.environment}-cf-target-group"
   port     = 80
