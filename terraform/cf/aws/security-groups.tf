@@ -100,7 +100,7 @@ resource "aws_security_group_rule" "internal_rule_allow_internet" {
   cidr_blocks       = ["10.0.0.0/16"]
 }
 
-resource "aws_security_group_rule" "internal_rule_allow_internet" {
+resource "aws_security_group_rule" "internal_rule_allow_alb" {
   security_group_id        = "${aws_security_group.internal.id}"
   type                     = "egress"
   protocol                 = "-1"
