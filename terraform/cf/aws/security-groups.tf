@@ -97,16 +97,7 @@ resource "aws_security_group_rule" "internal_rule_allow_internet" {
   protocol          = "-1"
   from_port         = 0
   to_port           = 0
-  cidr_blocks       = ["10.0.0.0/16"]
-}
-
-resource "aws_security_group_rule" "internal_rule_allow_alb" {
-  security_group_id        = "${aws_security_group.internal.id}"
-  type                     = "egress"
-  protocol                 = "-1"
-  from_port                = 0
-  to_port                  = 0
-  source_security_group_id = "${aws_security_group.cf_alb.id}"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "cf_from_bosh_rule_tcp_ssh" {
