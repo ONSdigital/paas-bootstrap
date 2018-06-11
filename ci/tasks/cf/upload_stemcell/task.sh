@@ -14,5 +14,5 @@ export BOSH_CA_CERT=$(cat bosh_ca.pem)
 
 # Upload the stemcell only if it doesn't already exist
 if ! bosh -n stemcells | grep -q "$stemcell_version"; then
-  bosh upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${bosh_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
+  bosh upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
 fi
