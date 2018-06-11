@@ -33,6 +33,14 @@ terraform plan \
   -state="$CONCOURSE_TERRAFORM_STATE_FILE" \
   "$TERRAFORM_DIR"
 
+save_state() {
+  if [ -f "${CONCOURSE_TERRAFORM_STATE_FILE}" ]; then
+    aws s3 cp "${CONCOURSE_TERRAFORM_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/tfstate.json" --acl=private
+  fi
+}
+
+trap save_state EXIT
+
 terraform apply -auto-approve \
   -var "environment=$ENVIRONMENT" \
   -var "aws_access_key_id=$AWS_ACCESS_KEY_ID" \
@@ -43,4 +51,3 @@ terraform apply -auto-approve \
   -state="$CONCOURSE_TERRAFORM_STATE_FILE" \
   "$TERRAFORM_DIR"
 
-aws s3 cp "${CONCOURSE_TERRAFORM_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/tfstate.json" --acl=private
