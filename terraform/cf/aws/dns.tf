@@ -23,3 +23,12 @@ resource "aws_route53_record" "cf_apps" {
 
   records = ["${aws_lb.cf.dns_name}"]
 }
+
+resource "aws_route53_record" "cf_ssh" {
+  zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
+  name    = "ssh.system.${var.environment}.${data.aws_route53_zone.parent.name}"
+  type    = "CNAME"
+  ttl     = "30"
+
+  records = ["${aws_lb.cf_ssh.dns_name}"]
+}
