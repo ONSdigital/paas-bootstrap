@@ -28,7 +28,8 @@ bosh update-cloud-config -n \
   -v cf-router-target-group-name="$(jq -r '."cf-router-target-group-name"' < cf-vars.json)" \
   -v cf-router-lb-internal-security-group-id="$(jq -r '."cf-router-lb-internal-security-group-id"' < cf-vars.json)" \
   -v cf-internal-security-group-id="$(jq -r '."cf-internal-security-group-id"' < cf-vars.json)" \
-  -v cf-ssh-lb-security-group-id="$(jq -r '."cf-ssh-lb-security-group-id"' < cf-vars.json)"
+  -v cf-ssh-lb-security-group-id="$(jq -r '."cf-ssh-lb-security-group-id"' < cf-vars.json)" \
+  -v cf-ssh-target-group-name="$(jq -r '."cf-ssh-target-group-name"' < cf-vars.json)" 
 
 
   bosh cloud-config > cf-manifests/cloud-config.yml
