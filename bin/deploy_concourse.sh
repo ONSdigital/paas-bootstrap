@@ -35,10 +35,12 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -o operations/concourse/fqdn.yml \
   -o operations/concourse/iam_instance_profile.yml \
   -o operations/concourse/ephemeral_disk.yml \
+  -o operations/concourse/tags.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
   -v access_key_id="$AWS_ACCESS_KEY_ID" \
   -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
+  -v environment="$ENVIRONMENT" \
   --var-file private_key="$PRIVATE_KEY_FILE" \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"
