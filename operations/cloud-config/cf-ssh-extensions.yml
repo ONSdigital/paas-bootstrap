@@ -4,7 +4,7 @@
   value:
     name: diego-ssh-proxy-network-properties
     cloud_properties:
-      # lb_target_groups: [((cf-ssh-target-group-name))]
+      lb_target_groups: [((cf-ssh-target-group-name))]
       security_groups:
         - ((cf-ssh-lb-security-group-id))
         - ((internal_security_group))

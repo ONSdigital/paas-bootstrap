@@ -21,3 +21,7 @@ output "cf-router-lb-internal-security-group-id" {
 output "cf-ssh-lb-security-group-id" {
   value = "${aws_security_group.cf_ssh_lb.id}"
 }
+
+output "cf-ssh-target-group-name" {
+  value = "${aws_lb_target_group.cf-ssh-lb.name}"
+}
