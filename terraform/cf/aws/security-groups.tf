@@ -210,3 +210,21 @@ resource "aws_security_group" "cf_ssh_lb" {
     Environment = "${var.environment}"
   }
 }
+
+resource "aws_security_group" "cf_ssh_lb_ingress" {
+  name        = "${var.environment}_cf_ssh_lb"
+  description = "CF SSH ingress traffic"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    cidr_blocks = ["${var.ingress_whitelist}"]
+    protocol    = "tcp"
+    from_port   = 2222
+    to_port     = 2222
+  }
+
+  tags {
+    Name        = "${var.environment}-cf-ssh-lb"
+    Environment = "${var.environment}"
+  }
+}
