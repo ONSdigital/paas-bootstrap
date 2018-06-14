@@ -1,4 +1,4 @@
-resource "aws_elb" "cf-ssh-lb" {
+resource "aws_elb" "cf-ssh-elb" {
   name                      = "${var.environment}-cf-ssh-lb"
   internal                  = false
   subnets                   = ["${data.aws_subnet_ids.public.ids}"]
