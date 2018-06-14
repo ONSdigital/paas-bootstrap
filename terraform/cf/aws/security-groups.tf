@@ -225,11 +225,11 @@ resource "aws_security_group" "cf_ssh_proxy" {
   }
 
   egress {
-    security_groups = ["${aws_security_group.cf_ssh_internal.id}"]
-    protocol        = "tcp"
-    from_port       = 2222
-    to_port         = 2222
-    description = "Provide egress SSH traffic to internal services"
+    source_security_group_id = "${aws_security_group.cf_ssh_internal.id}"
+    protocol                 = "tcp"
+    from_port                = 2222
+    to_port                  = 2222
+    description              = "Provide egress SSH traffic to internal services"
   }
 
   tags {
@@ -244,19 +244,11 @@ resource "aws_security_group" "cf_ssh_internal" {
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    self      = "true"
-    protocol  = "tcp"
-    from_port = 2222
-    to_port   = 2222
-    description = "Provide ingress SSH traffic"
-  }
-
-  egress {
-    self      = "true"
-    protocol  = "tcp"
-    from_port = 2222
-    to_port   = 2222
-    description = "Provide egress SSH traffic"
+    source_security_group_id = "${aws_security_group.cf_ssh_proxy.id}"
+    protocol                 = "tcp"
+    from_port                = 2222
+    to_port                  = 2222
+    description              = "Provide ingress SSH traffic"
   }
 
   tags {
