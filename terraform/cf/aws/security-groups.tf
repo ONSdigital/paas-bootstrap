@@ -223,8 +223,40 @@ resource "aws_security_group" "cf_ssh_proxy" {
     to_port     = 2222
   }
 
+  egress {
+    security_groups = ["${aws_security_group.cf_ssh_internal.id}"]
+    protocol        = "tcp"
+    from_port       = 2222
+    to_port         = 2222
+  }
+
   tags {
     Name        = "${var.environment}-cf-ssh-proxy"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group" "cf_ssh_internal" {
+  name        = "${var.environment}_cf_ssh_internal"
+  description = "CF SSH internal access"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    self      = "true"
+    protocol  = "tcp"
+    from_port = 2222
+    to_port   = 2222
+  }
+
+  egress {
+    self      = "true"
+    protocol  = "tcp"
+    from_port = 2222
+    to_port   = 2222
+  }
+
+  tags {
+    Name        = "${var.environment}-cf-ssh-internal"
     Environment = "${var.environment}"
   }
 }
