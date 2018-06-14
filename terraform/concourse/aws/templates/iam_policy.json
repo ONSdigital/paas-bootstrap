@@ -133,8 +133,8 @@
             "${environment}-cf-alb-security-group",
             "${environment}-cf-internal-security-group",
             "${environment}-cf-router-lb-internal-security-group",
-            "${environment}-cf-ssh-lb",
-            "${environment}-cf-ssh-internal"
+            "${environment}-cf-ssh-lb-security-group",
+            "${environment}-cf-ssh-internal-security-group"
           ]
         }
       }
@@ -363,6 +363,7 @@
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-proxy/*",
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb/*",
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb"
       ]
@@ -374,7 +375,8 @@
           "elasticloadbalancing:DeleteListener"
                 ],
       "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-cf-alb/*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-cf-alb/*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-cf-ssh-lb/*"
       ]
     },
     {
