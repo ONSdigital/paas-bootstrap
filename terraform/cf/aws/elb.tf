@@ -1,10 +1,10 @@
-resource "aws_elb" "cf-ssh-proxy" {
-  name                      = "${var.environment}-cf-ssh-proxy"
+resource "aws_elb" "cf-ssh-lb" {
+  name                      = "${var.environment}-cf-ssh-lb"
   internal                  = false
   subnets                   = ["${data.aws_subnet_ids.public.ids}"]
   cross_zone_load_balancing = "true"
 
-  security_groups = ["${aws_security_group.cf_ssh_proxy.id}"]
+  security_groups = ["${aws_security_group.cf_ssh_lb.id}"]
 
   health_check {
     target              = "TCP:2222"
@@ -22,7 +22,7 @@ resource "aws_elb" "cf-ssh-proxy" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-ssh-proxy"
+    Name        = "${var.environment}-cf-ssh-lb"
     Environment = "${var.environment}"
   }
 

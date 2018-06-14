@@ -132,7 +132,9 @@
             "${environment}-bosh-security-group",
             "${environment}-cf-alb-security-group",
             "${environment}-cf-internal-security-group",
-            "${environment}-cf-router-lb-internal-security-group"
+            "${environment}-cf-router-lb-internal-security-group",
+            "${environment}-cf-ssh-lb",
+            "${environment}-cf-ssh-internal"
           ]
         }
       }
@@ -355,10 +357,14 @@
           "elasticloadbalancing:DeleteListener",
           "elasticloadbalancing:ModifyLoadBalancerAttributes",
           "elasticloadbalancing:SetSecurityGroups",
-          "elasticloadbalancing:SetSubnets"
+          "elasticloadbalancing:SetSubnets",
+          "elasticloadbalancing:CreateLoadBalancerListeners",
+          "elasticloadbalancing:ConfigureHealthCheck"
                 ],
       "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb/*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb"
       ]
     },
     {

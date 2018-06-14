@@ -188,31 +188,6 @@ resource "aws_security_group" "cf_router_lb_internal_security_group" {
 
 resource "aws_security_group" "cf_ssh_lb" {
   name        = "${var.environment}_cf_ssh_lb"
-  description = "CF SSH restricted access"
-  vpc_id      = "${var.vpc_id}"
-
-  ingress {
-    cidr_blocks = ["0.0.0.0/0"] # temporary
-    protocol    = "tcp"
-    from_port   = 2222
-    to_port     = 2222
-  }
-
-  egress {
-    from_port   = 0             # temporary
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags {
-    Name        = "${var.environment}-cf-ssh-lb"
-    Environment = "${var.environment}"
-  }
-}
-
-resource "aws_security_group" "cf_ssh_lb" {
-  name        = "${var.environment}_cf_ssh_lb"
   description = "CF SSH traffic from load balancer"
   vpc_id      = "${var.vpc_id}"
 
