@@ -211,9 +211,9 @@ resource "aws_security_group" "cf_ssh_lb" {
   }
 }
 
-resource "aws_security_group" "cf_ssh_lb_ingress" {
-  name        = "${var.environment}_cf_ssh_lb_ingress"
-  description = "CF SSH ingress traffic"
+resource "aws_security_group" "cf_ssh_proxy" {
+  name        = "${var.environment}_cf_ssh_proxy"
+  description = "CF SSH proxy traffic"
   vpc_id      = "${var.vpc_id}"
 
   ingress {
@@ -224,7 +224,7 @@ resource "aws_security_group" "cf_ssh_lb_ingress" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-ssh-lb-ingress"
+    Name        = "${var.environment}-cf-ssh-proxy"
     Environment = "${var.environment}"
   }
 }

@@ -1,5 +1,5 @@
-resource "aws_elb" "cf-ssh-elb" {
-  name                      = "${var.environment}-cf-ssh-elb"
+resource "aws_elb" "cf-ssh-proxy" {
+  name                      = "${var.environment}-cf-ssh-proxy"
   internal                  = false
   subnets                   = ["${data.aws_subnet_ids.public.ids}"]
   cross_zone_load_balancing = "true"
@@ -19,5 +19,14 @@ resource "aws_elb" "cf-ssh-elb" {
     instance_protocol = "tcp"
     lb_port           = 2222
     lb_protocol       = "tcp"
+  }
+
+  tags {
+    Name        = "${var.environment}-cf-ssh-proxy"
+    Environment = "${var.environment}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
