@@ -5,7 +5,7 @@ resource "aws_elb" "cf-ssh-lb" {
   subnets                   = ["${data.aws_subnet_ids.public.ids}"]
   cross_zone_load_balancing = "true"
 
-  security_groups = ["${aws_security_group.sshproxy.id}"]
+  security_groups = ["${aws_security_group.cf_ssh_lb_ingress.id}"]
 
   health_check {
     target              = "TCP:2222"
