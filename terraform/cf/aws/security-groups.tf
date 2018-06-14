@@ -197,7 +197,7 @@ resource "aws_security_group" "cf_ssh_lb" {
   }
 }
 
-resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
+resource "aws_security_group_rule" "allow_tcp_2222_from_whitelist" {
   security_group_id = "${aws_security_group.cf_ssh_lb.id}"
   type              = "ingress"
   protocol          = "tcp"

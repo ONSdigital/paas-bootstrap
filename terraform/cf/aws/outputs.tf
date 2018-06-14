@@ -22,6 +22,6 @@ output "cf-ssh-internal" {
   value = "${aws_security_group.cf_ssh_internal.id}"
 }
 
-output "cf-ssh-proxy" {
-  value = "${aws_elb.cf-ssh-proxy.name}"
+output "cf-ssh-lb" {
+  value = "${aws_elb.cf-ssh-lb.name}"
 }
