@@ -18,10 +18,10 @@ output "cf-router-lb-internal-security-group-id" {
   value = "${aws_security_group.cf_router_lb_internal_security_group.id}"
 }
 
-output "cf-ssh-lb-security-group-id" {
-  value = "${aws_security_group.cf_ssh_lb.id}"
+output "cf-ssh-internal" {
+  value = "${aws_security_group.cf_ssh_internal.id}"
 }
 
-output "cf-ssh-target-group-name" {
-  value = "${aws_lb_target_group.cf-ssh-lb.name}"
+output "cf-ssh-proxy" {
+  value = "${aws_elb.cf-ssh-proxy.name}"
 }
