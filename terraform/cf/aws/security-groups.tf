@@ -224,7 +224,7 @@ resource "aws_security_group" "cf_ssh_lb_ingress" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-ssh-lb"
+    Name        = "${var.environment}-cf-ssh-lb-ingress"
     Environment = "${var.environment}"
   }
 }
