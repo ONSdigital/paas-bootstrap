@@ -211,31 +211,35 @@ resource "aws_security_group" "cf_ssh_lb" {
   }
 }
 
-resource "aws_security_group" "cf_ssh_proxy" {
-  name        = "${var.environment}_cf_ssh_proxy"
-  description = "CF SSH proxy traffic"
+resource "aws_security_group" "cf_ssh_lb" {
+  name        = "${var.environment}_cf_ssh_lb"
+  description = "CF SSH traffic from load balancer"
   vpc_id      = "${var.vpc_id}"
 
-  ingress {
-    cidr_blocks = ["${var.ingress_whitelist}"]
-    protocol    = "tcp"
-    from_port   = 2222
-    to_port     = 2222
-    description = "Provide ingress SSH traffic from whitelist"
-  }
-
-  egress {
-    source_security_group_id = "${aws_security_group.cf_ssh_internal.id}"
-    protocol                 = "tcp"
-    from_port                = 2222
-    to_port                  = 2222
-    description              = "Provide egress SSH traffic to internal services"
-  }
-
   tags {
-    Name        = "${var.environment}-cf-ssh-proxy"
+    Name        = "${var.environment}-cf-ssh-lb-security-group"
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
+  security_group_id = "${aws_security_group.cf_ssh_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 2222
+  to_port           = 2222
+  cidr_blocks       = ["${var.ingress_whitelist}"]
+  description       = "Provide egress SSH traffic"
+}
+
+resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
+  security_group_id        = "${aws_security_group.cf_ssh_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 2222
+  to_port                  = 2222
+  source_security_group_id = "${aws_security_group.cf_ssh_internal.id}"
+  description              = "Provide egress SSH traffic"
 }
 
 resource "aws_security_group" "cf_ssh_internal" {
@@ -243,16 +247,18 @@ resource "aws_security_group" "cf_ssh_internal" {
   description = "CF SSH internal access"
   vpc_id      = "${var.vpc_id}"
 
-  ingress {
-    source_security_group_id = "${aws_security_group.cf_ssh_proxy.id}"
-    protocol                 = "tcp"
-    from_port                = 2222
-    to_port                  = 2222
-    description              = "Provide ingress SSH traffic"
-  }
-
   tags {
-    Name        = "${var.environment}-cf-ssh-internal"
+    Name        = "${var.environment}-cf-ssh-internal-security-group"
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_security_group_rule" "allow_tcp_2222_from_ssh_lb" {
+  security_group_id        = "${aws_security_group.cf_ssh_internal.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 2222
+  to_port                  = 2222
+  source_security_group_id = "${aws_security_group.cf_ssh_lb.id}"
+  description              = "Provide ingress SSH traffic"
 }
