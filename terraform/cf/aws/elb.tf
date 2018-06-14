@@ -1,7 +1,6 @@
 resource "aws_elb" "cf-ssh-lb" {
   name                      = "${var.environment}-cf-ssh-lb"
   internal                  = false
-  load_balancer_type        = "network"
   subnets                   = ["${data.aws_subnet_ids.public.ids}"]
   cross_zone_load_balancing = "true"
 
