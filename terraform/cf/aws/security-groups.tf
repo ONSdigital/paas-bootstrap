@@ -221,6 +221,7 @@ resource "aws_security_group" "cf_ssh_proxy" {
     protocol    = "tcp"
     from_port   = 2222
     to_port     = 2222
+    description = "Provide ingress SSH traffic from whitelist"
   }
 
   egress {
@@ -228,6 +229,7 @@ resource "aws_security_group" "cf_ssh_proxy" {
     protocol        = "tcp"
     from_port       = 2222
     to_port         = 2222
+    description = "Provide egress SSH traffic to internal services"
   }
 
   tags {
@@ -246,6 +248,7 @@ resource "aws_security_group" "cf_ssh_internal" {
     protocol  = "tcp"
     from_port = 2222
     to_port   = 2222
+    description = "Provide ingress SSH traffic"
   }
 
   egress {
@@ -253,6 +256,7 @@ resource "aws_security_group" "cf_ssh_internal" {
     protocol  = "tcp"
     from_port = 2222
     to_port   = 2222
+    description = "Provide egress SSH traffic"
   }
 
   tags {

@@ -30,5 +30,5 @@ resource "aws_route53_record" "cf_ssh" {
   type    = "CNAME"
   ttl     = "30"
 
-  records = ["${aws_lb.cf-ssh-lb.dns_name}"]
+  records = ["${aws_lb.cf-ssh-proxy.dns_name}"]
 }
