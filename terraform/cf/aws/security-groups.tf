@@ -212,7 +212,7 @@ resource "aws_security_group" "cf_ssh_lb" {
 }
 
 resource "aws_security_group" "cf_ssh_lb_ingress" {
-  name        = "${var.environment}_cf_ssh_lb"
+  name        = "${var.environment}_cf_ssh_lb_ingress"
   description = "CF SSH ingress traffic"
   vpc_id      = "${var.vpc_id}"
 
