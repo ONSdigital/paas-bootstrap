@@ -131,6 +131,8 @@ resources:
 
 jobs:
 - name: destroy-bosh
+  serial_groups: [main]
+  serial: true
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -149,6 +151,8 @@ jobs:
         file: bosh-state/bosh-state.json
 
 - name: destroy-jumpbox
+  serial_groups: [main]
+  serial: true
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -165,3 +169,15 @@ jobs:
       put: jumpbox-state-s3
       params:
         file: jumpbox-state/jumpbox-state.json
+
+- name: destroy-cf
+  serial_groups: [main]
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
+    - name: cf-manifest-s3
+  - task: destroy-cf
+    file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
