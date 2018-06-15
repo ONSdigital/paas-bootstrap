@@ -11,4 +11,4 @@ export BOSH_CLIENT_SECRET="${bosh_admin_password}"
 export BOSH_ENVIRONMENT="https://${bosh_ip}:25555"
 export BOSH_CA_CERT=$(cat bosh_ca.pem)
 
-bosh -d cf --non-interactive delete-deployment ./cf-manifest-s3/cf.yml
+bosh -d cf --non-interactive delete-deployment
