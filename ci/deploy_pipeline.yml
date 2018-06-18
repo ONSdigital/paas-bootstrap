@@ -563,7 +563,7 @@ jobs:
   - aggregate:
     - get: paas-bootstrap-git
       trigger: true
-      passed: [verify-cf]
+      passed: [verify-cf-terraform]
     - get: cf-deployment-git
       version: { ref: ((cf_commit_ref)) }
     - get: vpc-tfstate-s3
