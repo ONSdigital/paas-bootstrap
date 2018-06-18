@@ -185,3 +185,55 @@ resource "aws_security_group" "cf_router_lb_internal_security_group" {
     Environment = "${var.environment}"
   }
 }
+
+resource "aws_security_group" "cf_ssh_lb" {
+  name        = "${var.environment}_cf_ssh_lb"
+  description = "CF SSH traffic from load balancer"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-cf-ssh-lb-security-group"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "allow_tcp_2222_from_whitelist" {
+  security_group_id = "${aws_security_group.cf_ssh_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 2222
+  to_port           = 2222
+  cidr_blocks       = ["${var.ingress_whitelist}"]
+  description       = "Allow SSH proxy traffic from whitelist"
+}
+
+resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
+  security_group_id        = "${aws_security_group.cf_ssh_lb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 2222
+  to_port                  = 2222
+  source_security_group_id = "${aws_security_group.cf_ssh_internal.id}"
+  description              = "Provide egress SSH traffic"
+}
+
+resource "aws_security_group" "cf_ssh_internal" {
+  name        = "${var.environment}_cf_ssh_internal"
+  description = "CF SSH internal access"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-cf-ssh-internal-security-group"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "allow_tcp_2222_from_ssh_lb" {
+  security_group_id        = "${aws_security_group.cf_ssh_internal.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 2222
+  to_port                  = 2222
+  source_security_group_id = "${aws_security_group.cf_ssh_lb.id}"
+  description              = "Provide ingress SSH traffic"
+}

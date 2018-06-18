@@ -11,6 +11,10 @@ vm_types:
   cloud_properties:
     instance_type: m3.large
     ephemeral_disk: {size: 30_000, type: gp2}
+- name: minimal-scheduler
+  cloud_properties:
+    instance_type: m4.large
+    ephemeral_disk: {size: 30_000, type: gp2}
 - name: small
   cloud_properties:
     instance_type: m3.medium

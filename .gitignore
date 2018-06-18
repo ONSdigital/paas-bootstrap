@@ -5,6 +5,7 @@
 secret.yml
 *.tfstate
 *.tfvars
+tmp*.tfvars.json
 
 *.pem
 *.pem.*

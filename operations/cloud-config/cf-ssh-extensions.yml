@@ -1,0 +1,11 @@
+---
+- type: replace
+  path: /vm_extensions/name=diego-ssh-proxy-network-properties?
+  value:
+    name: diego-ssh-proxy-network-properties
+    cloud_properties:
+      elbs: 
+        - ((cf-ssh-lb))
+      security_groups:
+        - ((cf-ssh-internal))
+        - ((internal_security_group))
