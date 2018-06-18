@@ -400,6 +400,7 @@ jobs:
   - aggregate:
     - get: concourse-tfstate-s3
     - get: jumpbox-terraform
+    - get: jumpbox-tfstate-s3
     - get: vpc-tfstate-s3
     - get: paas-bootstrap-git
       passed: [verify-jumpbox]
