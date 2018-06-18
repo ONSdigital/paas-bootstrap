@@ -363,7 +363,6 @@
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-proxy/*",
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb/*",
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb"
       ]
@@ -376,7 +375,7 @@
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-cf-alb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-cf-ssh-lb/*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-cf-ssh-lb/*"        
       ]
     },
     {
