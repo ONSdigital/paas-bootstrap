@@ -204,7 +204,7 @@ resource "aws_security_group_rule" "allow_tcp_2222_from_whitelist" {
   from_port         = 2222
   to_port           = 2222
   cidr_blocks       = ["${var.ingress_whitelist}"]
-  description       = "Provide egress SSH traffic"
+  description       = "Allow SSH proxy traffic from whitelist"
 }
 
 resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
