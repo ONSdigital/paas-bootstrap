@@ -49,6 +49,9 @@ test_s3_pipeline: require_vars ## Deploy a pipeline that tests S3 access to conc
 deploy_pipeline: require_vars ## Deploy the CF deployment pipeline
 	@ci/deploy_pipeline.sh
 
+pipeline_of_destruction: require_vars ## Deploy the CF destruction pipeline
+	@ci/destroy_pipeline.sh
+
 docker_image:  ## Build the general-purpose tooled docker image for Concourse tasks
 	@bin/create_docker_image.sh
 

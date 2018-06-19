@@ -3,8 +3,10 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-: $AWS_ACCESS_KEY_ID
-: $AWS_SECRET_ACCESS_KEY
+if [ -z "${AWS_PROFILE:-}" ]; then
+  : $AWS_ACCESS_KEY_ID
+  : $AWS_SECRET_ACCESS_KEY
+fi
 
 [ -f "$VAR_FILE" ] ||
   aws s3 cp "s3://${ENVIRONMENT}-states/vpc/vars.tfvars" "$VAR_FILE" ||
