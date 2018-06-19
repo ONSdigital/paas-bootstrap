@@ -42,6 +42,12 @@ aws s3 cp "s3://${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_F
     exit 0
   }
 
+aws s3 cp "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" "${PRIVATE_KEY_FILE}" ||
+  {
+    echo "Remote concourse pruvate key does not exist, assuming the environment does not exist...";
+    exit 0
+  }
+
 bosh delete-env "$SUBMODULE"/lite/concourse.yml \
   -o "$SUBMODULE"/lite/infrastructures/aws.yml \
   -o operations/concourse/public-network.yml \
@@ -58,3 +64,5 @@ aws s3 rm "s3://${ENVIRONMENT}-states/concourse/creds.yml" || true
 rm "${CONCOURSE_CREDS_FILE}" || true
 aws s3 rm "s3://${ENVIRONMENT}-states/concourse/state.json" || true
 rm "${CONCOURSE_STATE_FILE}" || true
+aws s3 rm "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" || true
+rm "${PRIVATE_KEY_FILE}" || true
