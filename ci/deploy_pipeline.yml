@@ -407,6 +407,8 @@ jobs:
       trigger: true
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
   - put: bosh-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/bosh/aws
