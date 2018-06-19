@@ -359,7 +359,8 @@
           "elasticloadbalancing:SetSecurityGroups",
           "elasticloadbalancing:SetSubnets",
           "elasticloadbalancing:CreateLoadBalancerListeners",
-          "elasticloadbalancing:ConfigureHealthCheck"
+          "elasticloadbalancing:ConfigureHealthCheck",
+          "elasticloadbalancing:ApplySecurityGroupsToLoadBalancer"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*",
