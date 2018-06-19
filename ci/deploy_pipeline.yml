@@ -443,6 +443,7 @@ jobs:
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
+    - get: jumpbox-tfstate-s3
     - get: bosh-tfstate-s3
     - get: concourse-tfstate-s3
     - get: paas-bootstrap-git
@@ -458,6 +459,7 @@ jobs:
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
+      - jumpbox-vars/vars.json
       - bosh-vars/vars.json
       - concourse-vars/vars.json
 

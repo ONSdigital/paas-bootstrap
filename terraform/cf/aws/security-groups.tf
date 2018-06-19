@@ -2,6 +2,10 @@ data "aws_security_group" "bosh" {
   id = "${var.bosh_security_group_id}"
 }
 
+data "aws_security_group" "jumpbox" {
+  id = "${var.jumpbox_security_group_id}"
+}
+
 resource "aws_security_group" "cf_alb" {
   name        = "${var.environment}_cf_alb_security_group"
   description = "CF public access"
@@ -118,6 +122,15 @@ resource "aws_security_group_rule" "cf_from_bosh_rule_tcp_bosh_agent" {
   source_security_group_id = "${data.aws_security_group.bosh.id}"
 }
 
+resource "aws_security_group_rule" "cf_from_jumpbox_rule_tcp_ssh" {
+  security_group_id        = "${aws_security_group.internal.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 22
+  to_port                  = 22
+  source_security_group_id = "${data.aws_security_group.jumpbox.id}"
+}
+
 resource "aws_security_group_rule" "bosh_ssh_cf" {
   security_group_id        = "${data.aws_security_group.bosh.id}"
   type                     = "egress"
@@ -151,6 +164,15 @@ resource "aws_security_group_rule" "bosh_udp_from_cf" {
   protocol                 = "udp"
   from_port                = 0
   to_port                  = 65535
+  source_security_group_id = "${aws_security_group.internal.id}"
+}
+
+resource "aws_security_group_rule" "jumpbox_ssh_cf" {
+  security_group_id        = "${data.aws_security_group.jumpbox.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 22
+  to_port                  = 22
   source_security_group_id = "${aws_security_group.internal.id}"
 }
 
