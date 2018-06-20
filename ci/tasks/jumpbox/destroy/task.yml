@@ -14,6 +14,9 @@ inputs:
 
 outputs:
   - name: jumpbox-state
+  - name: vpc-vars
+  - name: jumpbox-vars
+  - name: concourse-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.sh
