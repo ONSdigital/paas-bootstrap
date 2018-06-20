@@ -89,3 +89,7 @@ output "nat_az3_id" {
 output "nat_az3_private_ip" {
   value = "${aws_nat_gateway.nat_az3.private_ip}"
 }
+
+output "concourse_role" {
+  value = "${aws_iam_role_policy.concourse.role}"
+}
