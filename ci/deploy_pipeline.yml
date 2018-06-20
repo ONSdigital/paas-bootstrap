@@ -144,6 +144,8 @@ resources:
       region_name: ((region))
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
+    env:
+      TF_LOG: DEBUG  
 
 - name: cf-vars-s3
   type: s3-iam
@@ -223,7 +225,7 @@ jobs:
   serial: true
   plan:
   - get: paas-bootstrap-git
-    trigger: true
+    # trigger: true
   - get: concourse-tfstate-s3
   - aggregate:
     - task: ensure world cannot connect to concourse on port 22
@@ -262,7 +264,7 @@ jobs:
     - get: concourse-tfstate-s3
     - get: vpc-tfstate-s3
     - get: paas-bootstrap-git
-      trigger: true
+      # trigger: true
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
   - put: jumpbox-terraform
@@ -423,7 +425,7 @@ jobs:
     - get: concourse-tfstate-s3
     - get: paas-bootstrap-git
       trigger: true
-      passed: [verify-bosh]
+      # passed: [verify-bosh]
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
@@ -437,6 +439,7 @@ jobs:
       - jumpbox-vars/vars.json
       - bosh-vars/vars.json
       - concourse-vars/vars.json
+      logging: DEBUG
 
 - name: verify-cf
   serial: true
@@ -461,7 +464,7 @@ jobs:
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      trigger: true
+      # trigger: true
       passed: [verify-cf]
     - get: cf-deployment-git
       version: { ref: ((cf_commit_ref)) }
