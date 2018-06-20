@@ -25,3 +25,11 @@ output "cf-ssh-internal" {
 output "cf-ssh-lb" {
   value = "${aws_elb.cf-ssh-lb.name}"
 }
+
+output "cf_blobstore_s3_kms_key_id" {
+  value = "${aws_kms_key.cf-blobstore-key.id}"
+}
+
+output "cf_blobstore_s3_kms_key_arn" {
+  value = "${aws_kms_key.cf-blobstore-key.arn}"
+}
