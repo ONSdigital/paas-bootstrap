@@ -2,537 +2,61 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Effect": "Allow",
       "Action": [
-        "s3:ListBucket",
-        "s3:ListBucketVersions",
-        "s3:GetBucketVersioning"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${environment}-states"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:GetObjectVersion",
-        "s3:GetObjectTagging"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${environment}-states/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:PutObjectAcl",
-        "s3:PutObjectVersionAcl",
-        "s3:DeleteObject",
-        "s3:DeleteObjectTagging",
-        "s3:DeleteObjectVersion"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${environment}-states/jumpbox/*",
-        "arn:aws:s3:::${environment}-states/bosh/*",
-        "arn:aws:s3:::${environment}-states/cf/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:TagResource",
-        "kms:EnableKeyRotation",
-        "kms:DescribeKey",
-        "kms:GetKeyPolicy",
-        "kms:GetKeyRotationStatus",
-        "kms:ListResourceTags"
-      ],
-      "Resource": [
-        "arn:aws:kms:${region}:${account_id}:*",
-        "arn:aws:kms:${region}:${account_id}:key/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:CreateKey"
-      ],
-      "Resource": [
-        "*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:Decrypt",
-        "kms:Encrypt",
-        "kms:DescribeKey"
-      ],
-      "Resource": [
-        "${s3_kms_key_arn}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:DescribeKey"
-      ],
-      "Resource": [
-        "${default_s3_kms_key_arn}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:GenerateDataKey"
-      ],
-      "Resource": [
-        "*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "route53:GetHostedZone",
-        "route53:ChangeResourceRecordSets",
-        "route53:GetHealthCheck",
-        "route53:GetChange",
-        "route53:ListTagsForResource",
-        "route53:ChangeTagsForResource",
-        "route53:ListResourceRecordSets"
-      ],
-      "Resource": [
-        "arn:aws:route53:::hostedzone/${hosted_zone_id}",
-        "arn:aws:route53:::healthcheck/*",
-        "arn:aws:route53:::change/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "route53:GetHostedZone"
-      ],
-      "Resource": [
-        "arn:aws:route53:::hostedzone/${parent_hosted_zone_id}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "route53:ListHostedZones"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:ReleaseAddress",
-        "ec2:DisassociateAddress",
-        "ec2:DescribeAddresses",
         "ec2:AssociateAddress",
-        "ec2:AllocateAddress"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:RevokeSecurityGroupEgress",
-        "ec2:RevokeSecurityGroupIngress",
-        "ec2:AuthorizeSecurityGroupEgress",
-        "ec2:AuthorizeSecurityGroupIngress",
-        "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
-        "ec2:DeleteSecurityGroup",
-        "ec2:UpdateSecurityGroupRuleDescriptionsIngress"
-      ],
-      "Resource": "arn:aws:ec2:${region}:${account_id}:security-group/*",
-      "Condition": {
-        "StringEquals": {
-          "ec2:ResourceTag/Environment": "${environment}",
-          "ec2:ResourceTag/Name": [
-            "${environment}-jumpbox-security-group",
-            "${environment}-bosh-security-group",
-            "${environment}-cf-alb-security-group",
-            "${environment}-cf-internal-security-group",
-            "${environment}-cf-router-lb-internal-security-group",
-            "${environment}-cf-ssh-lb-security-group",
-            "${environment}-cf-ssh-internal-security-group"
-          ]
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:CreateTags",
-        "ec2:DeleteTags"
-      ],
-      "Resource": "arn:aws:ec2:${region}:${account_id}:*",
-      "Condition": {
-        "ForAllValues:StringEquals": {
-          "aws:TagKeys": [
-            "Name",
-            "Environment"
-          ]
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:CreateSecurityGroup",
-        "ec2:DescribeSecurityGroups",
-        "ec2:CreateSubnet",
-        "ec2:DeleteSubnet",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeNetworkInterfaces"
-      ],
-      "Resource": "*",
-      "Condition": {
-        "ForAllValues:StringEquals": {
-          "aws:TagKeys": [
-            "Name",
-            "Environment"
-          ]
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DetachVolume",
         "ec2:AttachVolume",
-        "ec2:DeleteVolume",
-        "ec2:TerminateInstances",
-        "ec2:CreateVolume"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:instance/*",
-        "arn:aws:ec2:${region}:${account_id}:volume/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:ResourceTag/Name": "jumpbox/0",
-          "ec2:ResourceTag/Environment": "${environment}",
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:AttachVolume",
-        "ec2:DetachVolume",
-        "ec2:TerminateInstances"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:instance/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:ResourceTag/Name": "bosh/0",
-          "ec2:ResourceTag/Environment": "${environment}",
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DeleteVolume",
+        "ec2:CopyImage",
         "ec2:CreateVolume",
-        "ec2:AttachVolume",
-        "ec2:DetachVolume"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:volume/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:CreateTags",
-        "ec2:DeleteTags"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:instance/*",
-        "arn:aws:ec2:${region}:${account_id}:subnet/*",
-        "arn:aws:ec2:${region}:${account_id}:volume/*",
-        "arn:aws:ec2:${region}:${account_id}:network-interface/*",
-        "arn:aws:ec2:*::image/*",
-        "arn:aws:ec2:${region}:${account_id}:security-group/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:RunInstances"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:subnet/*",
-        "arn:aws:ec2:${region}:${account_id}:volume/*",
-        "arn:aws:ec2:${region}:${account_id}:network-interface/*",
-        "arn:aws:ec2:*::image/*",
-        "arn:aws:ec2:${region}:${account_id}:security-group/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:RunInstances"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:instance/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:CreateTags",
-        "ec2:DeleteTags",
-        "ec2:RunInstances"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:key-pair/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
+        "ec2:DeleteSnapshot",
+        "ec2:DeleteVolume",
+        "ec2:DescribeAddresses",
+        "ec2:DescribeAvailabilityZones",
         "ec2:DescribeImages",
         "ec2:DescribeInstances",
-        "ec2:DescribeAvailabilityZones",
         "ec2:DescribeRegions",
-        "ec2:DescribeVolumes",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSnapshots",
         "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups"
+        "ec2:DescribeVolumes",
+        "ec2:DetachVolume",
+        "ec2:CreateSnapshot",
+        "ec2:CreateTags",
+        "ec2:ModifyInstanceAttribute",
+        "ec2:RunInstances",
+        "ec2:TerminateInstances",
+        "ec2:RegisterImage",
+        "ec2:DeregisterImage",
+        "ec2:CancelSpotInstanceRequests",
+        "ec2:DescribeSpotInstanceRequests",
+        "ec2:RequestSpotInstances",
+        "ec2:CreateRoute",
+        "ec2:DescribeRouteTables",
+        "ec2:ReplaceRoute"
       ],
-      "Resource": "*",
-      "Condition": {
-        "ForAllValues:StringEquals": {
-          "aws:TagKeys": [
-            "Name",
-            "Environment"
-          ]
-        }
-      }
+      "Effect": "Allow",
+      "Resource": "*"
     },
     {
-      "Effect": "Allow",
       "Action": [
-        "iam:CreateRole",
-        "iam:DeleteRole",
-        "iam:GetRole",
-        "iam:DeleteRolePolicy",
-        "iam:PutRolePolicy",
-        "iam:GetRolePolicy",
         "iam:PassRole"
       ],
-      "Resource": [
-        "arn:aws:iam::${account_id}:role/*"
-      ]
+      "Effect": "Allow",
+      "Resource": "*"
     },
     {
-      "Effect": "Allow",
       "Action": [
-        "iam:CreateInstanceProfile",
-        "iam:DeleteInstanceProfile",
-        "iam:GetInstanceProfile",
-        "iam:AddRoleToInstanceProfile",
-        "iam:RemoveRoleFromInstanceProfile"
+        "elasticloadbalancing:*"
       ],
-      "Resource": [
-        "arn:aws:iam::${account_id}:instance-profile/*"
-      ]
-    },
-    {
       "Effect": "Allow",
-      "Action": [
-          "elasticloadbalancing:CreateLoadBalancer",
-          "elasticloadbalancing:DeleteLoadBalancer",
-          "elasticloadbalancing:CreateListener",
-          "elasticloadbalancing:DeleteListener",
-          "elasticloadbalancing:ModifyLoadBalancerAttributes",
-          "elasticloadbalancing:SetSecurityGroups",
-          "elasticloadbalancing:SetSubnets",
-          "elasticloadbalancing:CreateLoadBalancerListeners",
-          "elasticloadbalancing:ConfigureHealthCheck"
-                ],
-      "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-          "elasticloadbalancing:ModifyListener",
-          "elasticloadbalancing:DeleteListener"
-                ],
-      "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-cf-alb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-cf-ssh-lb/*"        
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-          "elasticloadbalancing:CreateTargetGroup",
-          "elasticloadbalancing:AddTags",
-          "elasticloadbalancing:ModifyTargetGroup",
-          "elasticloadbalancing:ModifyTargetGroupAttributes",
-          "elasticloadbalancing:DeleteTargetGroup"
-                ],
-      "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/${environment}-cf-target-group/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "elasticloadbalancing:DescribeTags",
-        "elasticloadbalancing:DescribeLoadBalancerAttributes",
-        "elasticloadbalancing:DescribeTargetGroups",
-        "elasticloadbalancing:DescribeTargetGroupAttributes",
-        "elasticloadbalancing:DescribeListeners"
-      ],
-      "Resource": "*",
-      "Condition": {
-        "ForAllValues:StringEquals": {
-          "aws:TagKeys": [
-            "Name",
-            "Environment"
-          ]
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "acm:RequestCertificate"
-      ],
       "Resource": "*"
     },
     {
       "Effect": "Allow",
       "Action": [
-        "acm:AddTagsToCertificate",
-        "acm:DescribeCertificate",
-        "acm:DeleteCertificate"
-      ],
-      "Resource": "arn:aws:acm:${region}:${account_id}:certificate/*"
-    },
-    {
-      "Sid": "AllowCreationOfNATGateways",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:CreateNatGateway"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "AllowReadInfoOfNATGateways",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DescribeNatGateways"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "AllowDeleteOfNATGateways",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DeleteNatGateway"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "AllowDeleteRouteTables",
-      "Effect": "Allow",
-      "Action": [
-          "ec2:DeleteRoute",
-          "ec2:DeleteRouteTable",
-          "ec2:ReplaceRoute",
-          "ec2:CreateTags"
-      ],
-      "Resource": "arn:aws:ec2:${region}:${account_id}:route-table/*"
-  },
-  {
-      "Sid": "AllowCreateRouteTables",
-      "Effect": "Allow",
-      "Action": [
-          "ec2:CreateRoute",
-          "ec2:CreateRouteTable",
-          "ec2:DescribeRouteTables",
-          "ec2:AssociateRouteTable",
-          "ec2:ReplaceRouteTableAssociation",
-          "ec2:DisassociateRouteTable"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "DescribeAccount",
-      "Effect": "Allow",
-      "Action": [
-          "ec2:DescribeAccountAttributes"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "CreateBucket",
-      "Effect": "Allow",
-      "Action": [
-          "s3:CreateBucket",
-          "s3:PutBucketTagging",
-          "s3:PutBucketAcl",
-          "s3:PutObjectAcl",
-          "s3:PutEncryptionConfiguration"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${environment}-cf-buildpacks",
-        "arn:aws:s3:::${environment}-cf-droplets",
-        "arn:aws:s3:::${environment}-cf-packages",
-        "arn:aws:s3:::${environment}-cf-resource-pool"
-      ]
-    },
-    {
-      "Sid": "S3DescribeBucket",
-      "Effect": "Allow",
-      "Action": [
-          "s3:HeadBucket",
-          "s3:Get*",
-          "s3:List*",
-          "s3:PutBucketEncryption"
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:CreateGrant",
+        "kms:DescribeKey*"
       ],
       "Resource": [
         "*"
