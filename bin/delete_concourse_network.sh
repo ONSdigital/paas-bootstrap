@@ -5,8 +5,10 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-: $AWS_ACCESS_KEY_ID
-: $AWS_SECRET_ACCESS_KEY
+if [ -z "${AWS_PROFILE:-}" ]; then
+  : $AWS_ACCESS_KEY_ID
+  : $AWS_SECRET_ACCESS_KEY
+fi
 : $VPC_STATE_FILE
 : $CONCOURSE_TERRAFORM_STATE_FILE
 : $PUBLIC_KEY_FILE
@@ -34,8 +36,6 @@ STATE_FILE="$VPC_STATE_FILE" bin/tfstate_to_tfvars.sh >"$_tmp_vars"
 terraform init "$TERRAFORM_DIR"
 terraform destroy -auto-approve \
   -var "environment=$ENVIRONMENT" \
-  -var "aws_access_key_id=$AWS_ACCESS_KEY_ID" \
-  -var "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" \
   -var "public_key=$_public_key" \
   -var-file="$VAR_FILE" \
   -var-file="$_tmp_vars" \

@@ -9,8 +9,6 @@ variable "default_gw_ip" {
 variable "default_route_table_id" {}
 variable "vpc_id" {}
 variable "environment" {}
-variable "aws_access_key_id" {}
-variable "aws_secret_access_key" {}
 
 variable "region" {
   default = "eu-west-1"
