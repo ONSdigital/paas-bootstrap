@@ -14,3 +14,11 @@ data "template_file" "iam_policy" {
     vpc_id                 = "${var.vpc_id}"
   }
 }
+
+data "template_file" "cloud_controller_policy" {
+  template = "${file("${path.module}/templates/cloud_controller_policy.json")}"
+
+  vars {
+    environment = "${var.environment}"
+  }
+}
