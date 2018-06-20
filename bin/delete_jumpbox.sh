@@ -5,8 +5,10 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-: $AWS_ACCESS_KEY_ID
-: $AWS_SECRET_ACCESS_KEY
+if [ -z "${AWS_PROFILE:-}" ]; then
+  : $AWS_ACCESS_KEY_ID
+  : $AWS_SECRET_ACCESS_KEY
+fi
 
 VARS=/var/tmp/tmp$$
 trap 'rm -rf $VARS' EXIT

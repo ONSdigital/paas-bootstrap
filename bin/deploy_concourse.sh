@@ -5,8 +5,10 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-: $AWS_ACCESS_KEY_ID
-: $AWS_SECRET_ACCESS_KEY
+if [ -z "${AWS_PROFILE:-}" ]; then
+  : $AWS_ACCESS_KEY_ID
+  : $AWS_SECRET_ACCESS_KEY
+fi
 : $CONCOURSE_TERRAFORM_STATE_FILE
 : $CONCOURSE_STATE_FILE
 : $CONCOURSE_CREDS_FILE
@@ -38,8 +40,6 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -o operations/concourse/tags.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
-  -v access_key_id="$AWS_ACCESS_KEY_ID" \
-  -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
   -v environment="$ENVIRONMENT" \
   --var-file private_key="$PRIVATE_KEY_FILE" \
   --vars-store "$CONCOURSE_CREDS_FILE" \
