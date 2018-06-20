@@ -31,6 +31,7 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v cf_commit_ref="$cf_commit_ref" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
 fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline
+fly -t "$ENVIRONMENT" expose-pipeline -p deploy_pipeline
 
 fly -t "$ENVIRONMENT" check-resource -r deploy_pipeline/jumpbox-deployment-git --from "ref:${jumpbox_commit_ref}"
 fly -t "$ENVIRONMENT" check-resource -r deploy_pipeline/bosh-deployment-git --from "ref:${bosh_commit_ref}"
