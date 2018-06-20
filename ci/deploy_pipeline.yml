@@ -144,8 +144,6 @@ resources:
       region_name: ((region))
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
-    env:
-      TF_LOG: DEBUG  
 
 - name: cf-vars-s3
   type: s3-iam
@@ -439,7 +437,6 @@ jobs:
       - jumpbox-vars/vars.json
       - bosh-vars/vars.json
       - concourse-vars/vars.json
-      logging: DEBUG
 
 - name: verify-cf
   serial: true
