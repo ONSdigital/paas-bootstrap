@@ -8,8 +8,14 @@ inputs:
   - name: paas-bootstrap-git
   - name: bosh-vars-s3
   - name: bosh-manifest-s3
+  - name: vpc-tfstate-s3
+  - name: bosh-tfstate-s3
+  - name: concourse-tfstate-s3
 
 outputs:
+- name: vpc-vars
+- name: bosh-vars
+- name: concourse-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/cf/destroy/task.sh
