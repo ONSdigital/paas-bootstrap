@@ -27,5 +27,5 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v s3_kms_key_id="$S3_KMS_KEY_ID" \
     -v jumpbox_commit_ref="$jumpbox_commit_ref" \
     -v bosh_commit_ref="$bosh_commit_ref" \
-    -c ci/destroy_pipeline.yml -p destroy_pipeline -n
-fly -t "$ENVIRONMENT" unpause-pipeline -p destroy_pipeline
+    -c ci/destruction_pipeline.yml -p destruction_pipeline -n
+fly -t "$ENVIRONMENT" unpause-pipeline -p destruction_pipeline
