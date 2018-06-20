@@ -26,6 +26,15 @@ resource "aws_s3_bucket" "cf-buildpacks" {
   bucket = "${var.environment}-cf-buildpacks"
   acl    = "private"
 
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = "${aws_kms_key.cf-blobstore-key.arn}"
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+
   tags {
     Name        = "${var.environment}-cf-buildpacks"
     Environment = "${var.environment}"
