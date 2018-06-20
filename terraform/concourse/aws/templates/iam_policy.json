@@ -249,6 +249,19 @@
       }
     },
     {
+      "Sid": "AllowTerminateAllInstancesForDestroy",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:TerminateInstances"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": "${region}"
+        }
+      }
+    },
+    {
       "Effect": "Allow",
       "Action": [
         "ec2:CreateTags",
@@ -346,7 +359,8 @@
         "iam:DeleteRolePolicy",
         "iam:PutRolePolicy",
         "iam:GetRolePolicy",
-        "iam:PassRole"
+        "iam:PassRole",
+        "iam:ListInstanceProfilesForRole"
       ],
       "Resource": [
         "arn:aws:iam::${account_id}:role/*"

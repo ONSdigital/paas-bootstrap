@@ -35,7 +35,6 @@ aws s3 cp "s3://${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FI
     exit 0
   }
 
-
 aws s3 cp "s3://${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
   {
     echo "Remote concourse state does not exist, assuming the environment does not exist...";
