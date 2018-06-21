@@ -461,7 +461,7 @@ jobs:
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      # trigger: true
+      trigger: true
       passed: [verify-cf]
     - get: cf-deployment-git
       version: { ref: ((cf_commit_ref)) }
