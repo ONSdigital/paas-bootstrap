@@ -13,5 +13,17 @@
         "arn:aws:s3:::${environment}-cf-packages/*",
         "arn:aws:s3:::${environment}-cf-resource-pool/*"
       ]
-    }]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "${cf_blobstore_kms_key_arn}"
+      ]
+    }
+  ]
   }
