@@ -17,6 +17,7 @@ bosh int \
   -o paas-bootstrap-git/operations/cf/stemcells.yml \
   -o paas-bootstrap-git/operations/cf/router-sec-group.yml \
   -o paas-bootstrap-git/operations/cf/scheduler-instance-type.yml \
+  -o paas-bootstrap-git/operations/cf/iam-vm-extensions.yml \
   -v system_domain="${SYSTEM_DOMAIN}" \
   -v app_domains="[${APPS_DOMAIN}]" \
   -v smoke_test_app_domain="${APPS_DOMAIN}" \
