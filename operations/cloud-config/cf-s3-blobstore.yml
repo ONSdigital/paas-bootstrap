@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /vm_extensions/name=cloud-controller-iam?
+  value:
+    name: cloud-controller-iam
+    cloud_properties:
+      iam_instance_profile: ((cf_s3_iam_instance_profile))
+
