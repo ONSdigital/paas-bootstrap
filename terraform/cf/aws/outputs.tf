@@ -33,3 +33,7 @@ output "cf_blobstore_s3_kms_key_id" {
 output "cf_blobstore_s3_kms_key_arn" {
   value = "${aws_kms_key.cf-blobstore-key.arn}"
 }
+
+output "cf_s3_iam_instance_profile" {
+  value = "${aws_iam_instance_profile.s3_blobstore.name}"
+}
