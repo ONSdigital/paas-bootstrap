@@ -4,6 +4,7 @@ set -euo pipefail
 
 cp cf-vars-s3/cf-variables.yml cf-manifests/cf-variables.yml
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
 
 SYSTEM_DOMAIN="system.${DOMAIN}"
 APPS_DOMAIN="apps.${DOMAIN}" 
@@ -27,4 +28,5 @@ bosh int \
   -v app_package_directory_key="$(jq -r '.cf_packages_bucket_name' < cf-vars.json)" \
   -v resource_directory_key="$(jq -r '.cf_resource_pool_bucket_name' < cf-vars.json)" \
   -v cf_blobstore_s3_kms_key_id="$(jq -r '.cf_blobstore_s3_kms_key_id' < cf-vars.json)" \
+  -v region="$(jq -r .region < vpc-vars.json)" \
   > cf-manifests/cf.yml
