@@ -1,28 +1,4 @@
 ---
-<<<<<<< Updated upstream
-=======
-groups:
-- name: main
-  jobs:
-    - verify-concourse
-    - terraform-jumpbox
-    - create-jumpbox
-    - verify-jumpbox
-    - terraform-bosh
-    - create-bosh
-    - verify-bosh
-    - terraform-cf
-    - verify-cf-terraform
-    - deploy-cf
-    - verify-cf-endpoints
-- name: destroy
-  jobs:
-    - trigger-destroy
-    - destroy-bosh
-    - destroy-jumpbox
-    - destroy-cf
-
->>>>>>> Stashed changes
 resource_types:
 - name: terraform
   type: docker-image
