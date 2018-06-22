@@ -47,7 +47,8 @@
         "kms:DescribeKey",
         "kms:GetKeyPolicy",
         "kms:GetKeyRotationStatus",
-        "kms:ListResourceTags"
+        "kms:ListResourceTags",
+        "kms:ScheduleKeyDeletion"
       ],
       "Resource": [
         "arn:aws:kms:${region}:${account_id}:*",
