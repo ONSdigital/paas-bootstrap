@@ -423,7 +423,7 @@ jobs:
     - get: concourse-tfstate-s3
     - get: paas-bootstrap-git
       trigger: true
-      # passed: [verify-bosh]
+      passed: [verify-bosh]
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
