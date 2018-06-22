@@ -1,4 +1,4 @@
-resource "aws_kms_key" "cf-blobstore-key" {
+resource "aws_kms_key" "cf_blobstore_key" {
   description             = "This key is used to encrypt CF objects in blobstore"
   deletion_window_in_days = 10
   enable_key_rotation     = true
@@ -9,14 +9,14 @@ resource "aws_kms_key" "cf-blobstore-key" {
   }
 }
 
-resource "aws_s3_bucket" "cf-buildpacks" {
+resource "aws_s3_bucket" "cf_buildpacks" {
   bucket = "${var.environment}-cf-buildpacks"
   acl    = "private"
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "${aws_kms_key.cf-blobstore-key.arn}"
+        kms_master_key_id = "${aws_kms_key.cf_blobstore_key.arn}"
         sse_algorithm     = "aws:kms"
       }
     }
@@ -28,14 +28,14 @@ resource "aws_s3_bucket" "cf-buildpacks" {
   }
 }
 
-resource "aws_s3_bucket" "cf-droplets" {
+resource "aws_s3_bucket" "cf_droplets" {
   bucket = "${var.environment}-cf-droplets"
   acl    = "private"
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "${aws_kms_key.cf-blobstore-key.arn}"
+        kms_master_key_id = "${aws_kms_key.cf_blobstore_key.arn}"
         sse_algorithm     = "aws:kms"
       }
     }
@@ -47,14 +47,14 @@ resource "aws_s3_bucket" "cf-droplets" {
   }
 }
 
-resource "aws_s3_bucket" "cf-packages" {
+resource "aws_s3_bucket" "cf_packages" {
   bucket = "${var.environment}-cf-packages"
   acl    = "private"
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "${aws_kms_key.cf-blobstore-key.arn}"
+        kms_master_key_id = "${aws_kms_key.cf_blobstore_key.arn}"
         sse_algorithm     = "aws:kms"
       }
     }
@@ -66,14 +66,14 @@ resource "aws_s3_bucket" "cf-packages" {
   }
 }
 
-resource "aws_s3_bucket" "cf-resource-pool" {
+resource "aws_s3_bucket" "cf_resource_pool" {
   bucket = "${var.environment}-cf-resource-pool"
   acl    = "private"
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "${aws_kms_key.cf-blobstore-key.arn}"
+        kms_master_key_id = "${aws_kms_key.cf_blobstore_key.arn}"
         sse_algorithm     = "aws:kms"
       }
     }

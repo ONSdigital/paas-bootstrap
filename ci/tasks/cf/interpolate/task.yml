@@ -8,6 +8,7 @@ inputs:
   - name: paas-bootstrap-git
   - name: cf-deployment-git
   - name: cf-vars-s3
+  - name: cf-tfstate-s3
 
 outputs:
   - name: cf-manifests
