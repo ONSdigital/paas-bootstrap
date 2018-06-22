@@ -11,11 +11,6 @@ resource_types:
     repository: governmentpaas/s3-resource
 
 resources:
-- name: manual-force
-  type: time
-  source:
-    interval: 24000h
-
 - name: paas-bootstrap-git
   type: git
   source:
