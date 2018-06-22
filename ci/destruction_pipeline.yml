@@ -17,15 +17,15 @@ resources:
     uri: https://github.com/ONSdigital/paas-bootstrap.git
     branch: ((branch))
 
-- name: jumpbox-deployment-git
-  type: git
-  source:
-    uri: https://github.com/cppforlife/jumpbox-deployment.git
-
 - name: bosh-deployment-git
   type: git
   source:
     uri: https://github.com/cloudfoundry/bosh-deployment.git
+
+- name: manual-force
+  type: time
+  source:
+    interval: 24000h
 
 - name: jumpbox-terraform
   type: terraform
@@ -128,6 +128,51 @@ resources:
     versioned_file: bosh/bosh.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: cf/cf.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
+
+- name: vpc-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: vpc/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+
+- name: concourse-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: concourse/tfstate.json
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: cf-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ((environment))-states
+      bucket_path: cf/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))
 
 jobs:
 - name: trigger-destroy
