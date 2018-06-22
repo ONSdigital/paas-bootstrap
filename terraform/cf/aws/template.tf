@@ -5,6 +5,6 @@ data "template_file" "cloud_controller_policy" {
 
   vars {
     environment              = "${var.environment}"
-    cf_blobstore_kms_key_arn = "${aws_kms_key.cf-blobstore-key.arn}"
+    cf_blobstore_kms_key_arn = "${aws_kms_key.cf_blobstore_key.arn}"
   }
 }

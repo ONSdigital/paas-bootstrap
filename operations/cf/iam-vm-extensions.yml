@@ -1,5 +1,0 @@
----
-- type: replace
-  path: /instance_groups/name=api/vm_extensions?/-
-  value: cloud-controller-iam
-
