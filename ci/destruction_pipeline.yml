@@ -130,13 +130,21 @@ resources:
     sse_kms_key_id: ((s3_kms_key_id))
 
 jobs:
+- name: trigger-destroy
+  serial_groups: [destruction]
+  serial: true
+  plan:
+    - get: manual-force
+
 - name: destroy-cf
   serial_groups: [destruction]
   serial: true
   plan:
   - aggregate:
+    - get: manual-force
+      trigger: true
+      passed: [trigger-destroy]
     - get: paas-bootstrap-git
-      trigger: false
     - get: bosh-vars-s3
     - get: bosh-manifest-s3
     - get: cf-manifest-s3
@@ -165,8 +173,10 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: manual-force
+      trigger: true
+      passed: [destroy-cf]
     - get: paas-bootstrap-git
-      trigger: false
     - get: bosh-deployment-git
       version: { ref: ((bosh_commit_ref)) }
     - get: bosh-tfstate-s3
@@ -204,6 +214,9 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: manual-force
+      trigger: true
+      passed: [destroy-bosh]
     - get: paas-bootstrap-git
     - get: jumpbox-tfstate-s3
     - get: jumpbox-vars-s3
