@@ -527,3 +527,15 @@ jobs:
         DOMAIN: ((domain))
         QUERY_PATH: /info
         REQUIRE_JSON: true
+
+- name: cf-smoke-tests
+  serial: true
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      passed: [deploy-cf]
+      trigger: true
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
+  - task: ensure smoke tests pass
+    file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
