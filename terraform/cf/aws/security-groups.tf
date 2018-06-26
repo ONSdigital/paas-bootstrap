@@ -259,3 +259,14 @@ resource "aws_security_group_rule" "allow_tcp_2222_from_ssh_lb" {
   source_security_group_id = "${aws_security_group.cf_ssh_lb.id}"
   description              = "Provide ingress SSH traffic"
 }
+
+resource "aws_security_group" "cf_rds" {
+  name        = "${var.environment}_cf_rds_security_group"
+  description = "CF rds access"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-cf-rds-security-group"
+    Environment = "${var.environment}"
+  }
+}

@@ -53,3 +53,35 @@ output "aws_internet_gateway_id" {
 output "s3_prefix" {
   value = "${var.s3_prefix}"
 }
+
+output "uaa_database_password" {
+  value = "${var.uaa_database_password}"
+}
+
+output "cc_database_password" {
+  value = "${var.cc_database_password}"
+}
+
+output "bbs_database_password" {
+  value = "${var.bbs_database_password}"
+}
+
+output "routing_api_database_password" {
+  value = "${var.routing_api_database_password}"
+}
+
+output "policy_server_database_password" {
+  value = "${var.policy_server_database_password}"
+}
+
+output "silk_controller_database_password" {
+  value = "${var.silk_controller_database_password}"
+}
+
+output "locket_database_password" {
+  value = "${var.locket_database_password}"
+}
+
+output "cf_rds_password" {
+  value = "${var.cf_rds_password}"
+}
