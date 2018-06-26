@@ -521,10 +521,10 @@
           "s3:PutEncryptionConfiguration"
       ],
       "Resource": [
-        "arn:aws:s3:::${environment}-cf-buildpacks",
-        "arn:aws:s3:::${environment}-cf-droplets",
-        "arn:aws:s3:::${environment}-cf-packages",
-        "arn:aws:s3:::${environment}-cf-resource-pool"
+        "arn:aws:s3:::${s3_prefix}-${environment}-cf-buildpacks",
+        "arn:aws:s3:::${s3_prefix}-${environment}-cf-droplets",
+        "arn:aws:s3:::${s3_prefix}-${environment}-cf-packages",
+        "arn:aws:s3:::${s3_prefix}-${environment}-cf-resource-pool"
       ]
     },
     {

@@ -49,3 +49,7 @@ output "state_bucket_id" {
 output "aws_internet_gateway_id" {
   value = "${aws_internet_gateway.default.id}"
 }
+
+output "s3_prefix" {
+  value = "${var.s3_prefix}"
+}

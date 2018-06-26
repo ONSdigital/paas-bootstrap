@@ -38,3 +38,5 @@ variable "nat_az3_id" {}
 variable "public_ip" {
   description = "Concourse public IP"
 }
+
+variable "s3_prefix"  {}

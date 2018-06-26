@@ -14,5 +14,6 @@ data "template_file" "iam_policy" {
     subnet_id              = "${aws_subnet.az1.id}"
     security_group_id      = "${aws_security_group.concourse.id}"
     vpc_id                 = "${var.vpc_id}"
+    s3_prefix              = "${var.s3_prefix}"
   }
 }

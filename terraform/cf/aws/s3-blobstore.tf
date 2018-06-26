@@ -10,7 +10,7 @@ resource "aws_kms_key" "cf_blobstore_key" {
 }
 
 resource "aws_s3_bucket" "cf_buildpacks" {
-  bucket = "${var.environment}-cf-buildpacks"
+  bucket = "${var.s3_prefix}-${var.environment}-cf-buildpacks"
   acl    = "private"
 
   server_side_encryption_configuration {
@@ -23,13 +23,13 @@ resource "aws_s3_bucket" "cf_buildpacks" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-buildpacks"
+    Name        = "${var.s3_prefix}-${var.environment}-cf-buildpacks"
     Environment = "${var.environment}"
   }
 }
 
 resource "aws_s3_bucket" "cf_droplets" {
-  bucket = "${var.environment}-cf-droplets"
+  bucket = "${var.s3_prefix}-${var.environment}-cf-droplets"
   acl    = "private"
 
   server_side_encryption_configuration {
@@ -42,13 +42,13 @@ resource "aws_s3_bucket" "cf_droplets" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-droplets"
+    Name        = "${var.s3_prefix}-${var.environment}-cf-droplets"
     Environment = "${var.environment}"
   }
 }
 
 resource "aws_s3_bucket" "cf_packages" {
-  bucket = "${var.environment}-cf-packages"
+  bucket = "${var.s3_prefix}-${var.environment}-cf-packages"
   acl    = "private"
 
   server_side_encryption_configuration {
@@ -61,13 +61,13 @@ resource "aws_s3_bucket" "cf_packages" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-packages"
+    Name        = "${var.s3_prefix}-${var.environment}-cf-packages"
     Environment = "${var.environment}"
   }
 }
 
 resource "aws_s3_bucket" "cf_resource_pool" {
-  bucket = "${var.environment}-cf-resource-pool"
+  bucket = "${var.s3_prefix}-${var.environment}-cf-resource-pool"
   acl    = "private"
 
   server_side_encryption_configuration {
@@ -80,7 +80,7 @@ resource "aws_s3_bucket" "cf_resource_pool" {
   }
 
   tags {
-    Name        = "${var.environment}-cf-resource-pool"
+    Name        = "${var.s3_prefix}-${var.environment}-cf-resource-pool"
     Environment = "${var.environment}"
   }
 }
