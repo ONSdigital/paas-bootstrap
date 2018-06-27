@@ -3,7 +3,7 @@ resource "aws_db_instance" "cf_rds" {
   allocated_storage      = "100"
   engine                 = "mysql"
   engine_version         = "5.7"
-  instance_class         = "m4.xlarge"
+  instance_class         = "db.m4.xlarge"
   username               = "cf_admin"
   password               = "${var.cf_rds_password}"
   vpc_security_group_ids = ["${aws_security_group.cf_rds.id}"]
