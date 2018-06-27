@@ -13,7 +13,7 @@ resource "aws_db_instance" "cf_rds" {
 resource "aws_db_subnet_group" "cf_rds" {
   name        = "${var.environment}-cf-rds-subnet-group"
   description = "CF rds subnet group"
-  subnet_ids  = ["${aws_subnet.rds_az1.id}", "${aws_subnet.rds_az2.id}", "${aws_subnet.rds_az3}"]
+  subnet_ids  = ["${aws_subnet.rds_az1.id}", "${aws_subnet.rds_az2.id}", "${aws_subnet.rds_az3.id}"]
 }
 
 provider "mysql" {

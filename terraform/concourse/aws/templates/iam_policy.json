@@ -539,6 +539,20 @@
       "Resource": [
         "*"
       ]
+    },
+    {
+      "Sid": "CreateRDSInstance",
+      "Effect": "Allow",
+      "Action": [
+        "rds:DescribeDBInstances",
+        "rds:CreateDBInstance",
+        "rds:ModifyDBInstance",
+        "rds:DeleteDBInstance",
+        "rds:AddTagsToResource"
+      ],
+      "Resource": [
+        "arn:aws:rds:${region}:${account_id}:db:${environment}-cf-rds"
+      ]
     }
   ]
 }
