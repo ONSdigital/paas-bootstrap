@@ -15,14 +15,3 @@ resource "aws_db_subnet_group" "cf_rds" {
   description = "CF rds subnet group"
   subnet_ids  = ["${aws_subnet.rds_az1.id}", "${aws_subnet.rds_az2.id}", "${aws_subnet.rds_az3.id}"]
 }
-
-provider "mysql" {
-  endpoint = "${aws_db_instance.cf_rds.endpoint}"
-  username = "${aws_db_instance.cf_rds.username}"
-  password = "${aws_db_instance.cf_rds.password}"
-}
-
-resource "mysql_database" "foo" {
-  depends_on = ["aws_db_instance.cf_rds"]
-  name       = "foo"
-}
