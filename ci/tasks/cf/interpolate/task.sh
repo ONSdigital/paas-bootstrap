@@ -5,9 +5,15 @@ set -euo pipefail
 cp cf-vars-s3/cf-variables.yml cf-manifests/cf-variables.yml
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "databases-tfstate-s3/${ENVIRONMENT}.tfstate" > databases-vars.json
+
 
 SYSTEM_DOMAIN="system.${DOMAIN}"
 APPS_DOMAIN="apps.${DOMAIN}" 
+
+CF_DB_ENDPOINT="$(jq -r '.cf_db_endpoint' < cf-vars.json)"
+CF_DB_USERNAME="$(jq -r '.cf_db_usernamet' < cf-vars.json)"
+CF_DB_PASSWORD="$(jq -r '.cf_rds_password' < vpc-vars.json)"
 
 bosh int \
   ./cf-deployment-git/cf-deployment.yml \
@@ -16,6 +22,7 @@ bosh int \
   -o cf-deployment-git/operations/scale-to-one-az.yml \
   -o cf-deployment-git/operations/override-app-domains.yml \
   -o cf-deployment-git/operations/use-external-blobstore.yml \
+  -o cf-deployment-git/operations/use-external-dbs.yml \
   -o paas-bootstrap-git/operations/cf/stemcells.yml \
   -o paas-bootstrap-git/operations/cf/router-sec-group.yml \
   -o paas-bootstrap-git/operations/cf/scheduler-instance-type.yml \
@@ -29,4 +36,34 @@ bosh int \
   -v resource_directory_key="$(jq -r '.cf_resource_pool_bucket_name' < cf-vars.json)" \
   -v cf_blobstore_s3_kms_key_id="$(jq -r '.cf_blobstore_s3_kms_key_id' < cf-vars.json)" \
   -v region="$(jq -r .region < vpc-vars.json)" \
-  > cf-manifests/cf.yml
+  -v external_database_type="$(jq -r '.cf_db_type' < cf-vars.json)" \
+  -v external_database_port="$(jq -r '.cf_db_port' < cf-vars.json)" \
+  -v external_uaa_database_name="$(jq -r '.uaa_database_name' < databases-vars.json)" \
+  -v external_uaa_database_address="${CF_DB_ENDPOINT}" \
+  -v external_uaa_database_password="${CF_DB_PASSWORD}" \
+  -v external_uaa_database_username="${CF_DB_USERNAME}" \
+  -v external_cc_database_name="$(jq -r '.cc_database_name' < databases-vars.json)" \
+  -v external_cc_database_address="${CF_DB_ENDPOINT}" \
+  -v external_cc_database_password="${CF_DB_PASSWORD}" \
+  -v external_cc_database_username="${CF_DB_USERNAME}" \
+  -v external_bbs_database_name="$(jq -r '.bbs_database_name' < databases-vars.json)" \
+  -v external_bbs_database_address="${CF_DB_ENDPOINT}" \
+  -v external_bbs_database_password="${CF_DB_PASSWORD}" \
+  -v external_bbs_database_username="${CF_DB_USERNAME}" \
+  -v external_routing_api_database_name="$(jq -r '.routing_api_database_name' < databases-vars.json)" \
+  -v external_routing_api_database_address="${CF_DB_ENDPOINT}" \
+  -v external_routing_api_database_password="${CF_DB_PASSWORD}" \
+  -v external_routing_api_database_username="${CF_DB_USERNAME}" \
+  -v external_policy_server_database_name="$(jq -r '.policy_server_database_name' < databases-vars.json)" \
+  -v external_policy_server_database_address="${CF_DB_ENDPOINT}" \
+  -v external_policy_server_database_password="${CF_DB_PASSWORD}" \
+  -v external_policy_server_database_username="${CF_DB_USERNAME}" \
+  -v external_silk_controller_database_name="$(jq -r '.silk_controller_database_name' < databases-vars.json)" \
+  -v external_silk_controller_database_address="${CF_DB_ENDPOINT}" \
+  -v external_silk_controller_database_password="${CF_DB_PASSWORD}" \
+  -v external_silk_controller_database_username="${CF_DB_USERNAME}" \
+  -v external_locket_database_name="$(jq -r '.locket_database_name' < databases-vars.json)" \
+  -v external_locket_database_address="${CF_DB_ENDPOINT}" \
+  -v external_locket_database_password="${CF_DB_PASSWORD}" \
+  -v external_locket_database_username="${CF_DB_USERNAME}" \
+    > cf-manifests/cf.yml

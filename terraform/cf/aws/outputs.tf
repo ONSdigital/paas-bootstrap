@@ -61,3 +61,11 @@ output "cf_db_endpoint" {
 output "cf_db_username" {
   value = "${aws_db_instance.cf_rds.username}"
 }
+
+output "cf_db_type" {
+  value = "${aws_db_instance.cf_rds.engine}"
+}
+
+output "cf_db_port" {
+  value = "${aws_db_instance.cf_rds.port}"
+}
