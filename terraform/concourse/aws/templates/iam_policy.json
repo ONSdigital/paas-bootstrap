@@ -34,9 +34,7 @@
         "s3:DeleteObjectVersion"
       ],
       "Resource": [
-        "arn:aws:s3:::${environment}-states/jumpbox/*",
-        "arn:aws:s3:::${environment}-states/bosh/*",
-        "arn:aws:s3:::${environment}-states/cf/*"
+        "arn:aws:s3:::${environment}-states/*"
       ]
     },
     {
