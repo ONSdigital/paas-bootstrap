@@ -23,5 +23,6 @@ provider "mysql" {
 }
 
 resource "mysql_database" "foo" {
-  name = "foo"
+  depends_on = ["aws_db_instance.cf_rds"]
+  name       = "foo"
 }
