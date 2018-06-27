@@ -145,6 +145,17 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: databases-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ((environment))-states
+      bucket_path: databases/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))      
+
 - name: cf-vars-s3
   type: s3-iam
   source:
@@ -215,6 +226,16 @@ resources:
     private: true
     region_name: ((region))
     versioned_file: bosh/bosh.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: databases-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: databases/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
@@ -438,6 +459,18 @@ jobs:
       - jumpbox-vars/vars.json
       - bosh-vars/vars.json
       - concourse-vars/vars.json
+  - get: cf-tfstate-s3
+  - task: get-database-vars
+    file: paas-bootstrap-git/ci/tasks/databases/get_database_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: databases-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/databases/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - cf-vars/vars.json    
 
 - name: verify-cf
   serial: true
@@ -475,6 +508,7 @@ jobs:
     - get: cf-manifest-s3
     - get: concourse-tfstate-s3
     - get: jumpbox-tfstate-s3
+    - get: databases-tfstate-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
