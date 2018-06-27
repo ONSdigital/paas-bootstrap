@@ -159,7 +159,8 @@
             "${environment}-cf-internal-security-group",
             "${environment}-cf-router-lb-internal-security-group",
             "${environment}-cf-ssh-lb-security-group",
-            "${environment}-cf-ssh-internal-security-group"
+            "${environment}-cf-ssh-internal-security-group",
+            "${environment}-cf-rds-security-group"
           ]
         }
       }
@@ -552,6 +553,20 @@
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:db:${environment}-cf-rds"
+      ]
+    },
+    {
+      "Sid": "RDSSubnets",
+      "Effect": "Allow",
+      "Action": [
+        "rds:CreateDBInstance",
+        "rds:DeleteDBInstance",
+        "rds:CreateDBSubnetGroup",
+        "rds:DeleteDBSubnetGroup",
+        "rds:DescribeDBSubnetGroups"
+      ],
+      "Resource": [
+        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group"
       ]
     }
   ]
