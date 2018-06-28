@@ -69,3 +69,7 @@ output "cf_db_type" {
 output "cf_db_port" {
   value = "${aws_db_instance.cf_rds.port}"
 }
+
+output "cf_rds_fqdn" {
+  value = "${aws_route53_record.cf_rds.fqdn}"
+}

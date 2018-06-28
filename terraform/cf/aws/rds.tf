@@ -10,7 +10,7 @@ resource "aws_db_instance" "cf_rds" {
   db_subnet_group_name   = "${aws_db_subnet_group.cf_rds.id}"
   apply_immediately      = "true"
   backup_window          = "01:00-02:00"
-  maintenance_window     = "02:15-04:15"
+  maintenance_window     = "Mon:02:15-Mon:04:15"
   copy_tags_to_snapshot  = "true"
   kms_key_id             = "${aws_kms_key.cf_rds_key.arn}"
   multi_az               = "true"
