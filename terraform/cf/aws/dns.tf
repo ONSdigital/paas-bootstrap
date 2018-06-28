@@ -7,7 +7,8 @@ data "aws_route53_zone" "child_zone" {
 }
 
 data "aws_route53_zone" "private" {
-  name = "${var.private_dns_zone}."
+  name         = "${var.private_dns_zone}."
+  private_zone = true
 }
 
 resource "aws_route53_record" "cf_system" {
