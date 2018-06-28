@@ -17,6 +17,7 @@ resource "aws_db_instance" "cf_rds" {
   multi_az                  = true
   storage_encrypted         = true
   storage_type              = "gp2"
+  skip_final_snapshot       = true
 
   tags {
     Name        = "${var.environment}-cf-rds"
