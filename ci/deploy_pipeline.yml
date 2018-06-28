@@ -278,6 +278,7 @@ jobs:
 
 - name: terraform-jumpbox
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
@@ -297,6 +298,7 @@ jobs:
 
 - name: create-jumpbox
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -335,6 +337,7 @@ jobs:
 
 - name: verify-jumpbox
   serial: true
+  serial_groups: [main]
   plan:
   - get: paas-bootstrap-git
     passed: [create-jumpbox]
@@ -369,6 +372,7 @@ jobs:
 
 - name: terraform-bosh
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
@@ -390,6 +394,7 @@ jobs:
 
 - name: create-bosh
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -425,6 +430,7 @@ jobs:
 
 - name: verify-bosh
   serial: true
+  serial_groups: [main]
   plan:
   - get: paas-bootstrap-git
     passed: [create-bosh]
@@ -437,6 +443,7 @@ jobs:
 
 - name: terraform-cf
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -474,6 +481,7 @@ jobs:
 
 - name: verify-cf
   serial: true
+  serial_groups: [main]
   plan:
   - get: paas-bootstrap-git
     trigger: true
@@ -492,6 +500,7 @@ jobs:
 
 - name: deploy-cf
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -543,6 +552,7 @@ jobs:
 
 - name: verify-cf-endpoints
   serial: true
+  serial_groups: [main]
   plan:
   - get: paas-bootstrap-git
     passed: [deploy-cf]
@@ -564,6 +574,7 @@ jobs:
 
 - name: cf-smoke-tests
   serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git

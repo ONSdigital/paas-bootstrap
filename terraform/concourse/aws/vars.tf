@@ -29,6 +29,8 @@ variable "az3" {
 variable "public_key" {}
 variable "parent_dns_zone" {}
 
+variable "private_dns_zone" {}
+
 variable "ingress_whitelist" {
   "type" = "list"
 }
