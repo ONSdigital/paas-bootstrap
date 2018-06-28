@@ -570,6 +570,21 @@
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group"
       ]
+    },
+    {
+      "Sid": "VPCEndpoints",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:*VpcEndpoint*"
+      ],
+      "Resource": [
+        "*"
+      ],
+      "Condition": {
+        "StringEquals": {
+           "ec2:vpc": "arn:aws:ec2:${region}:${account_id}:vpc/${vpc_id}"
+        }
+     }
     }
   ]
 }

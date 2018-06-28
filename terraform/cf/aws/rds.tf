@@ -1,4 +1,5 @@
 resource "aws_db_instance" "cf_rds" {
+  depends_on                = ["aws_vpc_endpoint.cf_rds_kms"]
   identifier                = "${var.environment}-cf-rds"
   allocated_storage         = "100"
   engine                    = "mysql"
