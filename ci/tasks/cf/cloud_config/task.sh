@@ -32,5 +32,6 @@ bosh update-cloud-config -n \
   -v cf-internal-security-group-id="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
   -v cf-ssh-internal="$(jq -r '.cf_ssh_internal' < cf-vars.json)" \
   -v cf-ssh-lb="$(jq -r '.cf_ssh_lb' < cf-vars.json)" \
-  -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)" \
+  -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)" 
+  
   bosh cloud-config > cf-manifests/cloud-config.yml
