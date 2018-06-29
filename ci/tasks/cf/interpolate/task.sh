@@ -13,7 +13,7 @@ APPS_DOMAIN="apps.${DOMAIN}"
 
 CF_DB_ENDPOINT="$(jq -r '.cf_rds_fqdn' < cf-vars.json)"
 CF_DB_USERNAME="$(jq -r '.cf_db_username' < cf-vars.json)"
-CF_DB_PASSWORD="$(jq -r '.cf_rds_password' < vpc-vars.json)"
+CF_DB_PASSWORD="$(jq -r '.cf_rds_password' < cf-vars.json)"
 
 bosh int \
   ./cf-deployment-git/cf-deployment.yml \

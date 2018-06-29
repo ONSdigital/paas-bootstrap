@@ -58,10 +58,6 @@ output "s3_prefix" {
   value = "${var.s3_prefix}"
 }
 
-output "cf_rds_password" {
-  value = "${var.cf_rds_password}"
-}
-
 output "private_dns_zone" {
   value = "${aws_route53_zone.private.name}"
 }

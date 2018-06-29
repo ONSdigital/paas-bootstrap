@@ -1,3 +1,8 @@
+resource "random_string" "cf_rds_password" {
+  length  = 16
+  special = false
+}
+
 resource "aws_db_instance" "cf_rds" {
   identifier                = "${var.environment}-cf-rds"
   allocated_storage         = "100"
@@ -5,7 +10,7 @@ resource "aws_db_instance" "cf_rds" {
   engine_version            = "5.7"
   instance_class            = "db.m4.xlarge"
   username                  = "cf_admin"
-  password                  = "${var.cf_rds_password}"
+  password                  = "${random_string.cf_rds_password.result}"
   vpc_security_group_ids    = ["${aws_security_group.cf_rds.id}"]
   db_subnet_group_name      = "${aws_db_subnet_group.cf_rds.id}"
   apply_immediately         = true

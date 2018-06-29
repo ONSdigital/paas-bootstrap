@@ -73,3 +73,7 @@ output "cf_rds_fqdn" {
 output "cf_db_endpoint" {
   value = "${aws_db_instance.cf_rds.endpoint}"
 }
+
+output "cf_rds_password" {
+  value = "${random_string.cf_rds_password.result}"
+}
