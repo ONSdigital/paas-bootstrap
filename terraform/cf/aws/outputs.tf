@@ -71,5 +71,5 @@ output "cf_rds_fqdn" {
 }
 
 output "cf_db_endpoint" {
-  value = "${aws_route53_record.cf_rds.fqdn}:${aws_db_instance.cf_rds.port}"
+  value = "${aws_db_instance.cf_rds.endpoint}"
 }
