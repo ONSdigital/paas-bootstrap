@@ -2,6 +2,10 @@ output "vpc_id" {
   value = "${aws_vpc.default.id}"
 }
 
+output "vpc_dns_nameserver" {
+  value = "${cidrhost(aws_vpc.default.cidr_block, 2)}"
+}
+
 output "region" {
   value = "${var.region}"
 }

@@ -62,7 +62,9 @@ networks:
   - range: ((private_subnet_cidr))
     gateway: ((private_subnet_gateway))
     az: z1
-    dns: [1.1.1.1]
+    dns:
+    - ((private_dns_nameserver))
+    - 1.1.1.1
     reserved: [((reserved_cidr))]
     cloud_properties:
       subnet: ((private_subnet_id))
