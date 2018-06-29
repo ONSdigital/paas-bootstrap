@@ -14,7 +14,6 @@ resource "aws_db_instance" "cf_rds" {
   maintenance_window        = "Mon:02:15-Mon:04:15"
   copy_tags_to_snapshot     = true
   final_snapshot_identifier = "${var.environment}-cf-rds-final"
-  kms_key_id                = "${aws_kms_key.cf_rds_key.arn}"
   multi_az                  = true
   storage_encrypted         = true
   storage_type              = "gp2"
@@ -32,7 +31,4 @@ resource "aws_db_subnet_group" "cf_rds" {
   subnet_ids  = ["${aws_subnet.rds_az1.id}", "${aws_subnet.rds_az2.id}", "${aws_subnet.rds_az3.id}"]
 }
 
-resource "aws_kms_key" "cf_rds_key" {
-  description             = "This key is used to encrypt the CF RDS databases"
-  deletion_window_in_days = 7
-}
+

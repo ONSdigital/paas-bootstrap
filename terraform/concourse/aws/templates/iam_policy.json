@@ -133,7 +133,8 @@
         "ec2:DisassociateAddress",
         "ec2:DescribeAddresses",
         "ec2:AssociateAddress",
-        "ec2:AllocateAddress"
+        "ec2:AllocateAddress",
+        "ec2:DescribePrefixLists"
       ],
       "Resource": "*"
     },
@@ -451,7 +452,8 @@
       "Action": [
         "acm:AddTagsToCertificate",
         "acm:DescribeCertificate",
-        "acm:DeleteCertificate"
+        "acm:DeleteCertificate",
+        "acm:ListTagsForCertificate"
       ],
       "Resource": "arn:aws:acm:${region}:${account_id}:certificate/*"
     },
@@ -565,26 +567,12 @@
         "rds:DeleteDBInstance",
         "rds:CreateDBSubnetGroup",
         "rds:DeleteDBSubnetGroup",
-        "rds:DescribeDBSubnetGroups"
+        "rds:DescribeDBSubnetGroups",
+        "rds:ListTagsForResource"
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group"
       ]
-    },
-    {
-      "Sid": "VPCEndpoints",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:*VpcEndpoint*"
-      ],
-      "Resource": [
-        "*"
-      ],
-      "Condition": {
-        "StringEquals": {
-           "ec2:vpc": "arn:aws:ec2:${region}:${account_id}:vpc/${vpc_id}"
-        }
-     }
     }
   ]
 }
