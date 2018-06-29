@@ -54,10 +54,6 @@ output "cf_packages_bucket_name" {
   value = "${aws_s3_bucket.cf_packages.id}"
 }
 
-output "cf_db_endpoint" {
-  value = "${aws_db_instance.cf_rds.endpoint}"
-}
-
 output "cf_db_username" {
   value = "${aws_db_instance.cf_rds.username}"
 }

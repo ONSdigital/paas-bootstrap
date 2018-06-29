@@ -11,7 +11,7 @@ jq '.modules[0].outputs | with_entries(.value = .value.value)' < "databases-tfst
 SYSTEM_DOMAIN="system.${DOMAIN}"
 APPS_DOMAIN="apps.${DOMAIN}" 
 
-CF_DB_ENDPOINT="$(jq -r '.cf_db_endpoint' < cf-vars.json | sed 's/:.*//')"
+CF_DB_ENDPOINT="$(jq -r '.cf_rds_fqdn' < cf-vars.json)"
 CF_DB_USERNAME="$(jq -r '.cf_db_username' < cf-vars.json)"
 CF_DB_PASSWORD="$(jq -r '.cf_rds_password' < vpc-vars.json)"
 
