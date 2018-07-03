@@ -22,6 +22,7 @@ resource "aws_db_instance" "cf_rds" {
   storage_encrypted         = true
   storage_type              = "gp2"
   skip_final_snapshot       = true
+  option_group_name         = "${aws_db_option_group.cf_rds_audit_logging.name}"
 
   tags {
     Name        = "${var.environment}-cf-rds"
@@ -33,4 +34,20 @@ resource "aws_db_subnet_group" "cf_rds" {
   name        = "${var.environment}-cf-rds-subnet-group"
   description = "CF rds subnet group"
   subnet_ids  = ["${aws_subnet.rds_az1.id}", "${aws_subnet.rds_az2.id}", "${aws_subnet.rds_az3.id}"]
+}
+
+resource "aws_db_option_group" "cf_rds_audit_logging" {
+  name                     = "${var.environment}-cf-rds-audit-logging"
+  option_group_description = "Terraform RDS audit Option group"
+  engine_name              = "mysql"
+  major_engine_version     = "5.7"
+
+  option {
+    option_name = "MARIADB_AUDIT_PLUGIN"
+
+    option_settings {
+      name  = "SERVER_AUDIT_EVENTS"
+      value = "CONNECT"
+    }
+  }
 }
