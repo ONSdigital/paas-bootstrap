@@ -564,10 +564,7 @@
       "Sid": "CreateOptionGroup",
       "Effect": "Allow",
       "Action": [
-        "rds:CreateOptionGroup",
-        "rds:DeleteOptionGroup",
-        "rds:ModifyOptionGroup",
-        "rds:DescribeOptionGroupOptions"
+        "rds:*"
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:og:${environment}-cf-rds-audit-logging"
