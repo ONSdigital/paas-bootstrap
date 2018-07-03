@@ -62,6 +62,12 @@ The username is `admin` and you can get the password through:
 bosh int --path /admin_password <env>_concourse.creds.yml
 ```
 
+or using
+
+```sh
+make concourse_password ENVIRONMENT=<env>
+```
+
 ## Testing that Concourse works
 
 ```sh

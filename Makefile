@@ -37,6 +37,9 @@ concourse_network: vpc keypair ## Setup networks for concourse to consume
 concourse: concourse_network ## Deploy concourse with all prereqs
 	@bin/deploy_concourse.sh
 
+concourse_password: ## Retrieves the concourse password for a given environment
+	@bin/concourse_creds.sh
+
 concourse_login: require_vars ## Logs fly into concourse
 	@bin/login_fly.sh
 
