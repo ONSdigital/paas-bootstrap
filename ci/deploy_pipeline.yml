@@ -466,7 +466,17 @@ jobs:
       - jumpbox-vars/vars.json
       - bosh-vars/vars.json
       - concourse-vars/vars.json
-  - get: cf-tfstate-s3
+
+- name: terraform-databases
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: cf-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [terraform-cf]
   - task: get-database-vars
     file: paas-bootstrap-git/ci/tasks/databases/get_database_vars/task.yml
     params:
@@ -485,7 +495,7 @@ jobs:
   plan:
   - get: paas-bootstrap-git
     trigger: true
-    passed: [terraform-cf]
+    passed: [terraform-databases]
   - aggregate:
     - task: ensure that system FQDN is resolvable
       file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
