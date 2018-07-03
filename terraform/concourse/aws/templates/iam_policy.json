@@ -553,7 +553,8 @@
         "rds:DeleteDBInstance",
         "rds:AddTagsToResource",
         "rds:ListTagsForResource",
-        "rds:RemoveTagsFromResource"
+        "rds:RemoveTagsFromResource",
+        "rds:DescribeOptionGroups"
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:db:${environment}-cf-rds"
