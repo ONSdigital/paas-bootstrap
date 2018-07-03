@@ -23,6 +23,7 @@ bosh update-cloud-config -n \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v private_subnet_gateway="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json | sed 's#0/24#1#')" \
   -v reserved_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json  | sed 's#0/24#1/30#')" \
+  -v private_dns_nameserver="$(jq -r '.vpc_dns_nameserver' < vpc-vars.json)" \
   -v internal_security_group="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
   -v private_subnet_id="$(jq -r '.cf_internal_subnet_az1_id' < cf-vars.json)" \
   -v private_subnet_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json)" \
@@ -32,5 +33,5 @@ bosh update-cloud-config -n \
   -v cf-ssh-internal="$(jq -r '.cf_ssh_internal' < cf-vars.json)" \
   -v cf-ssh-lb="$(jq -r '.cf_ssh_lb' < cf-vars.json)" \
   -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)" 
-
+  
   bosh cloud-config > cf-manifests/cloud-config.yml

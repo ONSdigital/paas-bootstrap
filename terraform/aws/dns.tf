@@ -24,3 +24,15 @@ resource "aws_route53_record" "child_ns" {
     "${aws_route53_zone.child_zone.name_servers.3}.",
   ]
 }
+
+resource "aws_route53_zone" "private" {
+  name       = "${var.environment}-paas-private"
+  comment    = "Private DNS zone for internal CF add-ons"
+  vpc_id     = "${aws_vpc.default.id}"
+  vpc_region = "${var.region}"
+
+  tags {
+    Name        = "${var.environment}-paas-private-zone"
+    Environment = "${var.environment}"
+  }
+}

@@ -46,7 +46,8 @@
         "kms:GetKeyPolicy",
         "kms:GetKeyRotationStatus",
         "kms:ListResourceTags",
-        "kms:ScheduleKeyDeletion"
+        "kms:ScheduleKeyDeletion",
+        "kms:UpdateKeyDescription"
       ],
       "Resource": [
         "arn:aws:kms:${region}:${account_id}:*",
@@ -105,7 +106,8 @@
       "Resource": [
         "arn:aws:route53:::hostedzone/${hosted_zone_id}",
         "arn:aws:route53:::healthcheck/*",
-        "arn:aws:route53:::change/*"
+        "arn:aws:route53:::change/*",
+        "arn:aws:route53:::hostedzone/${private_zone_id}"
       ]
     },
     {
@@ -131,7 +133,8 @@
         "ec2:DisassociateAddress",
         "ec2:DescribeAddresses",
         "ec2:AssociateAddress",
-        "ec2:AllocateAddress"
+        "ec2:AllocateAddress",
+        "ec2:DescribePrefixLists"
       ],
       "Resource": "*"
     },
@@ -449,7 +452,8 @@
       "Action": [
         "acm:AddTagsToCertificate",
         "acm:DescribeCertificate",
-        "acm:DeleteCertificate"
+        "acm:DeleteCertificate",
+        "acm:ListTagsForCertificate"
       ],
       "Resource": "arn:aws:acm:${region}:${account_id}:certificate/*"
     },
@@ -563,7 +567,8 @@
         "rds:DeleteDBInstance",
         "rds:CreateDBSubnetGroup",
         "rds:DeleteDBSubnetGroup",
-        "rds:DescribeDBSubnetGroups"
+        "rds:DescribeDBSubnetGroups",
+        "rds:ListTagsForResource"
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group"

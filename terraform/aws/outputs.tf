@@ -2,6 +2,10 @@ output "vpc_id" {
   value = "${aws_vpc.default.id}"
 }
 
+output "vpc_dns_nameserver" {
+  value = "${cidrhost(aws_vpc.default.cidr_block, 2)}"
+}
+
 output "region" {
   value = "${var.region}"
 }
@@ -54,6 +58,6 @@ output "s3_prefix" {
   value = "${var.s3_prefix}"
 }
 
-output "cf_rds_password" {
-  value = "${var.cf_rds_password}"
+output "private_dns_zone" {
+  value = "${aws_route53_zone.private.name}"
 }

@@ -24,6 +24,8 @@ variable "ingress_whitelist" {
 
 variable "parent_dns_zone" {}
 
+variable "private_dns_zone" {}
+
 variable "bosh_security_group_id" {}
 variable "jumpbox_security_group_id" {}
 

@@ -15,5 +15,6 @@ data "template_file" "iam_policy" {
     security_group_id      = "${aws_security_group.concourse.id}"
     vpc_id                 = "${var.vpc_id}"
     s3_prefix              = "${var.s3_prefix}"
+    private_zone_id        = "${data.aws_route53_zone.private.zone_id}"
   }
 }

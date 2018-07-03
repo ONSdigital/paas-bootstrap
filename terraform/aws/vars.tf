@@ -22,5 +22,3 @@ variable "az2" {
 variable "s3_prefix" {
   default = "ons-paas"
 }
-
-variable "cf_rds_password" {}
