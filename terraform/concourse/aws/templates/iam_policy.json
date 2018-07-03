@@ -553,10 +553,20 @@
         "rds:DeleteDBInstance",
         "rds:AddTagsToResource",
         "rds:ListTagsForResource",
-        "rds:RemoveTagsFromResource"
+        "rds:RemoveTagsFromResource",
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:db:${environment}-cf-rds"
+      ]
+    },
+    {
+      "Sid": "CreateOptionGroup",
+      "Effect": "Allow",
+      "Action": [
+        "rds:*OptionGroup*"
+      ],
+      "Resource": [
+        "arn:aws:rds:${region}:${account_id}:og:${environment}-cf-rds-audit-logging"
       ]
     },
     {
