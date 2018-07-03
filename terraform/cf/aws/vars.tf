@@ -43,5 +43,3 @@ variable "public_ip" {
 }
 
 variable "s3_prefix" {}
-
-variable "cf_rds_password" {}
