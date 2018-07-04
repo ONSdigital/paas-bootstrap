@@ -6,6 +6,10 @@ set -euo pipefail
 
 : $ENVIRONMENT
 # BOSH create-env still requires the access credentials, rather than AWS_PROFILE
+if [ -n "${AWS_PROFILE:-}" ]; then
+  export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+  export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
+fi
 : $AWS_ACCESS_KEY_ID
 : $AWS_SECRET_ACCESS_KEY
 : $CONCOURSE_TERRAFORM_STATE_FILE
