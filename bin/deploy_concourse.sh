@@ -5,10 +5,9 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-if [ -z "${AWS_PROFILE:-}" ]; then
-  : $AWS_ACCESS_KEY_ID
-  : $AWS_SECRET_ACCESS_KEY
-fi
+# BOSH create-env still requires the access credentials, rather than AWS_PROFILE
+: $AWS_ACCESS_KEY_ID
+: $AWS_SECRET_ACCESS_KEY
 : $CONCOURSE_TERRAFORM_STATE_FILE
 : $CONCOURSE_STATE_FILE
 : $CONCOURSE_CREDS_FILE
@@ -41,6 +40,8 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
   -v environment="$ENVIRONMENT" \
+  -v access_key_id="$AWS_ACCESS_KEY_ID" \
+  -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
   --var-file private_key="$PRIVATE_KEY_FILE" \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"

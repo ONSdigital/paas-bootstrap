@@ -43,6 +43,9 @@ Where:
 - `AWS_ACCESS_KEY_ID` - your aws access key id
 - `AWS_SECRET_ACCESS_KEY` - your aws secret access key
 
+You can specify AWS_PROFILE, rather than the two AWS secrets, for every step except for `make concourse`.
+The `bosh create-env` command currently does not handle AWS_PROFILE correctly.
+
 ## Connecting to Concourse
 
 The dns name of Concourse is found by:
