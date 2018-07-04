@@ -11,6 +11,7 @@ inputs:
   - name: jumpbox-tfstate-s3
   - name: vpc-tfstate-s3
   - name: concourse-tfstate-s3
+  - name: jumpbox-vars-s3
 
 outputs:
   - name: jumpbox-state
