@@ -134,6 +134,17 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: databases-bosh-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ((environment))-states
+      bucket_path: bosh-databases/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))  
+
 - name: cf-terraform
   type: terraform
   source:
@@ -150,7 +161,7 @@ resources:
   source:
     storage:
       bucket: ((environment))-states
-      bucket_path: databases/
+      bucket_path: cf-databases/
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
@@ -235,9 +246,21 @@ resources:
     bucket: ((environment))-states
     private: true
     region_name: ((region))
-    versioned_file: databases/((environment)).tfstate
+    versioned_file: cf-databases/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+
+
+- name: bosh-databases-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: bosh-databases/((environment)).tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+    
 
 jobs:
 - name: verify-concourse
@@ -392,13 +415,36 @@ jobs:
       - jumpbox-terraform/metadata
       - vpc-vars/vars.json
 
+- name: terraform-bosh-databases
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [terraform-bosh]
+  - task: get-database-vars
+    file: paas-bootstrap-git/ci/tasks/bosh/get_database_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: databases-bosh-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/bosh-databases/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - bosh-vars/vars.json    
+
+
 - name: create-bosh
   serial: true
   serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      passed: [terraform-bosh]
+      passed: [terraform-bosh-databases]
       trigger: true
     - get: bosh-deployment-git
       version: { ref: ((bosh_commit_ref)) }
@@ -409,6 +455,7 @@ jobs:
     - get: bosh-state-s3
     - get: ssh-private-key-s3
     - get: concourse-tfstate-s3
+    - get: bosh-databases-tfstate-s3
   - task: interpolate-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.yml
     params:

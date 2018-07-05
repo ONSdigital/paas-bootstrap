@@ -43,7 +43,7 @@ output "bosh_db_username" {
 }
 
 output "bosh_db_type" {
-  value = "${aws_db_instance.bosh_rds.engine}"
+  value = "${aws_db_instance.bosh_rds.engine}2"
 }
 
 output "bosh_db_port" {

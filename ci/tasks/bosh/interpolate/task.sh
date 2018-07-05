@@ -33,6 +33,6 @@ bosh int \
   -v external_db_port="$(jq -r '.bosh_db_port' < bosh-vars.json)" \
   -v external_db_user="$(jq -r '.bosh_db_username' < bosh-vars.json)" \
   -v external_db_password="$(jq -r '.bosh_rds_password' < bosh-vars.json)" \
-  -v external_db_adapter="$(jq -r '.bosh_db_type' < bosh-vars.json)2" \
+  -v external_db_adapter="$(jq -r '.bosh_db_type' < bosh-vars.json)" \
   -v external_db_name="$(jq -r '.bosh_database_name' < databases-vars.json)" \
   > bosh-manifests/bosh.yml
