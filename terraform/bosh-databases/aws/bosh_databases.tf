@@ -4,6 +4,6 @@ provider "mysql" {
   password = "${var.bosh_rds_password}"
 }
 
-resource "mysql_database" "foo" {
-  name = "foo"
+resource "mysql_database" "bosh" {
+  name = "bosh"
 }
