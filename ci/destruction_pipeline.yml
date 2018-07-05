@@ -196,7 +196,7 @@ jobs:
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
     - get: concourse-tfstate-s3
-    - get: jumpbox-vars-s3
+    - get: jumpbox-tfstate-s3
   - task: destroy-cf
     file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
     params:
@@ -210,6 +210,7 @@ jobs:
         - vpc-vars/vars.json
         - bosh-vars/vars.json
         - concourse-vars/vars.json
+        - jumpbox-vars/vars.json
         action: destroy
       get_params:
         action: destroy

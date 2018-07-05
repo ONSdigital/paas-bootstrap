@@ -17,6 +17,7 @@ outputs:
 - name: vpc-vars
 - name: bosh-vars
 - name: concourse-vars
+- name: jumpbox-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/cf/destroy/task.sh
