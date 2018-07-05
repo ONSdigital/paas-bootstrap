@@ -120,3 +120,14 @@ resource "aws_security_group_rule" "jumpbox_director_bosh" {
   to_port                  = 25555
   source_security_group_id = "${aws_security_group.bosh.id}"
 }
+
+resource "aws_security_group" "bosh_rds" {
+  name        = "${var.environment}_bosh_rds_security_group"
+  description = "BOSH rds access"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-bosh-rds-security-group"
+    Environment = "${var.environment}"
+  }
+}
