@@ -161,7 +161,8 @@
             "${environment}-cf-router-lb-internal-security-group",
             "${environment}-cf-ssh-lb-security-group",
             "${environment}-cf-ssh-internal-security-group",
-            "${environment}-cf-rds-security-group"
+            "${environment}-cf-rds-security-group",
+            "${environment}-bosh-rds-security-group"
           ]
         }
       }

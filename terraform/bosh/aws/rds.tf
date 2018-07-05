@@ -14,7 +14,7 @@ resource "aws_db_instance" "bosh_rds" {
   vpc_security_group_ids    = ["${aws_security_group.bosh_rds.id}"]
   db_subnet_group_name      = "${aws_db_subnet_group.bosh_rds.id}"
   apply_immediately         = true
-  backup_window             = "02:00-03:00"
+  backup_window             = "01:00-02:00"
   maintenance_window        = "Tue:02:15-Tue:04:15"
   copy_tags_to_snapshot     = true
   final_snapshot_identifier = "${var.environment}-bosh-rds-final"
