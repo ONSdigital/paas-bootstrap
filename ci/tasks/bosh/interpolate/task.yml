@@ -12,6 +12,7 @@ inputs:
   - name: bosh-vars-s3
   - name: ssh-private-key-s3
   - name: concourse-tfstate-s3
+  - name: bosh-databases-tfstate-s3
 outputs:
   - name: bosh-manifests
 
