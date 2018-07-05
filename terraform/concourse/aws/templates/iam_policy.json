@@ -458,30 +458,6 @@
       "Resource": "arn:aws:acm:${region}:${account_id}:certificate/*"
     },
     {
-      "Sid": "AllowCreationOfNATGateways",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:CreateNatGateway"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "AllowReadInfoOfNATGateways",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DescribeNatGateways"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "AllowDeleteOfNATGateways",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DeleteNatGateway"
-      ],
-      "Resource": "*"
-    },
-    {
       "Sid": "AllowDeleteRouteTables",
       "Effect": "Allow",
       "Action": [
@@ -492,24 +468,24 @@
       ],
       "Resource": "arn:aws:ec2:${region}:${account_id}:route-table/*"
   },
-  {
-      "Sid": "AllowCreateRouteTables",
+    {
+      "Sid": "DescribeAccount",
       "Effect": "Allow",
       "Action": [
+        "ec2:DescribeNatGateways",
+        "ec2:CreateNatGateway",
+          "ec2:DeleteNatGateway",
+          "ec2:DescribeAccountAttributes",
           "ec2:CreateRoute",
           "ec2:CreateRouteTable",
           "ec2:DescribeRouteTables",
           "ec2:AssociateRouteTable",
           "ec2:ReplaceRouteTableAssociation",
-          "ec2:DisassociateRouteTable"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "DescribeAccount",
-      "Effect": "Allow",
-      "Action": [
-          "ec2:DescribeAccountAttributes"
+          "ec2:DisassociateRouteTable",
+          "s3:HeadBucket",
+          "s3:Get*",
+          "s3:List*",
+          "s3:PutBucketEncryption"
       ],
       "Resource": "*"
     },
@@ -531,19 +507,6 @@
       ]
     },
     {
-      "Sid": "S3DescribeBucket",
-      "Effect": "Allow",
-      "Action": [
-          "s3:HeadBucket",
-          "s3:Get*",
-          "s3:List*",
-          "s3:PutBucketEncryption"
-      ],
-      "Resource": [
-        "*"
-      ]
-    },
-    {
       "Sid": "CreateRDSInstance",
       "Effect": "Allow",
       "Action": [
@@ -557,7 +520,8 @@
         "rds:DescribeOptionGroups"
       ],
       "Resource": [
-        "arn:aws:rds:${region}:${account_id}:db:${environment}-cf-rds"
+        "arn:aws:rds:${region}:${account_id}:db:${environment}-cf-rds",
+        "arn:aws:rds:${region}:${account_id}:db:${environment}-bosh-rds"
       ]
     },
     {
@@ -567,7 +531,8 @@
         "rds:*"
       ],
       "Resource": [
-        "arn:aws:rds:${region}:${account_id}:og:${environment}-cf-rds-audit-logging"
+        "arn:aws:rds:${region}:${account_id}:og:${environment}-cf-rds-audit-logging",
+        "arn:aws:rds:${region}:${account_id}:og:${environment}-bosh-rds-audit-logging"
       ]
     },
     {
@@ -582,7 +547,8 @@
         "rds:ListTagsForResource"
       ],
       "Resource": [
-        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group"
+        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group",
+        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-bosh-rds-subnet-group"
       ]
     }
   ]
