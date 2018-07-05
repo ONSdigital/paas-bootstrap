@@ -38,7 +38,6 @@ output "s3_kms_key_arn" {
   value = "${var.s3_kms_key_arn}"
 }
 
-
 output "bosh_db_username" {
   value = "${aws_db_instance.bosh_rds.username}"
 }
@@ -51,9 +50,9 @@ output "bosh_db_port" {
   value = "${aws_db_instance.bosh_rds.port}"
 }
 
-output "bosh_rds_fqdn" {
-  value = "${aws_route53_record.bosh_rds.fqdn}"
-}
+# output "bosh_rds_fqdn" {
+#   value = "${aws_route53_record.bosh_rds.fqdn}"
+# }
 
 output "bosh_db_endpoint" {
   value = "${aws_db_instance.bosh_rds.endpoint}"
