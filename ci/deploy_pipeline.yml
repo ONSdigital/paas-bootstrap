@@ -456,6 +456,7 @@ jobs:
     - get: ssh-private-key-s3
     - get: concourse-tfstate-s3
     - get: bosh-databases-tfstate-s3
+    - get: vpc-tfstate-s3
   - task: interpolate-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/interpolate/task.yml
     params:
