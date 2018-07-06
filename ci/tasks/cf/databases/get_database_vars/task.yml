@@ -15,7 +15,7 @@ outputs:
 - name: cf-vars
 
 run:
-  path: paas-bootstrap-git/ci/tasks/databases/get_database_vars/task.sh
+  path: paas-bootstrap-git/ci/tasks/cf/databases/get_database_vars/task.sh
 
 params:
   ENVIRONMENT:
