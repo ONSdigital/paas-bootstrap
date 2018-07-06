@@ -39,7 +39,7 @@ output "s3_kms_key_arn" {
 }
 
 output "bosh_db_host" {
-  value = "${aws_db_instance.bosh_rds.host}"
+  value = "${aws_db_instance.bosh_rds.address}"
 }
 
 output "bosh_db_username" {
