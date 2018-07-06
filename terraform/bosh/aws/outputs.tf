@@ -38,12 +38,16 @@ output "s3_kms_key_arn" {
   value = "${var.s3_kms_key_arn}"
 }
 
+output "bosh_db_host" {
+  value = "${aws_db_instance.bosh_rds.host}"
+}
+
 output "bosh_db_username" {
   value = "${aws_db_instance.bosh_rds.username}"
 }
 
 output "bosh_db_type" {
-  value = "${aws_db_instance.bosh_rds.engine}2"
+  value = "${aws_db_instance.bosh_rds.engine}"
 }
 
 output "bosh_db_port" {
