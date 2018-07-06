@@ -37,3 +37,35 @@ output "s3_kms_key_id" {
 output "s3_kms_key_arn" {
   value = "${var.s3_kms_key_arn}"
 }
+
+output "bosh_db_host" {
+  value = "${aws_db_instance.bosh_rds.address}"
+}
+
+output "bosh_db_username" {
+  value = "${aws_db_instance.bosh_rds.username}"
+}
+
+output "bosh_db_type" {
+  value = "${aws_db_instance.bosh_rds.engine}"
+}
+
+output "bosh_db_engine_version" {
+  value = "${aws_db_instance.bosh_rds.engine_version}"
+}
+
+output "bosh_db_port" {
+  value = "${aws_db_instance.bosh_rds.port}"
+}
+
+output "bosh_rds_fqdn" {
+  value = "${aws_route53_record.bosh_rds.fqdn}"
+}
+
+output "bosh_db_endpoint" {
+  value = "${aws_db_instance.bosh_rds.endpoint}"
+}
+
+output "bosh_rds_password" {
+  value = "${random_string.bosh_rds_password.result}"
+}

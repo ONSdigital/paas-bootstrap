@@ -120,3 +120,34 @@ resource "aws_security_group_rule" "jumpbox_director_bosh" {
   to_port                  = 25555
   source_security_group_id = "${aws_security_group.bosh.id}"
 }
+
+resource "aws_security_group" "bosh_rds" {
+  name        = "${var.environment}_bosh_rds_security_group"
+  description = "BOSH rds access"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-bosh-rds-security-group"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "allow_postgres_from_concourse" {
+  security_group_id        = "${aws_security_group.bosh_rds.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${aws_db_instance.bosh_rds.port}"
+  to_port                  = "${aws_db_instance.bosh_rds.port}"
+  source_security_group_id = "${var.concourse_security_group_id}"
+  description              = "Provide ingress PostgreSQL traffic from Concourse"
+}
+
+resource "aws_security_group_rule" "allow_postgres_from_bosh" {
+  security_group_id        = "${aws_security_group.bosh_rds.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${aws_db_instance.bosh_rds.port}"
+  to_port                  = "${aws_db_instance.bosh_rds.port}"
+  source_security_group_id = "${aws_security_group.bosh.id}"
+  description              = "Provide ingress PostgreSQL traffic from BOSH"
+}

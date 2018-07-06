@@ -4,6 +4,14 @@ variable "az1" {
   default = "eu-west-1a"
 }
 
+variable "az2" {
+  default = "eu-west-1b"
+}
+
+variable "az3" {
+  default = "eu-west-1c"
+}
+
 variable "region" {
   default = "eu-west-1"
 }
@@ -30,3 +38,5 @@ variable concourse_security_group_id {}
 variable jumpbox_security_group_id {}
 
 variable "nat_az1_id" {}
+
+variable "private_dns_zone" {}
