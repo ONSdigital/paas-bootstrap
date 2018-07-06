@@ -59,7 +59,7 @@ output "bosh_db_port" {
 }
 
 output "bosh_rds_fqdn" {
-  value = "${aws_route53_record.bosh_rds.fqdn}"
+  value = "${aws_db_instance.bosh_rds.address}"
 }
 
 output "bosh_db_endpoint" {

@@ -6,6 +6,7 @@ image_resource:
 
 inputs:
   - name: paas-bootstrap-git
+  - name: vpc-tfstate-s3
   - name: bosh-terraform
   - name: bosh-tfstate-s3
   - name: bosh-deployment-git
