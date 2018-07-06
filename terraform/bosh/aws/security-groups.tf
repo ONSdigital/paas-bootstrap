@@ -132,22 +132,22 @@ resource "aws_security_group" "bosh_rds" {
   }
 }
 
-resource "aws_security_group_rule" "allow_mysql_from_concourse" {
+resource "aws_security_group_rule" "allow_postgres_from_concourse" {
   security_group_id        = "${aws_security_group.bosh_rds.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = 3306
-  to_port                  = 3306
+  from_port                = "${aws_db_instance.bosh_rds.port}"
+  to_port                  = "${aws_db_instance.bosh_rds.port}"
   source_security_group_id = "${var.concourse_security_group_id}"
-  description              = "Provide ingress MySQL traffic from Concourse"
+  description              = "Provide ingress PostgreSQL traffic from Concourse"
 }
 
-resource "aws_security_group_rule" "allow_mysql_from_bosh" {
+resource "aws_security_group_rule" "allow_postgres_from_bosh" {
   security_group_id        = "${aws_security_group.bosh_rds.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = 3306
-  to_port                  = 3306
+  from_port                = "${aws_db_instance.bosh_rds.port}"
+  to_port                  = "${aws_db_instance.bosh_rds.port}"
   source_security_group_id = "${aws_security_group.bosh.id}"
-  description              = "Provide ingress MySQL traffic from BOSH"
+  description              = "Provide ingress PostgreSQL traffic from BOSH"
 }

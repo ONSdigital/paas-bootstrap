@@ -1,3 +1,3 @@
 output "bosh_database_name" {
-  value = "${mysql_database.bosh.name}"
+  value = "${postgresql_database.bosh.name}"
 }
