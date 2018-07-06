@@ -7,7 +7,7 @@ resource "aws_db_instance" "bosh_rds" {
   identifier                = "${var.environment}-bosh-rds"
   allocated_storage         = "100"
   engine                    = "postgres"
-  engine_version            = "10.3"
+  engine_version            = "9.6.8"
   instance_class            = "db.m4.xlarge"
   username                  = "bosh_admin"
   password                  = "${random_string.bosh_rds_password.result}"
