@@ -1,4 +1,4 @@
 ---
 - type: replace
-  path: /instance_group/name=diego-cell/instances
+  path: /instance_groups/name=diego-cell/instances
   value: ((diego-cell-instance-count))
