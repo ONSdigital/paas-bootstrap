@@ -15,7 +15,12 @@ CF_DB_ENDPOINT="$(jq -r '.cf_rds_fqdn' < cf-vars.json)"
 CF_DB_USERNAME="$(jq -r '.cf_db_username' < cf-vars.json)"
 CF_DB_PASSWORD="$(jq -r '.cf_rds_password' < cf-vars.json)"
 
-instance_count_file=paas-bootstrap-git/environments/engineering/instance-count.yml
+if [[ ${ENVIRONMENT} = "eng"* ]]; then
+  profile="engineering"
+else
+  profile="${ENVIRONMENT}"
+fi
+instance_count_file=paas-bootstrap-git/profiles/${profile}/instance-count.yml
 
 bosh int \
   ./cf-deployment-git/cf-deployment.yml \
@@ -29,7 +34,7 @@ bosh int \
   -o paas-bootstrap-git/operations/cf/router-sec-group.yml \
   -o paas-bootstrap-git/operations/cf/scheduler-instance-type.yml \
   -o paas-bootstrap-git/operations/cf/s3_blobstore_with_kms_and_iam.yml \
-  -o paas-bootstrap-git/operations/cf/scale-diego-cells.yml \
+  -o paas-bootstrap-git/operations/cf/instance-counts.yml \
   -v system_domain="${SYSTEM_DOMAIN}" \
   -v app_domains="[${APPS_DOMAIN}]" \
   -v smoke_test_app_domain="${APPS_DOMAIN}" \
