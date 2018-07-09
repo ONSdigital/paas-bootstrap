@@ -9,7 +9,7 @@ jq '.modules[0].outputs | with_entries(.value = .value.value)' < "databases-tfst
 
 
 SYSTEM_DOMAIN="system.${DOMAIN}"
-APPS_DOMAIN="apps.${DOMAIN}" 
+APPS_DOMAIN="apps.${DOMAIN}"
 
 CF_DB_ENDPOINT="$(jq -r '.cf_rds_fqdn' < cf-vars.json)"
 CF_DB_USERNAME="$(jq -r '.cf_db_username' < cf-vars.json)"
@@ -19,7 +19,6 @@ bosh int \
   ./cf-deployment-git/cf-deployment.yml \
   --vars-store cf-manifests/cf-variables.yml \
   -o cf-deployment-git/operations/aws.yml \
-  -o cf-deployment-git/operations/scale-to-one-az.yml \
   -o cf-deployment-git/operations/override-app-domains.yml \
   -o cf-deployment-git/operations/use-external-blobstore.yml \
   -o cf-deployment-git/operations/use-external-dbs.yml \
