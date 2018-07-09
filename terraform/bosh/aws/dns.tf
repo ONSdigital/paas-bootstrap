@@ -11,3 +11,12 @@ resource "aws_route53_record" "bosh_rds" {
 
   records = ["${aws_db_instance.bosh_rds.address}"]
 }
+
+resource "aws_route53_record" "bosh_director" {
+  zone_id = "${data.aws_route53_zone.private.zone_id}"
+  name    = "bosh_director.${data.aws_route53_zone.private.name}"
+  type    = "A"
+  ttl     = "30"
+
+  records = ["${cidr_host(aws_subnet.az1.cidr_block, 6)}"]
+}
