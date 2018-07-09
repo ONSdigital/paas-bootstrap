@@ -526,34 +526,6 @@ jobs:
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
 
-- name: terraform-prometheus
-  serial: true
-  serial_groups: [main]
-  plan:
-  - get: paas-bootstrap-git
-    passed: [verify-bosh]
-    trigger: true
-  - put: prometheus-terraform
-    params:
-      terraform_source: paas-bootstrap-git/terraform/prometheus/aws
-      env_name: ((environment))
-
-- name: verify-prometheus
-  serial: true
-  serial_groups: [main]
-  plan:
-  - get: paas-bootstrap-git
-    passed: [terraform-prometheus]
-    trigger: true
-  - aggregate:
-    - task: ensure concourse can connect to grafana on port 3000
-      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
-      params:
-        HOST: grafana
-        DOMAIN: ((domain))
-        PORT: 3000
-        EXPECTED_OUTCOME: success
-
 - name: terraform-cf
   serial: true
   serial_groups: [main]
@@ -565,7 +537,7 @@ jobs:
     - get: concourse-tfstate-s3
     - get: paas-bootstrap-git
       trigger: true
-      passed: [verify-prometheus]
+      passed: [verify-bosh]
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
