@@ -3,7 +3,7 @@ data "aws_security_group" "bosh" {
 }
 
 data "aws_security_group" "cf" {
-  id = "${var.cf_security_group_id}"
+  id = "${var.cf_internal_security_group_id}"
 }
 
 resource "aws_security_group" "prometheus" {
