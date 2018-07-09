@@ -18,5 +18,5 @@ resource "aws_route53_record" "bosh_director" {
   type    = "A"
   ttl     = "30"
 
-  records = ["${cidr_host(aws_subnet.az1.cidr_block, 6)}"]
+  records = ["${cidrhost(aws_subnet.az1.cidr_block, 6)}"]
 }
