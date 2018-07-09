@@ -21,17 +21,27 @@ bosh update-cloud-config -n \
   -o paas-bootstrap-git/operations/cloud-config/cf-ssh-extensions.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
-  -v private_subnet_gateway="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json | sed 's#0/24#1#')" \
-  -v reserved_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json  | sed 's#0/24#1/30#')" \
+  -v az2="$(jq -r .az2 < vpc-vars.json)" \
+  -v az3="$(jq -r .az3 < vpc-vars.json)" \
+  -v private_subnet_az1_gateway="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json | sed 's#0/24#1#')" \
+  -v private_subnet_az2_gateway="$(jq -r '.cf_internal_subnet_az2_cidr' < cf-vars.json | sed 's#0/24#1#')" \
+  -v private_subnet_az3_gateway="$(jq -r '.cf_internal_subnet_az3_cidr' < cf-vars.json | sed 's#0/24#1#')" \
+  -v reserved_az1_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json  | sed 's#0/24#1/30#')" \
+  -v reserved_az2_cidr="$(jq -r '.cf_internal_subnet_az2_cidr' < cf-vars.json  | sed 's#0/24#1/30#')" \
+  -v reserved_az3_cidr="$(jq -r '.cf_internal_subnet_az3_cidr' < cf-vars.json  | sed 's#0/24#1/30#')" \
   -v private_dns_nameserver="$(jq -r '.vpc_dns_nameserver' < vpc-vars.json)" \
   -v internal_security_group="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
-  -v private_subnet_id="$(jq -r '.cf_internal_subnet_az1_id' < cf-vars.json)" \
-  -v private_subnet_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json)" \
+  -v private_subnet_az1_id="$(jq -r '.cf_internal_subnet_az1_id' < cf-vars.json)" \
+  -v private_subnet_az2_id="$(jq -r '.cf_internal_subnet_az2_id' < cf-vars.json)" \
+  -v private_subnet_az3_id="$(jq -r '.cf_internal_subnet_az3_id' < cf-vars.json)" \
+  -v private_subnet_az1_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json)" \
+  -v private_subnet_az2_cidr="$(jq -r '.cf_internal_subnet_az2_cidr' < cf-vars.json)" \
+  -v private_subnet_az3_cidr="$(jq -r '.cf_internal_subnet_az3_cidr' < cf-vars.json)" \
   -v cf-router-target-group-name="$(jq -r '.cf_router_target_group_name' < cf-vars.json)" \
   -v cf-router-lb-internal-security-group-id="$(jq -r '.cf_router_lb_internal_security_group_id' < cf-vars.json)" \
   -v cf-internal-security-group-id="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
   -v cf-ssh-internal="$(jq -r '.cf_ssh_internal' < cf-vars.json)" \
   -v cf-ssh-lb="$(jq -r '.cf_ssh_lb' < cf-vars.json)" \
-  -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)" 
-  
+  -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)"
+
   bosh cloud-config > cf-manifests/cloud-config.yml

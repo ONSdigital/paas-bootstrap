@@ -2,8 +2,24 @@ output "cf_internal_subnet_az1_id" {
   value = "${aws_subnet.az1.id}"
 }
 
+output "cf_internal_subnet_az2_id" {
+  value = "${aws_subnet.az2.id}"
+}
+
+output "cf_internal_subnet_az3_id" {
+  value = "${aws_subnet.az3.id}"
+}
+
 output "cf_internal_subnet_az1_cidr" {
   value = "${aws_subnet.az1.cidr_block}"
+}
+
+output "cf_internal_subnet_az2_cidr" {
+  value = "${aws_subnet.az2.cidr_block}"
+}
+
+output "cf_internal_subnet_az3_cidr" {
+  value = "${aws_subnet.az3.cidr_block}"
 }
 
 output "cf_internal_security_group_id" {

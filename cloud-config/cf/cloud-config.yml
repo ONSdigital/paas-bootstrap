@@ -1,6 +1,10 @@
 azs:
 - name: z1
   cloud_properties: {availability_zone: ((az1))}
+- name: z2
+  cloud_properties: {availability_zone: ((az2))}
+- name: z3
+  cloud_properties: {availability_zone: ((az3))}
 
 vm_types:
 - name: default
@@ -59,15 +63,35 @@ networks:
 - name: default
   type: manual
   subnets:
-  - range: ((private_subnet_cidr))
-    gateway: ((private_subnet_gateway))
+  - range: ((private_subnet_az1_cidr))
+    gateway: ((private_subnet_az1_gateway))
     az: z1
     dns:
     - ((private_dns_nameserver))
     - 1.1.1.1
-    reserved: [((reserved_cidr))]
+    reserved: [((reserved_az1_cidr))]
     cloud_properties:
-      subnet: ((private_subnet_id))
+      subnet: ((private_subnet_az1_id))
+      security_groups: [ ((internal_security_group))]
+  - range: ((private_subnet_az2_cidr))
+    gateway: ((private_subnet_az2_gateway))
+    az: z2
+    dns:
+    - ((private_dns_nameserver))
+    - 1.1.1.1
+    reserved: [((reserved_az2_cidr))]
+    cloud_properties:
+      subnet: ((private_subnet_az2_id))
+      security_groups: [ ((internal_security_group))]
+  - range: ((private_subnet_az3_cidr))
+    gateway: ((private_subnet_az3_gateway))
+    az: z3
+    dns:
+    - ((private_dns_nameserver))
+    - 1.1.1.1
+    reserved: [((reserved_az3_cidr))]
+    cloud_properties:
+      subnet: ((private_subnet_az3_id))
       security_groups: [ ((internal_security_group))]
 
 compilation:

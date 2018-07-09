@@ -19,6 +19,10 @@ variable "az2" {
   default = "eu-west-1b"
 }
 
+variable "az3" {
+  default = "eu-west-1c"
+}
+
 variable "s3_prefix" {
   default = "ons-paas"
 }

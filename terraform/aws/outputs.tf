@@ -18,6 +18,10 @@ output "az2" {
   value = "${var.az2}"
 }
 
+output "az3" {
+  value = "${var.az3}"
+}
+
 output "default_route_table_id" {
   value = "${aws_vpc.default.main_route_table_id}"
 }
