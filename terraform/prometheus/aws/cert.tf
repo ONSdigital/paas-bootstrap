@@ -15,14 +15,16 @@ resource "aws_acm_certificate" "prometheus" {
 }
 
 resource "aws_route53_record" "prometheus_validation" {
-  name    = "${aws_acm_certificate.prometheus.domain_validation_options.0.resource_record_name}"
-  type    = "${aws_acm_certificate.prometheus.domain_validation_options.0.resource_record_type}"
+  count = 3
+
+  name    = "${lookup(aws_acm_certificate.prometheus.domain_validation_options[count.index], "resource_record_name")}"
+  type    = "${lookup(aws_acm_certificate.prometheus.domain_validation_options[count.index], "resource_record_type")}"
   zone_id = "${data.aws_route53_zone.child_zone.zone_id}"
-  records = ["${aws_acm_certificate.prometheus.domain_validation_options.0.resource_record_value}"]
+  records = ["${lookup(aws_acm_certificate.prometheus.domain_validation_options[count.index], "resource_record_value")}"]
   ttl     = 30
 }
 
 resource "aws_acm_certificate_validation" "prometheus" {
   certificate_arn         = "${aws_acm_certificate.prometheus.arn}"
-  validation_record_fqdns = ["${aws_route53_record.prometheus_validation.fqdn}"]
+  validation_record_fqdns = ["${aws_route53_record.prometheus_validation.*.fqdn}"]
 }
