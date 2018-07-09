@@ -15,7 +15,7 @@ resource "aws_acm_certificate" "prometheus" {
 }
 
 resource "aws_route53_record" "prometheus_validation" {
-  count = 3
+  count = 2
 
   name    = "${lookup(aws_acm_certificate.prometheus.domain_validation_options[count.index], "resource_record_name")}"
   type    = "${lookup(aws_acm_certificate.prometheus.domain_validation_options[count.index], "resource_record_type")}"
