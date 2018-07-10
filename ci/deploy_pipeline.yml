@@ -156,7 +156,7 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
-- name: databases-terraform
+- name: cf-databases-terraform
   type: terraform
   source:
     storage:
@@ -515,7 +515,7 @@ jobs:
       - bosh-vars/vars.json
       - concourse-vars/vars.json
 
-- name: terraform-databases
+- name: terraform-cf-databases
   serial: true
   serial_groups: [main]
   plan:
@@ -526,12 +526,12 @@ jobs:
       trigger: true
       passed: [terraform-cf]
   - task: get-database-vars
-    file: paas-bootstrap-git/ci/tasks/databases/get_database_vars/task.yml
+    file: paas-bootstrap-git/ci/tasks/cf/databases/get_database_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
-  - put: databases-terraform
+  - put: cf-databases-terraform
     params:
-      terraform_source: paas-bootstrap-git/terraform/databases/aws
+      terraform_source: paas-bootstrap-git/terraform/cf-databases/aws
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
@@ -543,7 +543,7 @@ jobs:
   plan:
   - get: paas-bootstrap-git
     trigger: true
-    passed: [terraform-databases]
+    passed: [terraform-cf-databases]
   - aggregate:
     - task: ensure that system FQDN is resolvable
       file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
