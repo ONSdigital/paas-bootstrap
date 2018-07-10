@@ -69,8 +69,8 @@ resource "aws_lb_listener" "cf_4443" {
 
 resource "aws_lb_target_group" "cf" {
   name     = "${var.environment}-cf-target-group"
-  port     = 80
-  protocol = "HTTP"
+  port     = 443
+  protocol = "HTTPS"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
