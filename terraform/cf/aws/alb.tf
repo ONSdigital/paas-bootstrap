@@ -16,20 +16,21 @@ resource "aws_lb" "cf" {
   }
 }
 
-resource "aws_lb_listener" "cf_80" {
-  load_balancer_arn = "${aws_lb.cf.arn}"
-  port              = "80"
-  protocol          = "HTTP"
+# Port 80 disabled, see [#157117450]
+# resource "aws_lb_listener" "cf_80" {
+#   load_balancer_arn = "${aws_lb.cf.arn}"
+#   port              = "80"
+#   protocol          = "HTTP"
 
-  default_action {
-    target_group_arn = "${aws_lb_target_group.cf.arn}"
-    type             = "forward"
-  }
+#   default_action {
+#     target_group_arn = "${aws_lb_target_group.cf.arn}"
+#     type             = "forward"
+#   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 resource "aws_lb_listener" "cf_443" {
   depends_on        = ["aws_acm_certificate_validation.cf"]

@@ -17,15 +17,16 @@ resource "aws_security_group" "cf_alb" {
   }
 }
 
-resource "aws_security_group_rule" "cf_alb_http" {
-  security_group_id = "${aws_security_group.cf_alb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["${concat(var.ingress_whitelist,formatlist("%s/32", list(var.public_ip, data.aws_nat_gateway.az1.public_ip, data.aws_nat_gateway.az2.public_ip, data.aws_nat_gateway.az3.public_ip)))}"]
-  description       = "Whitelist administrator access for HTTP"
-}
+# Port 80 disabled, see [#157117450]
+# resource "aws_security_group_rule" "cf_alb_http" {
+#   security_group_id = "${aws_security_group.cf_alb.id}"
+#   type              = "ingress"
+#   protocol          = "tcp"
+#   from_port         = 80
+#   to_port           = 80
+#   cidr_blocks       = ["${concat(var.ingress_whitelist,formatlist("%s/32", list(var.public_ip, data.aws_nat_gateway.az1.public_ip, data.aws_nat_gateway.az2.public_ip, data.aws_nat_gateway.az3.public_ip)))}"]
+#   description       = "Whitelist administrator access for HTTP"
+# }
 
 resource "aws_security_group_rule" "cf_alb_https" {
   security_group_id = "${aws_security_group.cf_alb.id}"
