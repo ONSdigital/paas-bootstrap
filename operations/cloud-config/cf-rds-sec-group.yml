@@ -5,3 +5,4 @@
     cloud_properties:
       security_groups:
         - ((cf-rds-client-security-group))
+        - ((internal_security_group))
