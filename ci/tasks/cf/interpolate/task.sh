@@ -38,6 +38,8 @@ bosh int \
   -o paas-bootstrap-git/operations/cf/azs.yml \
   -o paas-bootstrap-git/operations/cf/instance-counts.yml \
   -o paas-bootstrap-git/operations/cf/rds-access.yml \
+  -v environment="${ENVIRONMENT}" \
+  -v region="$(jq -r .region < vpc-vars.json)" \
   -v system_domain="${SYSTEM_DOMAIN}" \
   -v app_domains="[${APPS_DOMAIN}]" \
   -v smoke_test_app_domain="${APPS_DOMAIN}" \
@@ -46,7 +48,6 @@ bosh int \
   -v app_package_directory_key="$(jq -r '.cf_packages_bucket_name' < cf-vars.json)" \
   -v resource_directory_key="$(jq -r '.cf_resource_pool_bucket_name' < cf-vars.json)" \
   -v cf_blobstore_s3_kms_key_id="$(jq -r '.cf_blobstore_s3_kms_key_id' < cf-vars.json)" \
-  -v region="$(jq -r .region < vpc-vars.json)" \
   -v external_database_type="$(jq -r '.cf_db_type' < cf-vars.json)" \
   -v external_database_port="$(jq -r '.cf_db_port' < cf-vars.json)" \
   -v external_uaa_database_name="$(jq -r '.uaa_database_name' < databases-vars.json)" \
