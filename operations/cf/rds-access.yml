@@ -1,0 +1,20 @@
+---
+- type: replace
+  path: /instance_groups/name=uaa/vm_extensions?/-
+  value: cf-rds-sec-group
+
+- type: replace
+  path: /instance_groups/name=api/vm_extensions?/-
+  value: cf-rds-sec-group
+
+- type: replace
+  path: /instance_groups/name=cc-worker/vm_extensions?/-
+  value: cf-rds-sec-group
+
+- type: replace
+  path: /instance_groups/name=scheduler/vm_extensions?/-
+  value: cf-rds-sec-group
+
+- type: replace
+  path: /instance_groups/name=diego-api/vm_extensions?/-
+  value: cf-rds-sec-group

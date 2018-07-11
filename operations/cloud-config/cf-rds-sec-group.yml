@@ -1,0 +1,7 @@
+- type: replace
+  path: /vm_extensions/name=cf-rds-sec-group?
+  value:
+    name: cf-rds-sec-group
+    cloud_properties:
+      security_groups:
+        - ((cf-rds-client-security-group))

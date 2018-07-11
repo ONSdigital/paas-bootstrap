@@ -20,6 +20,7 @@ bosh update-cloud-config -n \
   -o paas-bootstrap-git/operations/cloud-config/router-extensions.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-ssh-extensions.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
+  -o paas-bootstrap-git/operations/cloud-config/cf-rds-sec-group.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v az2="$(jq -r .az2 < vpc-vars.json)" \
   -v az3="$(jq -r .az3 < vpc-vars.json)" \
@@ -42,6 +43,7 @@ bosh update-cloud-config -n \
   -v cf-internal-security-group-id="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
   -v cf-ssh-internal="$(jq -r '.cf_ssh_internal' < cf-vars.json)" \
   -v cf-ssh-lb="$(jq -r '.cf_ssh_lb' < cf-vars.json)" \
-  -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)"
+  -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)" \
+  -v cf_rds_client_security_group_id="$(jq -r '.cf_rds_client_security_group_id' < cf-vars.json)"
 
   bosh cloud-config > cf-manifests/cloud-config.yml

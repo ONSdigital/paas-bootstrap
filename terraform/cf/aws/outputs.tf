@@ -93,3 +93,7 @@ output "cf_db_endpoint" {
 output "cf_rds_password" {
   value = "${random_string.cf_rds_password.result}"
 }
+
+output "cf_rds_client_security_group_id" {
+  value = "${aws_security_group.cf_rds_client.id}"
+}

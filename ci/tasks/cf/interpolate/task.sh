@@ -35,6 +35,7 @@ bosh int \
   -o paas-bootstrap-git/operations/cf/scheduler-instance-type.yml \
   -o paas-bootstrap-git/operations/cf/s3_blobstore_with_kms_and_iam.yml \
   -o paas-bootstrap-git/operations/cf/instance-counts.yml \
+  -o paas-bootstrap-git/operations/cf/rds-access.yml \
   -v system_domain="${SYSTEM_DOMAIN}" \
   -v app_domains="[${APPS_DOMAIN}]" \
   -v smoke_test_app_domain="${APPS_DOMAIN}" \

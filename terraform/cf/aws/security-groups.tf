@@ -282,12 +282,23 @@ resource "aws_security_group_rule" "allow_mysql_from_concourse" {
   description              = "Provide ingress MySQL traffic from Concourse"
 }
 
-resource "aws_security_group_rule" "allow_mysql_from_cf_internal" {
+resource "aws_security_group_rule" "allow_mysql_from_cf_internal_clients" {
   security_group_id        = "${aws_security_group.cf_rds.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 3306
   to_port                  = 3306
-  source_security_group_id = "${aws_security_group.internal.id}"
+  source_security_group_id = "${aws_security_group.cf_rds_client.id}"
   description              = "Provide ingress MySQL traffic from CF"
+}
+
+resource "aws_security_group" "cf_rds_client" {
+  name        = "${var.environment}_cf_rds_client_security_group"
+  description = "CF rds consumer"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-cf-rds-client-security-group"
+    Environment = "${var.environment}"
+  }
 }
