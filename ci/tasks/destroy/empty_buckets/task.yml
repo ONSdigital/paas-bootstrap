@@ -5,9 +5,7 @@ image_resource:
   source: { repository: onsdigital/paas-ci-gp, tag: latest }
 
 inputs:
-  - paas-bootstrap-git
-
-outputs:
+  - name: paas-bootstrap-git
 
 run:
   path: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.sh
