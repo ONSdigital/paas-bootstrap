@@ -30,7 +30,7 @@ bosh int \
   -o cf-deployment-git/operations/override-app-domains.yml \
   -o cf-deployment-git/operations/use-external-blobstore.yml \
   -o cf-deployment-git/operations/use-external-dbs.yml \
-  -o prometheus-boshrelease-git/manifests/operators/cf/add-prometheus-uaa-clients.yml \
+  -o prometheus-deployment-git/manifests/operators/cf/add-prometheus-uaa-clients.yml \
   -o paas-bootstrap-git/operations/bosh/tags.yml \
   -o paas-bootstrap-git/operations/cf/stemcells.yml \
   -o paas-bootstrap-git/operations/cf/router-sec-group.yml \
