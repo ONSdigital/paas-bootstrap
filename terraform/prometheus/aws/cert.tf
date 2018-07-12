@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "prometheus" {
-  domain_name = "prometheus.${var.environment}.${var.parent_dns_zone}"
+  domain_name = "*.prometheus.${var.environment}.${var.parent_dns_zone}"
 
   subject_alternative_names = [
     "prometheus.${var.environment}.${var.parent_dns_zone}",
