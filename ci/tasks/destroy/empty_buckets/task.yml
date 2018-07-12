@@ -1,0 +1,13 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+  - paas-bootstrap-git
+
+outputs:
+
+run:
+  path: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.sh

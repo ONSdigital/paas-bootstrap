@@ -202,18 +202,26 @@ jobs:
     params:
       ENVIRONMENT: ((environment))
     on_success:
-      put: cf-terraform
-      params:
-        terraform_source: paas-bootstrap-git/terraform/cf/aws
-        env_name: ((environment))
-        var_files:
-        - vpc-vars/vars.json
-        - bosh-vars/vars.json
-        - concourse-vars/vars.json
-        - jumpbox-vars/vars.json
-        action: destroy
-      get_params:
-        action: destroy
+      - task: empty-buckets
+        file: paas-bootstrap-git/ci/destroy/empty_buckets/task.yml
+        params:
+          ONS_PREFIX: ons-paas
+          ENVIRONMENT: ((environment))
+          NAMESSPACE: cf
+
+
+      # - put: cf-terraform
+      #   params:
+      #     terraform_source: paas-bootstrap-git/terraform/cf/aws
+      #     env_name: ((environment))
+      #     var_files:
+      #     - vpc-vars/vars.json
+      #     - bosh-vars/vars.json
+      #     - concourse-vars/vars.json
+      #     - jumpbox-vars/vars.json
+      #     action: destroy
+      #   get_params:
+      #     action: destroy
 
 - name: destroy-bosh
   serial_groups: [destruction]
