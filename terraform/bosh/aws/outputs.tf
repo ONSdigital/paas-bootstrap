@@ -69,3 +69,7 @@ output "bosh_db_endpoint" {
 output "bosh_rds_password" {
   value = "${random_string.bosh_rds_password.result}"
 }
+
+output "bosh_director_fqdn" {
+  value = "${aws_route53_record.bosh_director.fqdn}"
+}
