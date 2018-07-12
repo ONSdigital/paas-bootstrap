@@ -10,3 +10,6 @@ variable "ingress_whitelist" {
 }
 
 variable "parent_dns_zone" {}
+
+variable "s3_kms_key_arn" {}
+variable "state_bucket_id" {}
