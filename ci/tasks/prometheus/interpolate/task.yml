@@ -7,10 +7,10 @@ image_resource:
 inputs:
   - name: paas-bootstrap-git
   - name: prometheus-deployment-git
+  - name: prometheus-vars-s3
   - name: cf-vars-s3
   - name: cf-tfstate-s3
   - name: vpc-tfstate-s3
-  - name: databases-tfstate-s3
   - name: bosh-vars-s3
 
 outputs:

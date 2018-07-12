@@ -752,6 +752,7 @@ jobs:
       passed: [terraform-prometheus]
     - get: prometheus-deployment-git
       version: { ref: ((prometheus_commit_ref)) }
+    - get: prometheus-vars-s3
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
     - get: cf-tfstate-s3
