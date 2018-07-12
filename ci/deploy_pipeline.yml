@@ -47,6 +47,10 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+- name: prometheus-deployment-git
+  type: git
+  source:
+    uri: https://github.com/bosh-prometheus/prometheus-boshrelease.git
 
 - name: jumpbox-terraform
   type: terraform
@@ -166,7 +170,7 @@ resources:
   source:
     storage:
       bucket: ons-paas-((environment))-states
-      bucket_path: prometheus/
+      bucket_path: cf/
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
@@ -177,7 +181,7 @@ resources:
   source:
     storage:
       bucket: ons-paas-((environment))-states
-      bucket_path: cf/
+      bucket_path: prometheus/
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
@@ -214,6 +218,29 @@ resources:
     private: true
     region_name: ((region))
     versioned_file: cf/cf.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
+
+- name: prometheus-vars-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: prometheus/prometheus-variables.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: prometheus-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: prometheus/prometheus.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
     initial_version: "-"
@@ -603,6 +630,8 @@ jobs:
       passed: [verify-cf]
     - get: cf-deployment-git
       version: { ref: ((cf_commit_ref)) }
+    - get: prometheus-deployment-git
+      version: { ref: ((prometheus_commit_ref)) }
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
     - get: cf-tfstate-s3
@@ -690,12 +719,12 @@ jobs:
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
 
 - name: terraform-prometheus
-  serial: true
-  serial_groups: [main]
+  # serial: true
+  # serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      passed: [deploy-cf]
+      # passed: [deploy-cf]
       trigger: true
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
@@ -713,12 +742,45 @@ jobs:
       - bosh-vars/vars.json
       - cf-vars/vars.json
 
+- name: deploy-prometheus
+  # serial: true
+  # serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [terraform-prometheus]
+    - get: prometheus-deployment-git
+      version: { ref: ((prometheus_commit_ref)) }
+    - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: cf-tfstate-s3
+    - get: cf-vars-s3
+    - get: bosh-vars-s3
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - task: interpolate-prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/interpolate/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      DOMAIN: ((domain))
+    on_success:
+      aggregate:
+      - put: prometheus-vars-s3
+        params:
+          file: prometheus-manifests/prometheus-variables.yml
+      - put: prometheus-manifest-s3
+        params:
+          file: prometheus-manifests/prometheus.yml
+
 - name: verify-prometheus
-  serial: true
-  serial_groups: [main]
+  # serial: true
+  # serial_groups: [main]
   plan:
   - get: paas-bootstrap-git
-    passed: [terraform-prometheus]
+    passed: [deploy-prometheus]
     trigger: true
   - aggregate:
     - task: ensure concourse can connect to grafana on port 3000

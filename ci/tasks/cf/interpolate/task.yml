@@ -11,6 +11,7 @@ inputs:
   - name: cf-tfstate-s3
   - name: vpc-tfstate-s3
   - name: databases-tfstate-s3
+  - name: prometheus-boshrelease-git
 
 outputs:
   - name: cf-manifests
