@@ -3,7 +3,9 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-: ${BRANCH:=master}
+: ${BRANCH:="$(git rev-parse --abbrev-ref HEAD)"}
+
+echo "Using branch '${BRANCH}'"
 
 bin/login_fly.sh
 
