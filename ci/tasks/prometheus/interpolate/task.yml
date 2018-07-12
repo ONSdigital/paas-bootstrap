@@ -12,6 +12,7 @@ inputs:
   - name: cf-tfstate-s3
   - name: vpc-tfstate-s3
   - name: bosh-vars-s3
+  - name: bosh-tfstate-s3
 
 outputs:
   - name: prometheus-manifests
