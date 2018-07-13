@@ -406,7 +406,8 @@
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/${environment}-cf-target-group/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:targetgroup/*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb"
       ]
     },
     {
@@ -487,8 +488,8 @@
           "s3:PutBucketAcl",
           "s3:PutObjectAcl",
           "s3:PutEncryptionConfiguration",
-          "s3:DeleteObjectVersion",
-          "s3:DeleteObject"
+          "s3:DeleteObject*",
+          "s3:DeleteBucket"
       ],
       "Resource": [
         "arn:aws:s3:::${s3_prefix}-${environment}-cf-buildpacks",

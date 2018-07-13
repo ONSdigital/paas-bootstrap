@@ -143,7 +143,7 @@ resources:
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
-      sse_kms_key_id: ((s3_kms_key_id))  
+      sse_kms_key_id: ((s3_kms_key_id))
 
 - name: cf-terraform
   type: terraform
@@ -165,7 +165,7 @@ resources:
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
-      sse_kms_key_id: ((s3_kms_key_id))      
+      sse_kms_key_id: ((s3_kms_key_id))
 
 - name: cf-vars-s3
   type: s3-iam
@@ -176,6 +176,9 @@ resources:
     versioned_file: cf/cf-variables.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
 
 - name: cf-manifest-s3
   type: s3-iam
@@ -260,7 +263,7 @@ resources:
     versioned_file: bosh-databases/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
-    
+
 
 jobs:
 - name: verify-concourse
@@ -438,7 +441,7 @@ jobs:
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
-      - bosh-vars/vars.json    
+      - bosh-vars/vars.json
 
 
 - name: create-bosh
@@ -538,7 +541,7 @@ jobs:
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
-      - cf-vars/vars.json    
+      - cf-vars/vars.json
 
 - name: verify-cf
   serial: true
@@ -566,7 +569,7 @@ jobs:
   - aggregate:
     - get: paas-bootstrap-git
       trigger: true
-      passed: [verify-cf-terraform]
+      passed: [verify-cf]
     - get: cf-deployment-git
       version: { ref: ((cf_commit_ref)) }
     - get: vpc-tfstate-s3
