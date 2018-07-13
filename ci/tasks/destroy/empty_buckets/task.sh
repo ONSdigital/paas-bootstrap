@@ -8,11 +8,9 @@ set -euo pipefail
 
 prefix=${ONS_PREFIX}-${ENVIRONMENT}-${NAMESPACE}
 
-
-
 NAMES=$(aws s3api list-buckets --query "Buckets[?starts_with(Name, '${prefix}')].Name" --output text)
 
-echo "Removing all versions from $NAMES"
+echo "Removing all versions from ${prefix}-* (${NAMES})"
 
 function emptyBucket {
 

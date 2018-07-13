@@ -202,12 +202,12 @@ jobs:
     params:
       ENVIRONMENT: ((environment))
     on_success:
-      - task: empty-buckets
-        file: paas-bootstrap-git/ci/destroy/empty_buckets/task.yml
-        params:
-          ONS_PREFIX: ons-paas
-          ENVIRONMENT: ((environment))
-          NAMESSPACE: cf
+      task: empty-buckets
+      file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+      params:
+        ONS_PREFIX: ons-paas
+        ENVIRONMENT: ((environment))
+        NAMESPACE: cf
 
 
       # - put: cf-terraform
