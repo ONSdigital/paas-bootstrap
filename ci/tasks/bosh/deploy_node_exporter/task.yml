@@ -5,6 +5,7 @@ image_resource:
   source: { repository: onsdigital/paas-ci-gp, tag: latest }
 
 inputs:
+  - name: paas-bootstrap-git
   - name: bosh-manifest-s3
 
 run:
