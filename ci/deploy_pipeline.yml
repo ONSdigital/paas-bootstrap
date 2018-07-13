@@ -775,6 +775,8 @@ jobs:
       - put: prometheus-manifest-s3
         params:
           file: prometheus-manifests/prometheus.yml
+  - task: deploy_prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/deploy/task.yml
 
 - name: verify-prometheus
   # serial: true
