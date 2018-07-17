@@ -13,7 +13,6 @@ SYSTEM_DOMAIN="system.${DOMAIN}"
 bosh interpolate --path /default_ca/ca bosh-vars-s3/bosh-variables.yml > bosh_ca_cert.pem
 
 bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
-  
   --vars-store prometheus-manifests/prometheus-variables.yml \
   -v bosh_url="$(jq -r .bosh_director_fqdn < bosh-vars.json)" \
   -v bosh_username="admin" \
