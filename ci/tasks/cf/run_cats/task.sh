@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -euo pipefail
+set -eu
 
 cd cf-acceptance-tests-git
 ./bin/test
