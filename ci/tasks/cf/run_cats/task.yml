@@ -14,4 +14,4 @@ run:
   path: paas-bootstrap-git/ci/tasks/cf/run_cats/task.sh
 
 params:
-  CONFIG
+- CONFIG:
