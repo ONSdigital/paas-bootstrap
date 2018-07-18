@@ -11,4 +11,4 @@ cat $CATS_CONFIG_FILE | jq "
 .apps_domain = \"apps.${DOMAIN}\" |
 .admin_user = \"admin\" |
 .admin_password = \"${ADMIN_PASSWORD}\"
-" > cats/cats_config.json
+" > integration-config/integration_config.json

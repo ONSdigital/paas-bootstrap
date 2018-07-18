@@ -6,7 +6,7 @@ image_resource:
 
 inputs:
   - name: paas-bootstrap-git
-  - name: cf-acceptance-tests-git
+  - name: cf-deployment-concourse-tasks-git
   - name: cats
 
 
@@ -14,4 +14,4 @@ run:
   path: paas-bootstrap-git/ci/tasks/cf/run_cats/task.sh
 
 params:
-- CONFIG:
+- CONFIG_FILE_PATH: cats/cats_config.json

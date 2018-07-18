@@ -32,6 +32,11 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/cf-deployment.git
 
+- name: cf-deployment-concourse-tasks-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-deployment-concourse-tasks.git
+
 - name: cf-acceptance-tests-git
   type: git
   source:
@@ -652,6 +657,7 @@ jobs:
   plan:
   - aggregate:
     - get: paas-bootstrap-git
+    - get: cf-deployment-concourse-tasks-git
     - get: cf-acceptance-tests-git
     - get: cf-vars-s3
   - task: interpolate CATS config
@@ -661,7 +667,7 @@ jobs:
       ENVIRONMENT: ((environment))
       CATS_CONFIG_FILE: paas-bootstrap-git/profiles/staging/cats_config.json
   - task: run CATS tests
-    file: paas-bootstrap-git/ci/tasks/cf/run_cats/task.yml
-    params:
-      CONFIG: cats/cats_config.json
-
+    file: cf-deployment-concourse-tasks-git/run-cats/task.yml
+    input_mapping:
+      cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
+      cf-acceptance-tests: cf-acceptance-tests-git

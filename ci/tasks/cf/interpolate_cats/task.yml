@@ -10,7 +10,7 @@ inputs:
   - name: cf-vars-s3
 
 outputs:
-  - name: cats
+  - name: integration-config
 
 run:
   path: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.sh
