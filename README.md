@@ -27,7 +27,7 @@ az2 = "eu-west-1b"
 region = "eu-west-1"
 parent_dns_zone = "<domain>"
 ingress_whitelist = ["0.0.0.0/0"] # put the CIDRs that may access Concourse here
-slack_webhook_uri = "https://hooks.slack.com/services/<generated path>"
+slack_webhook_uri = "https://hooks.slack.com/services/<generated uri>"
 ```
 
 Example command:
