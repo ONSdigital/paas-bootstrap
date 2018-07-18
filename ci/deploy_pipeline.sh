@@ -21,6 +21,7 @@ aws s3 cp "s3://${ENVIRONMENT}-states/vpc/tfstate.json" "${VPC_STATE_FILE}"
 REGION=$(terraform output -state="${ENVIRONMENT}_concourse.tfstate.json" region)
 S3_KMS_KEY_ID=$(terraform output -state="${ENVIRONMENT}_concourse.tfstate.json" s3_kms_key_id)
 DOMAIN=$(jq '.modules[0].outputs | with_entries(.value = .value.value)' "${VPC_STATE_FILE}" | jq -r '.dns_zone' | sed 's/\.$//')
+slack_webhook_uri=$(cat $VAR_FILE | tail -n1 | sed -e 's/slack_webhook_uri = //g')
 
 fly -t "$ENVIRONMENT" set-pipeline \
     -v environment="$ENVIRONMENT" \
@@ -31,7 +32,9 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v jumpbox_commit_ref="$jumpbox_commit_ref" \
     -v bosh_commit_ref="$bosh_commit_ref" \
     -v cf_commit_ref="$cf_commit_ref" \
+    -v slack_webhook_uri="$slack_webhook_uri" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
+    
 fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline
 fly -t "$ENVIRONMENT" expose-pipeline -p deploy_pipeline
 

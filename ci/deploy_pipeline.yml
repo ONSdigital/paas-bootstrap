@@ -10,6 +10,12 @@ resource_types:
   source:
     repository: governmentpaas/s3-resource
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
 - name: paas-bootstrap-git
   type: git
@@ -271,6 +277,10 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
     
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: ((slack_webhook_uri))
 
 jobs:
 - name: verify-concourse
@@ -617,6 +627,14 @@ jobs:
     file: paas-bootstrap-git/ci/tasks/cf/upload_stemcell/task.yml
   - task: deploy_cf
     file: paas-bootstrap-git/ci/tasks/cf/deploy_cf/task.yml
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          App Name:   CF Deployment
+          Build Name: $BUILD_NAME
+          Build ID:   $BUILD_ID
+          Result:     FAIL
 
 - name: verify-cf-endpoints
   serial: true
