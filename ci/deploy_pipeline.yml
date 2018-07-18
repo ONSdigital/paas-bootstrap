@@ -650,12 +650,18 @@ jobs:
 
 - name: cats
   plan:
-  - get: paas-bootstrap-git
-  - get: cf-acceptance-tests-git
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: cf-acceptance-tests-git
+    - get: cf-vars-s3
   - task: interpolate CATS config
     file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
     params:
       DOMAIN: ((domain))
       ENVIRONMENT: ((environment))
-      CATS_CONFIG_PATH: paas-bootstrap-git/profiles/staging/cats_config.json
+      CATS_CONFIG_FILE: paas-bootstrap-git/profiles/staging/cats_config.json
+  - task: run CATS tests
+    file: paas-bootstrap-git/ci/tasks/cf/run_cats/task.yml
+    params:
+      CONFIG: cats/cats_config.json
 

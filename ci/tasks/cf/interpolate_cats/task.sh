@@ -2,11 +2,13 @@
 
 set -euo pipefail
 
-# jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
-
 : $DOMAIN
 
-cat profiles/staging/cats_config.json | jq "
+ADMIN_PASSWORD="$(bosh int --path cf-vars-s3/cf-variables.yml --path /cf_admin_password)"
+
+cat $CATS_CONFIG_FILE | jq "
 .api = \"api.system.${DOMAIN}\" | 
-.apps_domain = \"apps.${DOMAIN}\"
-"
+.apps_domain = \"apps.${DOMAIN}\" |
+.admin_user = \"admin\" |
+.admin_password = \"${ADMIN_PASSWORD}\"
+" > cats/cats_config.json
