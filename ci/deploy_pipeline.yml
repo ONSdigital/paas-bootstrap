@@ -32,6 +32,11 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/cf-deployment.git
 
+- name: cf-acceptance-tests-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+
 - name: jumpbox-terraform
   type: terraform
   source:
@@ -642,3 +647,15 @@ jobs:
     - get: bosh-manifest-s3
   - task: ensure smoke tests pass
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
+
+- name: cats
+  plan:
+  - get: paas-bootstrap-git
+  - get: cf-acceptance-tests-git
+  - task: interpolate CATS config
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
+    params:
+      DOMAIN: ((domain))
+      ENVIRONMENT: ((environment))
+      CATS_CONFIG_PATH: paas-bootstrap-git/profiles/staging/cats_config.json
+
