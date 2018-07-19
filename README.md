@@ -21,13 +21,17 @@ You'll need to create a `<env>_vpc.tfvars` file with `az1`, `az2`, `region` and 
 
 > **Note**: Multiple AZs are required in order to deploy an AWS ALB.
 
-```sh
-az1 = "eu-west-1a"
-az2 = "eu-west-1b"
-region = "eu-west-1"
-parent_dns_zone = "<domain>"
-ingress_whitelist = ["0.0.0.0/0"] # put the CIDRs that may access Concourse here
-slack_webhook_uri = "https://hooks.slack.com/services/<generated uri>"
+> set ingress_whitelist to the CIDRs that may access Concourse
+
+```json
+{
+"az1": "eu-west-1a",
+"az2": "eu-west-1b",
+"region": "eu-west-1",
+"parent_dns_zone": "<domain>",
+"ingress_whitelist": ["0.0.0.0/0"],
+"slack_webhook_uri": "https://hooks.slack.com/services/<generated uri>"
+}
 ```
 
 Example command:
