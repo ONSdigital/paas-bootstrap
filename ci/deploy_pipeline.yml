@@ -631,7 +631,7 @@ jobs:
       put: slack-alert
       params:
         text: |
-          App Name:   CF Deployment
+          Job/Task:   deploy_cf/deploy_cf
           Build Name: $BUILD_NAME
           Build ID:   $BUILD_ID
           Result:     FAIL
@@ -670,7 +670,15 @@ jobs:
     - get: bosh-manifest-s3
   - task: ensure smoke tests pass
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
-
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          Job/Task:   cf-smoke-tests/ensure smoke tests pass
+          Build Name: $BUILD_NAME
+          Build ID:   $BUILD_ID
+          Result:     FAIL
+          
 - name: cats
   serial: true
   serial_groups: [main]
