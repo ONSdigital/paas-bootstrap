@@ -17,8 +17,8 @@
   "include_internet_dependent": false,
   "include_isolation_segments": false,
   "include_private_docker_registry": false,
-  "include_route_services": false,
-  "include_routing": false,
+  "include_route_services": true,
+  "include_routing": true,
   "include_routing_isolation_segments": false,
   "include_security_groups": false,
   "include_service_discovery": false,
@@ -28,5 +28,5 @@
   "include_sso": false,
   "include_tasks": false,
   "include_v3": false,
-  "include_zipkin": false
+  "include_zipkin": true
 }
