@@ -703,3 +703,11 @@ jobs:
       cf-acceptance-tests: cf-acceptance-tests-git
     params:
       CAPTURE_CONFIG: true
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          Job/Task:   cats/run CATS tests
+          Build Name: $BUILD_NAME
+          Build ID:   $BUILD_ID
+          Result:     FAIL
