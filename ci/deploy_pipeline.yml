@@ -654,9 +654,13 @@ jobs:
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
 
 - name: cats
+  serial: true
+  serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
+      trigger: true
+      passed: [deploy-cf]
     - get: cf-deployment-concourse-tasks-git
     - get: cf-acceptance-tests-git
     - get: cf-vars-s3
@@ -671,3 +675,5 @@ jobs:
     input_mapping:
       cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
       cf-acceptance-tests: cf-acceptance-tests-git
+    params:
+      CAPTURE_CONFIG: true
