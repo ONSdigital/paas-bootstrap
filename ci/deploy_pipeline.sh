@@ -14,6 +14,8 @@ bosh_commit_ref="010bd498bb97dee707c167e60469b0f5d2cc90fb"
 cf_commit_ref="a8bb2b3938c0896e60f97ebaab6d71df72aebee4"
 prometheus_commit_ref="a381c0af550550fc1d740ef409c2e2f22a589202"
 
+node_exporter_version="4.0.0"
+
 # Grab pre-requisite files from S3
 aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}"
 aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}"
@@ -35,6 +37,7 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v cf_commit_ref="$cf_commit_ref" \
     -v slack_webhook_uri="$slack_webhook_uri" \
     -v prometheus_commit_ref="$prometheus_commit_ref" \
+    -v node_exporter_version="$node_exporter_version" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
 
 fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline

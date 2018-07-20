@@ -541,6 +541,8 @@ jobs:
         file: bosh-state/bosh-state.json
   - task: deploy-bosh-node-exporter
     file: paas-bootstrap-git/ci/tasks/bosh/deploy_node_exporter/task.yml
+    params:
+      NODE_EXPORTER_VERSION: ((node_exporter_version))
 
 - name: verify-bosh
   serial: true

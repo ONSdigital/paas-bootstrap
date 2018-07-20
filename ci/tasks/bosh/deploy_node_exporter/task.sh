@@ -11,23 +11,9 @@ export BOSH_CLIENT_SECRET="${bosh_admin_password}"
 export BOSH_ENVIRONMENT="https://${bosh_ip}:25555"
 export BOSH_CA_CERT=$(cat bosh_ca.pem)
 
+RUNTIME_CONFIG=paas-bootstrap-git/runtime-config/bosh/node-exporter-config.yml
+
 #TODO Needs to be parameterised
-bosh upload-release https://github.com/bosh-prometheus/node-exporter-boshrelease/releases/download/v4.0.0/node-exporter-4.0.0.tgz
+bosh upload-release https://github.com/bosh-prometheus/node-exporter-boshrelease/releases/download/v${NODE_EXPORTER_VERSION}/node-exporter-${NODE_EXPORTER_VERSION}.tgz
 
-cat > node-exporter-config.yml <<EOF
-releases:
-  - name: node-exporter
-    version: 4.0.0
-
-addons:
-  - name: node_exporter
-    jobs:
-      - name: node_exporter
-        release: node-exporter
-    include:
-      stemcell:
-        - os: ubuntu-trusty
-    properties: {}
-EOF
-
-bosh update-runtime-config --non-interactive node-exporter-config.yml
+bosh update-runtime-config --non-interactive ${RUNTIME_CONFIG}

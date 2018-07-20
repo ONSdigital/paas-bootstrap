@@ -11,3 +11,6 @@ inputs:
 
 run:
   path: paas-bootstrap-git/ci/tasks/bosh/deploy_node_exporter/task.sh
+
+params:
+  NODE_EXPORTER_VERSION:
