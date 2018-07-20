@@ -1,7 +1,4 @@
 ---
 - type: replace
-  path: /variables/name=default_ca/options
-  value:
-    is_ca: true
-    common_name: ca
-    alternative_names: [((bosh_director_fqdn))]
+  path: /variables/name=director_ssl/options/alternative_names/-?
+  value: ((bosh_director_fqdn))
