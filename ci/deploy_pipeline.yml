@@ -631,10 +631,11 @@ jobs:
       put: slack-alert
       params:
         text: |
-          Job/Task:   deploy_cf/deploy_cf
-          Build Name: $BUILD_NAME
-          Build ID:   $BUILD_ID
-          Result:     FAIL
+          Environment: ((environment))
+          Job/Task:    deploy_cf/deploy_cf
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
 
 - name: verify-cf-endpoints
   serial: true
@@ -674,10 +675,11 @@ jobs:
       put: slack-alert
       params:
         text: |
-          Job/Task:   cf-smoke-tests/ensure smoke tests pass
-          Build Name: $BUILD_NAME
-          Build ID:   $BUILD_ID
-          Result:     FAIL
+          Environment: ((environment))
+          Job/Task:    cf-smoke-tests/ensure smoke tests pass
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
 
 - name: cats
   serial: true
@@ -707,7 +709,8 @@ jobs:
       put: slack-alert
       params:
         text: |
-          Job/Task:   cats/run CATS tests
-          Build Name: $BUILD_NAME
-          Build ID:   $BUILD_ID
-          Result:     FAIL
+          Environment: ((environment))
+          Job/Task:    cats/run CATS tests
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
