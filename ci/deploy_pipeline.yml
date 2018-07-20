@@ -762,6 +762,7 @@ jobs:
     - get: cf-tfstate-s3
     - get: cf-vars-s3
     - get: bosh-vars-s3
+    - get: bosh-manifest-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
     params:

@@ -19,10 +19,12 @@ bosh int \
   -o paas-bootstrap-git/operations/bosh/iam-instance-profile.yml \
   -o paas-bootstrap-git/operations/bosh/tags.yml \
   -o paas-bootstrap-git/operations/bosh/dns-resolution.yml \
+  -o paas-bootstrap-git/operations/bosh/certificate.yml \
   -v director_name=bosh \
   -v internal_cidr="$(jq -r .internal_cidr < bosh-vars.json)" \
   -v internal_gw="$(jq -r .internal_cidr < bosh-vars.json | sed 's#0/24#1#')" \
   -v internal_ip="$(jq -r .internal_cidr < bosh-vars.json | sed 's#0/24#6#')" \
+  -v bosh_director_fqdn="$(jq -r .bosh_director_fqdn < bosh-vars.json)" \
   -v private_dns_nameserver="$(jq -r '.vpc_dns_nameserver' < vpc-vars.json)" \
   -v region="$(jq -r .region < bosh-vars.json)" \
   -v bosh_iam_instance_profile="$(jq -r .bosh_iam_instance_profile < bosh-vars.json)" \
