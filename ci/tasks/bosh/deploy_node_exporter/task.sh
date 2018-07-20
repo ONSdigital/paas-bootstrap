@@ -30,4 +30,4 @@ addons:
     properties: {}
 EOF
 
-bosh update-runtime-config node-exporter-config.yml
+bosh update-runtime-config --non-interactive node-exporter-config.yml

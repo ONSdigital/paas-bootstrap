@@ -328,7 +328,7 @@ jobs:
   serial: true
   plan:
   - get: paas-bootstrap-git
-    trigger: true
+    # trigger: true
   - get: concourse-tfstate-s3
   - aggregate:
     - task: ensure world cannot connect to concourse on port 22
@@ -464,7 +464,7 @@ jobs:
     - get: jumpbox-tfstate-s3
     - get: vpc-tfstate-s3
     - get: paas-bootstrap-git
-      passed: [verify-jumpbox]
+      # passed: [verify-jumpbox]
       trigger: true
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
@@ -539,6 +539,8 @@ jobs:
       put: bosh-state-s3
       params:
         file: bosh-state/bosh-state.json
+  - task: deploy-bosh-node-exporter
+    file: paas-bootstrap-git/ci/tasks/bosh/deploy_node_exporter/task.yml
 
 - name: verify-bosh
   serial: true
