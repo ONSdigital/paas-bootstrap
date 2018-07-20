@@ -1,6 +1,6 @@
 ---
 - type: replace
-  path: /variables/name=default_ca/options/
+  path: /variables/name=default_ca/options
   value:
     is_ca: true
     common_name: ca
