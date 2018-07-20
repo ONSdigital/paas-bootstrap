@@ -793,3 +793,37 @@ jobs:
         DOMAIN: ((domain))
         PORT: 3000
         EXPECTED_OUTCOME: success
+
+- name: cats
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [deploy-cf]
+    - get: cf-deployment-concourse-tasks-git
+    - get: cf-acceptance-tests-git
+    - get: cf-vars-s3
+  - task: interpolate CATS config
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
+    params:
+      DOMAIN: ((domain))
+      ENVIRONMENT: ((environment))
+      CATS_CONFIG_FILE: paas-bootstrap-git/profiles/staging/cats_config.json
+  - task: run CATS tests
+    file: cf-deployment-concourse-tasks-git/run-cats/task.yml
+    input_mapping:
+      cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
+      cf-acceptance-tests: cf-acceptance-tests-git
+    params:
+      CAPTURE_CONFIG: true
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          Environment: ((environment))
+          Job/Task:    cats/run CATS tests
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
