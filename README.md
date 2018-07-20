@@ -64,7 +64,7 @@ Go to `https://<concourse_fqdn>` to login.
 The username is `admin` and you can get the password through:
 
 ```sh
-bosh int --path /admin_password <env>_concourse.creds.yml
+bin/concourse_password.sh -e <env>
 ```
 
 ## Testing that Concourse works
