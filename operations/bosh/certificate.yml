@@ -1,4 +1,4 @@
 ---
 - type: replace
-  path: /variables/name=director_ssl/options/alternative_names/-?
+  path: /variables/name=director_ssl/options/alternative_names/-
   value: ((bosh_director_fqdn))
