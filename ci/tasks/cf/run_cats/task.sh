@@ -7,4 +7,4 @@ set -eu
 CONFIG="$PWD/$CONFIG"
 cd cf-acceptance-tests-git
 ./bin/update_submodules
-./bin/test
+./bin/test -nodes=4
