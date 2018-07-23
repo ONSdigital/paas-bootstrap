@@ -1,5 +1,5 @@
 ---
-diego-cell-instance-count: 2
+diego-cell-instance-count: 4
 consul-instance-count: 1
 nats-instance-count: 1
 diego-api-instance-count: 1
