@@ -13,7 +13,7 @@
   "include_container_networking": false,
   "include_credhub" : false,
   "include_detect": true,
-  "include_docker": true,
+  "include_docker": false,
   "include_internet_dependent": false,
   "include_isolation_segments": false,
   "include_private_docker_registry": false,
