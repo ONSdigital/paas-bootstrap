@@ -9,6 +9,8 @@ set -euo pipefail
 
 FQDN="$HOST.$DOMAIN"
 
+echo "ATTEMPTING $FQDN"
+
 set +e
 echo "foo" | nc -w 1 "$FQDN" "$PORT" 
 RESULT=$?
