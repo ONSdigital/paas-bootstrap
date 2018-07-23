@@ -772,6 +772,7 @@ jobs:
     params:
       ENVIRONMENT: ((environment))
       DOMAIN: ((domain))
+      CF_DEPLOYMENT_NAME: ((cf_deployment_name))
     on_success:
       aggregate:
       - put: prometheus-vars-s3

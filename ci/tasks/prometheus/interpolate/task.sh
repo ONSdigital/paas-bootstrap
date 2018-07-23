@@ -15,6 +15,8 @@ bosh interpolate --path /default_ca/ca bosh-vars-s3/bosh-variables.yml > bosh_ca
 bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   --vars-store prometheus-manifests/prometheus-variables.yml \
   -o "$PROMETHEUS_MANIFESTS"/operators/monitor-bosh.yml \
+  -o "$PROMETHEUS_MANIFESTS"/operators/enable-cf-route-registrar.yml \
+  -v cf_deployment_name="$CF_DEPLOYMENT_NAME" \
   -v bosh_url="$(jq -r .bosh_director_fqdn < bosh-vars.json)" \
   -v bosh_username="admin" \
   -v bosh_password="$(bosh interpolate --path /admin_password bosh-vars-s3/bosh-variables.yml)" \

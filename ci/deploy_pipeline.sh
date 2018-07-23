@@ -38,6 +38,7 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v slack_webhook_uri="$slack_webhook_uri" \
     -v prometheus_commit_ref="$prometheus_commit_ref" \
     -v node_exporter_version="$node_exporter_version" \
+    -v cf_deployment_name="cf" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
 
 fly -t "$ENVIRONMENT" unpause-pipeline -p deploy_pipeline
