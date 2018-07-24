@@ -247,6 +247,16 @@ resources:
     initial_content_text: |
         ---
 
+- name: prometheus-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: prometheus/((environment)).tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
 - name: cf-cloud-config-s3
   type: s3-iam
   source:
@@ -763,6 +773,7 @@ jobs:
     - get: cf-vars-s3
     - get: bosh-vars-s3
     - get: bosh-manifest-s3
+    - get: prometheus-tfstate-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
     params:

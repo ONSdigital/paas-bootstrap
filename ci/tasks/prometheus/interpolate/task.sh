@@ -5,6 +5,7 @@ set -euo pipefail
 cp prometheus-vars-s3/prometheus-variables.yml prometheus-manifests/prometheus-variables.yml
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "bosh-tfstate-s3/${ENVIRONMENT}.tfstate" > bosh-vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "prometheus-tfstate-s3/${ENVIRONMENT}.tfstate" > prometheus-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
 
 PROMETHEUS_MANIFESTS=prometheus-deployment-git/manifests
@@ -16,6 +17,7 @@ bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   --vars-store prometheus-manifests/prometheus-variables.yml \
   -o "$PROMETHEUS_MANIFESTS"/operators/monitor-bosh.yml \
   -o "$PROMETHEUS_MANIFESTS"/operators/enable-cf-route-registrar.yml \
+  -o paas-bootstrap-git/operations/prometheus/eip.yml \
   -v cf_deployment_name="$CF_DEPLOYMENT_NAME" \
   -v bosh_url="$(jq -r .bosh_director_fqdn < bosh-vars.json)" \
   -v bosh_username="admin" \
@@ -28,5 +30,6 @@ bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   -v uaa_clients_firehose_exporter_secret="$(bosh interpolate --path /uaa_clients_firehose_exporter_secret cf-vars-s3/cf-variables.yml)" \
   -v traffic_controller_external_port="$(jq -r .cf_traffic_controller_port < cf-vars.json)" \
   -v skip_ssl_verify=false \
+  -v prometheus_eip="$(jq -r prometheus_external_ip < prometheus-vars.json)" \
   > prometheus-manifests/prometheus.yml
 
