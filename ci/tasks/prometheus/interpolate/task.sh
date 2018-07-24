@@ -30,6 +30,6 @@ bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   -v uaa_clients_firehose_exporter_secret="$(bosh interpolate --path /uaa_clients_firehose_exporter_secret cf-vars-s3/cf-variables.yml)" \
   -v traffic_controller_external_port="$(jq -r .cf_traffic_controller_port < cf-vars.json)" \
   -v skip_ssl_verify=false \
-  -v prometheus_eip="$(jq -r prometheus_external_ip < prometheus-vars.json)" \
+  -v prometheus_eip="$(jq -r .prometheus_external_ip < prometheus-vars.json)" \
   > prometheus-manifests/prometheus.yml
 
