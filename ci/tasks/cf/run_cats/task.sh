@@ -4,14 +4,14 @@
 
 # # This script follows the recipe set out in the README for cf-acceptance-tests
 
-CONFIG="$PWD/$CONFIG -v"
+CONFIG="$PWD/$CONFIG"
 cd cf-acceptance-tests-git
 ./bin/update_submodules
 # ./bin/test
 
 
 
-set -e -x
+function test {
 
 if [ ! -f "${CONFIG}" ]; then
   echo "FAIL: \$CONFIG must be set to the path of an integration config JSON file"
@@ -36,5 +36,9 @@ export RUN_ID=$(openssl rand -hex 16)
 go install -v github.com/cloudfoundry/cf-acceptance-tests/vendor/github.com/onsi/ginkgo/ginkgo
 
 params="$@"
-echo $params
+echo "PARAMS ==$params== "
 ginkgo "$params"
+
+}
+
+test -v
