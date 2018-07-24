@@ -19,6 +19,7 @@ if [ ! -f "${CONFIG}" ]; then
 fi
 
 echo "Printing sanitized \$CONFIG"
+echo "==1=="
 grep -v -e password -e private_docker_registry_ -e credhub_secret -e honeycomb_write_key $CONFIG
 
 bin_dir=$(dirname "${BASH_SOURCE[0]}")
@@ -33,11 +34,13 @@ export PATH="${project_gopath}/bin":$PATH
 
 export RUN_ID=$(openssl rand -hex 16)
 
+echo "====2===="
 go install -v github.com/cloudfoundry/cf-acceptance-tests/vendor/github.com/onsi/ginkgo/ginkgo
 
+echo "====3===="
 params="$@"
 echo "PARAMS ==$params== "
-ginkgo "$params"
+# ginkgo "$params"
 
 }
 
