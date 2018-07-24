@@ -1,7 +1,0 @@
----
-# Not actually CF, used by Prometheus in lieu of a LB
-- type: replace
-  path: /networks/-
-  value: 
-    name: vip
-    type: vip

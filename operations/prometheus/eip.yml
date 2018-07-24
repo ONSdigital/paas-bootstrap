@@ -1,10 +1,28 @@
 ---
 - type: replace
-  path: /instance_groups/name=nginx/networks/name=default/default?
-  value: [dns, gateway]
+  path: /instance_groups/name=alertmanager/networks
+  value:
+  - name: prometheus
 
 - type: replace
-  path: /instance_groups/name=nginx/networks/-
+  path: /instance_groups/name=prometheus2/networks
   value:
-    name: vip
-    static_ips: [((prometheus_eip))]
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=database/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=grafana/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=nginx/networks
+  value:
+  - name: prometheus
+    default: [dns, gateway]
+  - name: vip
+    static_ips: [((prometheus_eip))

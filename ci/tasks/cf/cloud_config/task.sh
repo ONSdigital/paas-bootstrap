@@ -5,6 +5,7 @@ set -euo pipefail
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < concourse-tfstate-s3/tfstate.json > concourse-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "prometheus-tfstate-s3/${ENVIRONMENT}.tfstate" > prometheus-vars.json
 
 bosh_admin_password=$(bosh int bosh-vars-s3/bosh-variables.yml --path /admin_password)
 bosh int bosh-vars-s3/bosh-variables.yml --path /default_ca/ca > bosh_ca.pem
@@ -21,7 +22,7 @@ bosh update-cloud-config -n \
   -o paas-bootstrap-git/operations/cloud-config/cf-scheduler-extensions.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-rds-sec-group.yml \
-  -o paas-bootstrap-git/operations/cloud-config/cf-eip.yml \
+  -o paas-bootstrap-git/operations/cloud-config/prometheus.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v az2="$(jq -r .az2 < vpc-vars.json)" \
   -v az3="$(jq -r .az3 < vpc-vars.json)" \
@@ -45,6 +46,10 @@ bosh update-cloud-config -n \
   -v cf-ssh-internal="$(jq -r '.cf_ssh_internal' < cf-vars.json)" \
   -v cf-ssh-lb="$(jq -r '.cf_ssh_lb' < cf-vars.json)" \
   -v cf_s3_iam_instance_profile="$(jq -r '.cf_s3_iam_instance_profile' < cf-vars.json)" \
-  -v cf-rds-client-security-group="$(jq -r '.cf_rds_client_security_group_id' < cf-vars.json)"
+  -v cf-rds-client-security-group="$(jq -r '.cf_rds_client_security_group_id' < cf-vars.json)" \
+  -v prometheus_subnet_az1_cidr="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json)" \
+  -v prometheus_subnet_az1_id="$(jq -r .prometheus_subnet_az1_id < prometheus-vars.json)" \
+  -v prometheus_security_group="$(jq -r .prometheus_security_group_id < prometheus-vars.json)" \
+  -v prometheus_subnet_az1_gateway="$(jq -r .prometheus_subnet_az1_cidr < cf-vars.json | sed 's#0/24#1#')"
 
   bosh cloud-config > cf-manifests/cloud-config.yml
