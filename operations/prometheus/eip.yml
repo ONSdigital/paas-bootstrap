@@ -1,5 +1,6 @@
 ---
 - type: replace
-  path: /instance_groups/name=nginx/networks/-?
-  value: 
+  path: /instance_groups/name=nginx/networks?/-
+  value:
+    name: vip
     static_ips: [((prometheus_eip))]
