@@ -1,6 +1,10 @@
 ---
 - type: replace
-  path: /instance_groups/name=nginx/networks?/-
+  path: /instance_groups/name=nginx/networks/name=default/default?
+  value: [dns, gateway]
+
+- type: replace
+  path: /instance_groups/name=nginx/networks/-
   value:
     name: vip
     static_ips: [((prometheus_eip))]
