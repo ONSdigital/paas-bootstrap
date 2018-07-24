@@ -24,9 +24,9 @@
   "include_service_discovery": false,
   "include_services": true,
   "include_service_instance_sharing": false,
-  "include_ssh": false,
-  "include_sso": false,
-  "include_tasks": false,
-  "include_v3": false,
+  "include_ssh": true,
+  "include_sso": true,
+  "include_tasks": true,
+  "include_v3": true,
   "include_zipkin": true
 }
