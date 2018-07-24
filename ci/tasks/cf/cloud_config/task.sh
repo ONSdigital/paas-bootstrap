@@ -21,6 +21,7 @@ bosh update-cloud-config -n \
   -o paas-bootstrap-git/operations/cloud-config/cf-scheduler-extensions.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-rds-sec-group.yml \
+  -o paas-bootstrap-git/operations/cloud-config/cf-eip.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v az2="$(jq -r .az2 < vpc-vars.json)" \
   -v az3="$(jq -r .az3 < vpc-vars.json)" \

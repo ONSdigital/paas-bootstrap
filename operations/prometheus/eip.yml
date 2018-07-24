@@ -1,11 +1,5 @@
 ---
 - type: replace
-  path: /networks/name=elastic?
-  value: 
-    name: elastic
-    type: vip
-
-- type: replace
   path: /instance_groups/name=nginx/networks/-?
   value: 
     static_ips: [((prometheus_eip))]
