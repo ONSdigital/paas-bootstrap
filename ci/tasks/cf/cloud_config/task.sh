@@ -18,7 +18,7 @@ export BOSH_CA_CERT=bosh_ca.pem
 bosh update-cloud-config -n \
   paas-bootstrap-git/cloud-config/cf/cloud-config.yml \
   -o paas-bootstrap-git/operations/cloud-config/router-extensions.yml \
-  -o paas-bootstrap-git/operations/cloud-config/cf-ssh-extensions.yml \
+  -o paas-bootstrap-git/operations/cloud-config/cf-scheduler-extensions.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-rds-sec-group.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
