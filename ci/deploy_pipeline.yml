@@ -390,13 +390,148 @@ jobs:
       - concourse-vars/vars.json
       - vpc-vars/vars.json
 
+- name: terraform-bosh
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: concourse-tfstate-s3
+    - get: jumpbox-terraform
+    - get: vpc-tfstate-s3
+    - get: paas-bootstrap-git
+      passed: [terraform-jumpbox]
+      trigger: true
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
+  - put: bosh-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/bosh/aws
+      env_name: ((environment))
+      var_files:
+      - concourse-vars/vars.json
+      - jumpbox-terraform/metadata
+      - vpc-vars/vars.json
+
+- name: terraform-bosh-databases
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [terraform-bosh]
+  - task: get-database-vars
+    file: paas-bootstrap-git/ci/tasks/bosh/get_database_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: databases-bosh-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/bosh-databases/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - bosh-vars/vars.json
+
+- name: terraform-cf
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: jumpbox-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: concourse-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [terraform-bosh-databases]
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: cf-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/cf/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - jumpbox-vars/vars.json
+      - bosh-vars/vars.json
+      - concourse-vars/vars.json
+
+- name: terraform-cf-databases
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: vpc-tfstate-s3
+    - get: cf-tfstate-s3
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [terraform-cf]
+  - task: get-database-vars
+    file: paas-bootstrap-git/ci/tasks/cf/databases/get_database_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: cf-databases-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/cf-databases/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - cf-vars/vars.json
+
+- name: verify-terraform-cf
+  serial: true
+  serial_groups: [main]
+  plan:
+  - get: paas-bootstrap-git
+    trigger: true
+    passed: [terraform-cf-databases]
+  - aggregate:
+    - task: ensure that system FQDN is resolvable
+      file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
+      params:
+        HOST: test.system
+        DOMAIN: ((domain))
+    - task: ensure that apps FQDN is resolvable
+      file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
+      params:
+        HOST: test.apps
+        DOMAIN: ((domain))
+
+- name: terraform-prometheus
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      passed: [verify-terraform-cf]
+      trigger: true
+    - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: cf-tfstate-s3
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: prometheus-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/prometheus/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - bosh-vars/vars.json
+      - cf-vars/vars.json
+
 - name: create-jumpbox
   serial: true
   serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      passed: [terraform-jumpbox]
+      passed: [terraform-prometheus]
       trigger: true
     - get: jumpbox-deployment-git
       version: { ref: ((jumpbox_commit_ref)) }
@@ -464,61 +599,13 @@ jobs:
         HOST: jumpbox
         DOMAIN: ((domain))
 
-- name: terraform-bosh
-  serial: true
-  serial_groups: [main]
-  plan:
-  - aggregate:
-    - get: concourse-tfstate-s3
-    - get: jumpbox-terraform
-    - get: jumpbox-tfstate-s3
-    - get: vpc-tfstate-s3
-    - get: paas-bootstrap-git
-      # passed: [verify-jumpbox]
-      trigger: true
-  - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - put: bosh-terraform
-    params:
-      terraform_source: paas-bootstrap-git/terraform/bosh/aws
-      env_name: ((environment))
-      var_files:
-      - concourse-vars/vars.json
-      - jumpbox-terraform/metadata
-      - vpc-vars/vars.json
-
-- name: terraform-bosh-databases
-  serial: true
-  serial_groups: [main]
-  plan:
-  - aggregate:
-    - get: vpc-tfstate-s3
-    - get: bosh-tfstate-s3
-    - get: paas-bootstrap-git
-      trigger: true
-      passed: [terraform-bosh]
-  - task: get-database-vars
-    file: paas-bootstrap-git/ci/tasks/bosh/get_database_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - put: databases-bosh-terraform
-    params:
-      terraform_source: paas-bootstrap-git/terraform/bosh-databases/aws
-      env_name: ((environment))
-      var_files:
-      - vpc-vars/vars.json
-      - bosh-vars/vars.json
-
-
 - name: create-bosh
   serial: true
   serial_groups: [main]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      passed: [terraform-bosh-databases]
+      passed: [verify-jumpbox]
       trigger: true
     - get: bosh-deployment-git
       version: { ref: ((bosh_commit_ref)) }
@@ -567,73 +654,6 @@ jobs:
   - task: verify
     file: paas-bootstrap-git/ci/tasks/bosh/test/task.yml
 
-- name: terraform-cf
-  serial: true
-  serial_groups: [main]
-  plan:
-  - aggregate:
-    - get: vpc-tfstate-s3
-    - get: jumpbox-tfstate-s3
-    - get: bosh-tfstate-s3
-    - get: concourse-tfstate-s3
-    - get: paas-bootstrap-git
-      trigger: true
-      passed: [verify-bosh]
-  - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - put: cf-terraform
-    params:
-      terraform_source: paas-bootstrap-git/terraform/cf/aws
-      env_name: ((environment))
-      var_files:
-      - vpc-vars/vars.json
-      - jumpbox-vars/vars.json
-      - bosh-vars/vars.json
-      - concourse-vars/vars.json
-
-- name: terraform-cf-databases
-  serial: true
-  serial_groups: [main]
-  plan:
-  - aggregate:
-    - get: vpc-tfstate-s3
-    - get: cf-tfstate-s3
-    - get: paas-bootstrap-git
-      trigger: true
-      passed: [terraform-cf]
-  - task: get-database-vars
-    file: paas-bootstrap-git/ci/tasks/cf/databases/get_database_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - put: cf-databases-terraform
-    params:
-      terraform_source: paas-bootstrap-git/terraform/cf-databases/aws
-      env_name: ((environment))
-      var_files:
-      - vpc-vars/vars.json
-      - cf-vars/vars.json
-
-- name: verify-cf
-  serial: true
-  serial_groups: [main]
-  plan:
-  - get: paas-bootstrap-git
-    trigger: true
-    passed: [terraform-cf-databases]
-  - aggregate:
-    - task: ensure that system FQDN is resolvable
-      file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
-      params:
-        HOST: test.system
-        DOMAIN: ((domain))
-    - task: ensure that apps FQDN is resolvable
-      file: paas-bootstrap-git/ci/tasks/cf/test/task.yml
-      params:
-        HOST: test.apps
-        DOMAIN: ((domain))
-
 - name: deploy-cf
   serial: true
   serial_groups: [main]
@@ -641,7 +661,7 @@ jobs:
   - aggregate:
     - get: paas-bootstrap-git
       trigger: true
-      passed: [verify-cf]
+      passed: [verify-bosh]
     - get: cf-deployment-git
       version: { ref: ((cf_commit_ref)) }
     - get: prometheus-deployment-git
@@ -656,6 +676,7 @@ jobs:
     - get: concourse-tfstate-s3
     - get: jumpbox-tfstate-s3
     - get: databases-tfstate-s3
+    - get: prometheus-tfstate-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
@@ -732,85 +753,6 @@ jobs:
   - task: ensure smoke tests pass
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
 
-- name: terraform-prometheus
-  # serial: true
-  # serial_groups: [main]
-  plan:
-  - aggregate:
-    - get: paas-bootstrap-git
-      # passed: [deploy-cf]
-      trigger: true
-    - get: vpc-tfstate-s3
-    - get: bosh-tfstate-s3
-    - get: cf-tfstate-s3
-  - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - put: prometheus-terraform
-    params:
-      terraform_source: paas-bootstrap-git/terraform/prometheus/aws
-      env_name: ((environment))
-      var_files:
-      - vpc-vars/vars.json
-      - bosh-vars/vars.json
-      - cf-vars/vars.json
-
-- name: deploy-prometheus
-  # serial: true
-  # serial_groups: [main]
-  plan:
-  - aggregate:
-    - get: paas-bootstrap-git
-      trigger: true
-      passed: [terraform-prometheus]
-    - get: prometheus-deployment-git
-      version: { ref: ((prometheus_commit_ref)) }
-    - get: prometheus-vars-s3
-    - get: vpc-tfstate-s3
-    - get: bosh-tfstate-s3
-    - get: cf-tfstate-s3
-    - get: cf-vars-s3
-    - get: bosh-vars-s3
-    - get: bosh-manifest-s3
-    - get: prometheus-tfstate-s3
-  - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - task: interpolate-prometheus
-    file: paas-bootstrap-git/ci/tasks/prometheus/interpolate/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-      DOMAIN: ((domain))
-      CF_DEPLOYMENT_NAME: ((cf_deployment_name))
-    on_success:
-      aggregate:
-      - put: prometheus-vars-s3
-        params:
-          file: prometheus-manifests/prometheus-variables.yml
-      - put: prometheus-manifest-s3
-        params:
-          file: prometheus-manifests/prometheus.yml
-  - task: deploy_prometheus
-    file: paas-bootstrap-git/ci/tasks/prometheus/deploy/task.yml
-
-- name: verify-prometheus
-  # serial: true
-  # serial_groups: [main]
-  plan:
-  - get: paas-bootstrap-git
-    passed: [deploy-prometheus]
-    trigger: true
-  - aggregate:
-    - task: ensure concourse can connect to grafana on port 3000
-      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
-      params:
-        HOST: grafana
-        DOMAIN: ((domain))
-        PORT: 3000
-        EXPECTED_OUTCOME: success
-
 - name: cats
   serial: true
   serial_groups: [main]
@@ -844,3 +786,58 @@ jobs:
           Build Name:  $BUILD_NAME
           Build ID:    $BUILD_ID
           Result:      FAIL
+
+- name: deploy-prometheus
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [deploy-cf]
+    - get: prometheus-deployment-git
+      version: { ref: ((prometheus_commit_ref)) }
+    - get: prometheus-vars-s3
+    - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: cf-tfstate-s3
+    - get: cf-vars-s3
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
+    - get: prometheus-tfstate-s3
+  - task: get-terraform-vars
+    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - task: interpolate-prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/interpolate/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      DOMAIN: ((domain))
+      CF_DEPLOYMENT_NAME: ((cf_deployment_name))
+    on_success:
+      aggregate:
+      - put: prometheus-vars-s3
+        params:
+          file: prometheus-manifests/prometheus-variables.yml
+      - put: prometheus-manifest-s3
+        params:
+          file: prometheus-manifests/prometheus.yml
+  - task: deploy_prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/deploy/task.yml
+
+- name: verify-prometheus
+  serial: true
+  serial_groups: [main]
+  plan:
+  - get: paas-bootstrap-git
+    passed: [deploy-prometheus]
+    trigger: true
+  - aggregate:
+    - task: ensure concourse can connect to grafana on port 3000
+      file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
+      params:
+        HOST: grafana
+        DOMAIN: ((domain))
+        PORT: 3000
+        EXPECTED_OUTCOME: success

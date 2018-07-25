@@ -12,7 +12,7 @@
     name: prometheus
     type: manual
     subnets:
-      range: ((prometheus_subnet_az1_cidr))
+    - range: ((prometheus_subnet_az1_cidr))
       gateway: ((prometheus_subnet_az1_gateway))
       az: z1
       dns:
