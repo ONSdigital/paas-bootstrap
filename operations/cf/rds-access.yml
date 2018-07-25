@@ -11,9 +11,8 @@
   path: /instance_groups/name=cc-worker/vm_extensions?/-
   value: cf-rds-sec-group
 
-- type: replace
-  path: /instance_groups/name=scheduler/vm_extensions?/-
-  value: cf-rds-sec-group
+# Note: scheduler also requires cf-rds-sec-group. This is done in scheduler.yml, as it has other
+# security groups to add.
 
 - type: replace
   path: /instance_groups/name=diego-api/vm_extensions?/-

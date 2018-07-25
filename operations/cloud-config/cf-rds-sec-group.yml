@@ -6,3 +6,8 @@
       security_groups:
         - ((cf-rds-client-security-group))
         - ((internal_security_group))
+
+# Note: requires cf-scheduler-sec-groiup to exist, which implies ordering
+- type: replace
+  path: /vm_extensions/name=cf-scheduler-sec-group/cloud_properties/security_groups/-
+  value: ((cf-rds-client-security-group))
