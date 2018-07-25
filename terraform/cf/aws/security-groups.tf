@@ -230,6 +230,16 @@ resource "aws_security_group_rule" "allow_tcp_2222_from_whitelist" {
   description       = "Allow SSH proxy traffic from whitelist"
 }
 
+resource "aws_security_group_rule" "allow_tcp_2222_from_nat_gateways" {
+  security_group_id = "${aws_security_group.cf_ssh_lb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 2222
+  to_port           = 2222
+  cidr_blocks       = ["${data.aws_nat_gateway.az1.public_ip}/32", "${data.aws_nat_gateway.az2.public_ip}/32", "${data.aws_nat_gateway.az3.public_ip}/32"]
+  description       = "Allow SSH proxy traffic from internal components"
+}
+
 resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
   security_group_id        = "${aws_security_group.cf_ssh_lb.id}"
   type                     = "egress"
