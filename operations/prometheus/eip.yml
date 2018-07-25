@@ -25,4 +25,4 @@
   - name: prometheus
     default: [dns, gateway]
   - name: vip
-    static_ips: [((prometheus_eip))
+    static_ips: [((prometheus_eip))]
