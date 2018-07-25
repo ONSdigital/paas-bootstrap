@@ -38,7 +38,7 @@ variable "nat_az1_id" {}
 variable "nat_az2_id" {}
 variable "nat_az3_id" {}
 
-variable "public_ip" {
+variable "concourse_public_ip" {
   description = "Concourse public IP"
 }
 

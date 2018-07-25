@@ -33,7 +33,7 @@ bosh int \
   -o paas-bootstrap-git/operations/bosh/tags.yml \
   -o paas-bootstrap-git/operations/cf/stemcells.yml \
   -o paas-bootstrap-git/operations/cf/router-sec-group.yml \
-  -o paas-bootstrap-git/operations/cf/scheduler-instance-type.yml \
+  -o paas-bootstrap-git/operations/cf/scheduler.yml \
   -o paas-bootstrap-git/operations/cf/s3_blobstore_with_kms_and_iam.yml \
   -o paas-bootstrap-git/operations/cf/azs.yml \
   -o paas-bootstrap-git/operations/cf/instance-counts.yml \

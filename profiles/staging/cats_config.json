@@ -3,7 +3,7 @@
   "apps_domain": "bosh-lite.com",
   "admin_user": "admin",
   "admin_password": "admin",
-  "skip_ssl_validation": true,
+  "skip_ssl_validation": false,
   "use_http": false,
   "use_log_cache": false,
   "include_apps": true,
