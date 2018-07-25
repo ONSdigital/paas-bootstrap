@@ -14,6 +14,11 @@ output "internal_ip" {
   value = "${var.concourse_ip}"
 }
 
+output "concourse_public_ip" {
+  value = "${aws_eip.atc.public_ip}"
+}
+
+# All of the concourse deployment YMLs refer to the Concourse IP as "public_ip"
 output "public_ip" {
   value = "${aws_eip.atc.public_ip}"
 }
