@@ -380,9 +380,8 @@
           "elasticloadbalancing:AttachLoadBalancerToSubnets"
                 ],
       "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-cf-alb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-cf-ssh-lb"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/app/${environment}-*"
       ]
     },
     {
@@ -392,8 +391,8 @@
           "elasticloadbalancing:DeleteListener"
                 ],
       "Resource": [
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-cf-alb/*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-cf-ssh-lb/*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-*"
       ]
     },
     {

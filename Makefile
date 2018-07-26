@@ -67,5 +67,5 @@ destroy_concourse_network: destroy_concourse ## Destroy concourse and its networ
 destroy_concourse: require_vars ## Destroy concourse only
 	@bin/delete_concourse.sh
 
-decode_aws_error:
+decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
