@@ -71,15 +71,6 @@ resource "aws_security_group_rule" "prometheus_outbound" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "grafana_web_access" {
-  security_group_id = "${aws_security_group.prometheus.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 3000
-  to_port           = 3000
-  cidr_blocks       = "${var.ingress_whitelist}"
-}
-
 resource "aws_security_group_rule" "prometheus_rule_tcp" {
   security_group_id = "${aws_security_group.prometheus.id}"
   type              = "ingress"
@@ -177,4 +168,42 @@ resource "aws_security_group_rule" "jumpbox_ssh_prometheus" {
   from_port                = 22
   to_port                  = 22
   source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
+resource "aws_security_group" "prometheus_alb" {
+  name        = "${var.environment}_prometheus_alb_security_group"
+  description = "Prometheus web access"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-prometheus-alb-security-group"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "prometheus_alb_web_access" {
+  security_group_id = "${aws_security_group.prometheus_alb.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = "${var.ingress_whitelist}"
+}
+
+resource "aws_security_group_rule" "prometheus_alb_to_grafana_access" {
+  security_group_id        = "${aws_security_group.prometheus_alb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 3000
+  to_port                  = 3000
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
+resource "aws_security_group_rule" "grafana_from_prometheus_alb_access" {
+  security_group_id        = "${aws_security_group.prometheus.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 3000
+  to_port                  = 3000
+  source_security_group_id = "${aws_security_group.prometheus_alb.id}"
 }

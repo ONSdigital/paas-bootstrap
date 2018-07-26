@@ -23,6 +23,7 @@
   path: /instance_groups/name=nginx/networks
   value:
   - name: prometheus
-    default: [dns, gateway]
-  - name: vip
-    static_ips: [((prometheus_eip))]
+
+- type: replace
+  path: /instance_groups/name=nginx/vm_extensions/-
+  value: prometheus-nginx-network-properties

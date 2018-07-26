@@ -22,3 +22,12 @@
       cloud_properties:
         subnet: ((prometheus_subnet_az1_id))
         security_groups: [ ((prometheus_security_group))]
+
+- type: replace
+  path: /vm_extensions/-
+  value:
+   name: prometheus-nginx-network-properties
+   cloud_properties:
+    lb_target_groups:
+      - ((grafana_target_group_name))
+   

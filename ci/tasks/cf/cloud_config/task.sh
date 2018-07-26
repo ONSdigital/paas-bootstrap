@@ -50,6 +50,7 @@ bosh update-cloud-config -n \
   -v prometheus_subnet_az1_cidr="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json)" \
   -v prometheus_subnet_az1_id="$(jq -r .prometheus_subnet_az1_id < prometheus-vars.json)" \
   -v prometheus_security_group="$(jq -r .prometheus_security_group_id < prometheus-vars.json)" \
-  -v prometheus_subnet_az1_gateway="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json | sed 's#0/24#1#')"
+  -v prometheus_subnet_az1_gateway="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json | sed 's#0/24#1#')" \
+  -v grafana_target_group_name="$(jq -r .grafana_target_group_name < prometheus-vars.json)"
 
   bosh cloud-config > cf-manifests/cloud-config.yml
