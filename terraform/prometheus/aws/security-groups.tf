@@ -85,3 +85,21 @@ resource "aws_security_group_rule" "grafana_web_access" {
   to_port           = 3000
   cidr_blocks       = "${var.ingress_whitelist}"
 }
+
+resource "aws_security_group_rule" "bosh_tcp_from_prometheus" {
+  security_group_id        = "${data.aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
+resource "aws_security_group_rule" "bosh_udp_from_prometheus" {
+  security_group_id        = "${data.aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "udp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
