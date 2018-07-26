@@ -16,6 +16,7 @@ outputs:
 - name: vpc-vars
 - name: bosh-vars
 - name: cf-vars
+- name: jumpbox-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.sh
