@@ -51,26 +51,6 @@ resource "aws_security_group_rule" "prometheus_bosh_director" {
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
-resource "aws_security_group_rule" "prometheus_bosh_ssh" {
-  security_group_id        = "${aws_security_group.prometheus.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 22
-  to_port                  = 22
-  description              = "Allow bosh to access prometheus ssh"
-  source_security_group_id = "${data.aws_security_group.bosh.id}"
-}
-
-resource "aws_security_group_rule" "prometheus_bosh_mbus" {
-  security_group_id        = "${aws_security_group.prometheus.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 6868
-  to_port                  = 6868
-  description              = "Allow bosh to access prometheus mbus"
-  source_security_group_id = "${data.aws_security_group.bosh.id}"
-}
-
 resource "aws_security_group_rule" "prometheus_outbound" {
   security_group_id = "${aws_security_group.prometheus.id}"
   type              = "egress"
