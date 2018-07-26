@@ -6,6 +6,10 @@ data "aws_security_group" "cf" {
   id = "${var.cf_internal_security_group_id}"
 }
 
+data "aws_security_group" "jumpbox" {
+  id = "${var.jumpbox_security_group_id}"
+}
+
 resource "aws_security_group" "prometheus" {
   name        = "${var.environment}_prometheus_security_group"
   description = "Prometheus node exporter access"
@@ -97,6 +101,24 @@ resource "aws_security_group_rule" "bosh_tcp_from_prometheus" {
 
 resource "aws_security_group_rule" "bosh_udp_from_prometheus" {
   security_group_id        = "${data.aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "udp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
+resource "aws_security_group_rule" "jumpbox_tcp_from_prometheus" {
+  security_group_id        = "${data.aws_security_group.jumpbox.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
+resource "aws_security_group_rule" "jumpbox_udp_from_prometheus" {
+  security_group_id        = "${data.aws_security_group.jumpbox.id}"
   type                     = "ingress"
   protocol                 = "udp"
   from_port                = 0
