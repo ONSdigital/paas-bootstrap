@@ -17,7 +17,7 @@ bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   --vars-store prometheus-manifests/prometheus-variables.yml \
   -o "$PROMETHEUS_MANIFESTS"/operators/monitor-bosh.yml \
   -o "$PROMETHEUS_MANIFESTS"/operators/enable-cf-route-registrar.yml \
-  -o paas-bootstrap-git/operations/prometheus/eip.yml \
+  -o paas-bootstrap-git/operations/prometheus/networks.yml \
   -v cf_deployment_name="$CF_DEPLOYMENT_NAME" \
   -v bosh_url="$(jq -r .bosh_director_fqdn < bosh-vars.json)" \
   -v bosh_username="admin" \
@@ -30,6 +30,5 @@ bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   -v uaa_clients_firehose_exporter_secret="$(bosh interpolate --path /uaa_clients_firehose_exporter_secret cf-vars-s3/cf-variables.yml)" \
   -v traffic_controller_external_port="$(jq -r .cf_traffic_controller_port < cf-vars.json)" \
   -v skip_ssl_verify=false \
-  -v prometheus_eip="$(jq -r .prometheus_external_ip < prometheus-vars.json)" \
   > prometheus-manifests/prometheus.yml
 

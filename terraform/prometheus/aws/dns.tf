@@ -12,7 +12,7 @@ resource "aws_route53_record" "prometheus" {
   type    = "A"
   ttl     = "30"
 
-  records = ["${aws_eip.prometheus.public_ip}"]
+  records = ["${aws_lb.prometheus.dns_name}"]
 }
 
 resource "aws_route53_record" "grafana" {
