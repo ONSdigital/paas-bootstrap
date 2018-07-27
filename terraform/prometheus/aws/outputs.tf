@@ -13,3 +13,11 @@ output "prometheus_security_group_id" {
 output "grafana_target_group_name" {
   value = "${aws_lb_target_group.grafana.name}"
 }
+
+output "grafana_fqdn" {
+  value = "${aws_route53_record.grafana.name}"
+}
+
+output "prometheus_fqdn" {
+  value = "${aws_route53_record.prometheus.fqdn}"
+}
