@@ -42,6 +42,8 @@ function emptyBucket {
       aws s3api delete-object --bucket "$bucket" --key "$key" --version-id "$versionId"
     done
   fi
+
+  return 0
 }
 
 for name in $NAMES
