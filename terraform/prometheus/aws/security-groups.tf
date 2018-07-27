@@ -206,4 +206,15 @@ resource "aws_security_group_rule" "grafana_from_prometheus_alb_access" {
   from_port                = 3000
   to_port                  = 3000
   source_security_group_id = "${aws_security_group.prometheus_alb.id}"
+  description              = "Access to Grafana"
+}
+
+resource "aws_security_group_rule" "prometheus_alb_access" {
+  security_group_id        = "${aws_security_group.prometheus.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 9090
+  to_port                  = 9090
+  source_security_group_id = "${aws_security_group.prometheus_alb.id}"
+  description              = "Access to Prometheus"
 }
