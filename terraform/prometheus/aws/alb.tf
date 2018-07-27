@@ -56,3 +56,26 @@ resource "aws_lb_target_group" "grafana" {
     interval            = 5
   }
 }
+
+resource "aws_lb_target_group" "prometheus" {
+  name                 = "${var.environment}-prometheus-target-group"
+  port                 = 9090
+  protocol             = "HTTP"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = "30"
+
+  tags {
+    Name        = "${var.environment}-prometheus-target-group"
+    Environment = "${var.environment}"
+  }
+
+  health_check {
+    path                = "/metrics"
+    port                = 9090
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 3
+    interval            = 5
+  }
+}
