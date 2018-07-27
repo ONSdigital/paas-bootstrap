@@ -188,6 +188,7 @@ resource "aws_security_group_rule" "prometheus_alb_web_access" {
   from_port         = 443
   to_port           = 443
   cidr_blocks       = "${var.ingress_whitelist}"
+  description       = "External access to Prometheus service"
 }
 
 resource "aws_security_group_rule" "prometheus_alb_to_grafana_access" {
@@ -197,6 +198,7 @@ resource "aws_security_group_rule" "prometheus_alb_to_grafana_access" {
   from_port                = 3000
   to_port                  = 3000
   source_security_group_id = "${aws_security_group.prometheus.id}"
+  description              = "Route traffic to Grafana"
 }
 
 resource "aws_security_group_rule" "grafana_from_prometheus_alb_access" {
@@ -207,6 +209,16 @@ resource "aws_security_group_rule" "grafana_from_prometheus_alb_access" {
   to_port                  = 3000
   source_security_group_id = "${aws_security_group.prometheus_alb.id}"
   description              = "Access to Grafana"
+}
+
+resource "aws_security_group_rule" "prometheus_alb_to_prometheus_access" {
+  security_group_id        = "${aws_security_group.prometheus_alb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 9090
+  to_port                  = 9090
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+  description              = "Route traffic to Prometheus"
 }
 
 resource "aws_security_group_rule" "prometheus_alb_access" {
