@@ -8,15 +8,10 @@ inputs:
   - name: paas-bootstrap-git
   - name: jumpbox-state-s3
   - name: jumpbox-manifest-s3
-  - name: jumpbox-tfstate-s3
-  - name: vpc-tfstate-s3
-  - name: concourse-tfstate-s3
 
 outputs:
   - name: jumpbox-state
-  - name: vpc-vars
-  - name: jumpbox-vars
-  - name: concourse-vars
+
 
 run:
   path: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.sh

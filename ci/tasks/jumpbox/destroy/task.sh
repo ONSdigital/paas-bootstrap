@@ -2,10 +2,6 @@
 
 set -euo pipefail
 
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars/vars.json
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < concourse-tfstate-s3/tfstate.json > concourse-vars/vars.json
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < "jumpbox-tfstate-s3/${ENVIRONMENT}.tfstate" > jumpbox-vars/vars.json
-
 cp jumpbox-state-s3/jumpbox-state.json jumpbox-state/jumpbox-state.json
 
 bosh delete-env \
