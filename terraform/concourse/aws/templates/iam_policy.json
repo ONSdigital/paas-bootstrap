@@ -388,7 +388,8 @@
       "Effect": "Allow",
       "Action": [
           "elasticloadbalancing:ModifyListener",
-          "elasticloadbalancing:DeleteListener"
+          "elasticloadbalancing:DeleteListener",
+          "elasticloadbalancing:CreateRule"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-*",
@@ -418,7 +419,7 @@
         "elasticloadbalancing:DescribeLoadBalancerAttributes",
         "elasticloadbalancing:DescribeTargetGroups",
         "elasticloadbalancing:DescribeTargetGroupAttributes",
-        "elasticloadbalancing:DescribeListeners"
+        "elasticloadbalancing:DescribeListeners"        
       ],
       "Resource": "*",
       "Condition": {
@@ -433,7 +434,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "acm:RequestCertificate"
+        "acm:RequestCertificate",
+        "elasticloadbalancing:DescribeRules"
       ],
       "Resource": "*"
     },
