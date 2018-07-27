@@ -35,10 +35,11 @@ resource "aws_lb_listener" "prometheus_443" {
 }
 
 resource "aws_lb_target_group" "grafana" {
-  name     = "${var.environment}-grafana-target-group"
-  port     = 3000
-  protocol = "HTTP"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "${var.environment}-grafana-target-group"
+  port                 = 3000
+  protocol             = "HTTP"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = "30"
 
   tags {
     Name        = "${var.environment}-grafana-target-group"
@@ -53,9 +54,5 @@ resource "aws_lb_target_group" "grafana" {
     unhealthy_threshold = 2
     timeout             = 3
     interval            = 5
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
