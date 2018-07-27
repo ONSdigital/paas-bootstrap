@@ -82,7 +82,7 @@ resource "aws_lb_target_group" "prometheus" {
 }
 
 resource "aws_lb_listener_rule" "prometheus_host_routing" {
-  listener_arn = "${aws_lb_listener.prometheus.arn}"
+  listener_arn = "${aws_lb_listener.prometheus_443.arn}"
   priority     = 5
 
   action {
