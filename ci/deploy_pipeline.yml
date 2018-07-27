@@ -507,11 +507,12 @@ jobs:
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      passed: [verify-terraform-cf]
+      # passed: [verify-terraform-cf]
       trigger: true
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
     - get: cf-tfstate-s3
+    - get: jumpbox-tfstate-s3
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
     params:
@@ -524,6 +525,7 @@ jobs:
       - vpc-vars/vars.json
       - bosh-vars/vars.json
       - cf-vars/vars.json
+      - jumpbox-vars/vars.json
 
 - name: create-jumpbox
   serial: true
@@ -793,8 +795,8 @@ jobs:
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      trigger: true
-      passed: [deploy-cf]
+      # trigger: true
+      # passed: [deploy-cf]
     - get: prometheus-deployment-git
       version: { ref: ((prometheus_commit_ref)) }
     - get: prometheus-vars-s3
