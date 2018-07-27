@@ -47,7 +47,7 @@ resource "aws_lb_target_group" "grafana" {
   }
 
   health_check {
-    path                = "/"
+    path                = "/metrics"
     port                = 3000
     protocol            = "HTTP"
     healthy_threshold   = 2
