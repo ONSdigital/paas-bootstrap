@@ -20,7 +20,7 @@ function emptyBucket {
 
   local versions=$(aws s3api list-object-versions --bucket "$bucket" | jq '.Versions')
   local markers=$(aws s3api list-object-versions --bucket "$bucket" | jq '.DeleteMarkers')
-  let count=$(echo $versions | jq 'length')-1
+  count=$(($(echo $versions | jq 'length')-1))
 
   if [ $count -gt -1 ]; then
     echo "removing files"
@@ -31,7 +31,7 @@ function emptyBucket {
     done
   fi
 
-  let count=$(echo $markers | jq 'length')-1
+  count=$(($(echo $markers | jq 'length')-1))
 
   if [ $count -gt -1 ]; then
     echo "removing delete markers"
