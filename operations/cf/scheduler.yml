@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /instance_groups/name=scheduler/vm_type
+  value: minimal-scheduler
+
+- type: replace
+  path: /instance_groups/name=scheduler/vm_extensions/-
+  value: cf-scheduler-sec-group

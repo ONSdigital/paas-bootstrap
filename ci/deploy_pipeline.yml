@@ -10,6 +10,12 @@ resource_types:
   source:
     repository: governmentpaas/s3-resource
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
 - name: paas-bootstrap-git
   type: git
@@ -31,6 +37,16 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-deployment.git
+
+- name: cf-deployment-concourse-tasks-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-deployment-concourse-tasks.git
+
+- name: cf-acceptance-tests-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
 
 - name: jumpbox-terraform
   type: terraform
@@ -263,7 +279,11 @@ resources:
     versioned_file: bosh-databases/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
-
+    
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: ((slack_webhook_uri))
 
 jobs:
 - name: verify-concourse
@@ -613,6 +633,15 @@ jobs:
     file: paas-bootstrap-git/ci/tasks/cf/upload_stemcell/task.yml
   - task: deploy_cf
     file: paas-bootstrap-git/ci/tasks/cf/deploy_cf/task.yml
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          Environment: ((environment))
+          Job/Task:    deploy_cf/deploy_cf
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
 
 - name: verify-cf-endpoints
   serial: true
@@ -648,3 +677,46 @@ jobs:
     - get: bosh-manifest-s3
   - task: ensure smoke tests pass
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          Environment: ((environment))
+          Job/Task:    cf-smoke-tests/ensure smoke tests pass
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
+
+- name: cats
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [deploy-cf]
+    - get: cf-deployment-concourse-tasks-git
+    - get: cf-acceptance-tests-git
+    - get: cf-vars-s3
+  - task: interpolate CATS config
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
+    params:
+      DOMAIN: ((domain))
+      ENVIRONMENT: ((environment))
+      CATS_CONFIG_FILE: paas-bootstrap-git/profiles/staging/cats_config.json
+  - task: run CATS tests
+    file: cf-deployment-concourse-tasks-git/run-cats/task.yml
+    input_mapping:
+      cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
+      cf-acceptance-tests: cf-acceptance-tests-git
+    params:
+      CAPTURE_CONFIG: true
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+          Environment: ((environment))
+          Job/Task:    cats/run CATS tests
+          Build Name:  $BUILD_NAME
+          Build ID:    $BUILD_ID
+          Result:      FAIL
