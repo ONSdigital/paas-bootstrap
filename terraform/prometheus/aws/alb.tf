@@ -80,3 +80,18 @@ resource "aws_lb_target_group" "prometheus" {
     port                = "401"
   }
 }
+
+resource "aws_lb_listener_rule" "prometheus_host_routing" {
+  listener_arn = "${aws_lb_listener.prometheus.arn}"
+  priority     = 5
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.prometheus.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["prometheus.*"]
+  }
+}
