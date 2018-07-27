@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+set -x
 
 : $ONS_PREFIX
 : $ENVIRONMENT
