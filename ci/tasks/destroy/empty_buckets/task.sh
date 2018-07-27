@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -euo pipefail
-set -x
 
 : $ONS_PREFIX
 : $ENVIRONMENT
@@ -27,6 +26,7 @@ function emptyBucket {
     for i in $(seq 0 $count); do
       key=$(echo $versions | jq ".[$i].Key" | sed -e 's/\"//g')
       versionId=$(echo $versions | jq ".[$i].VersionId" | sed -e 's/\"//g')
+      echo "- $bucket $key $versionId"
       aws s3api delete-object --bucket "$bucket" --key "$key" --version-id "$versionId"
     done
   fi
@@ -39,6 +39,7 @@ function emptyBucket {
     for i in $(seq 0 $count); do
       key=$(echo $markers | jq ".[$i].Key" | sed -e 's/\"//g')
       versionId=$(echo $markers | jq ".[$i].VersionId" | sed -e 's/\"//g')
+      echo "- $bucket $key $versionId"
       aws s3api delete-object --bucket "$bucket" --key "$key" --version-id "$versionId"
     done
   fi

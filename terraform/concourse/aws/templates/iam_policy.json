@@ -488,7 +488,9 @@
           "s3:PutBucketAcl",
           "s3:PutObjectAcl",
           "s3:PutEncryptionConfiguration",
-          "s3:DeleteObject*",
+          "s3:DeleteObject",
+          "s3:DeleteObjectTagging",
+          "s3:DeleteObjectVersion",
           "s3:DeleteBucket"
       ],
       "Resource": [

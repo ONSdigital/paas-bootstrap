@@ -48,15 +48,15 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
-- name: jumpbox-vars-s3
-  type: s3-iam
-  source:
-    bucket: ((environment))-states
-    private: true
-    region_name: ((region))
-    versioned_file: jumpbox/jumpbox-variables.yml
-    server_side_encryption: 'aws:kms'
-    sse_kms_key_id: ((s3_kms_key_id))
+# - name: jumpbox-vars-s3
+#   type: s3-iam
+#   source:
+#     bucket: ((environment))-states
+#     private: true
+#     region_name: ((region))
+#     versioned_file: jumpbox/jumpbox-variables.yml
+#     server_side_encryption: 'aws:kms'
+#     sse_kms_key_id: ((s3_kms_key_id))
 
 - name: jumpbox-state-s3
   type: s3-iam
@@ -129,18 +129,18 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
-- name: cf-manifest-s3
-  type: s3-iam
-  source:
-    bucket: ((environment))-states
-    private: true
-    region_name: ((region))
-    versioned_file: cf/cf.yml
-    server_side_encryption: 'aws:kms'
-    sse_kms_key_id: ((s3_kms_key_id))
-    initial_version: "-"
-    initial_content_text: |
-        ---
+# - name: cf-manifest-s3
+#   type: s3-iam
+#   source:
+#     bucket: ((environment))-states
+#     private: true
+#     region_name: ((region))
+#     versioned_file: cf/cf.yml
+#     server_side_encryption: 'aws:kms'
+#     sse_kms_key_id: ((s3_kms_key_id))
+#     initial_version: "-"
+#     initial_content_text: |
+#         ---
 
 - name: vpc-tfstate-s3
   type: s3-iam
@@ -179,7 +179,7 @@ jobs:
   serial_groups: [destruction]
   serial: true
   plan:
-    - get: manual-force
+  - get: manual-force
 
 - name: destroy-cf
   serial_groups: [destruction]
@@ -192,35 +192,36 @@ jobs:
     - get: paas-bootstrap-git
     - get: bosh-vars-s3
     - get: bosh-manifest-s3
-    - get: cf-manifest-s3
     - get: vpc-tfstate-s3
-    - get: bosh-tfstate-s3
     - get: concourse-tfstate-s3
+    - get: bosh-tfstate-s3
     - get: jumpbox-tfstate-s3
   - task: destroy-cf
     file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
     params:
       ENVIRONMENT: ((environment))
-    on_success:
-      task: empty-buckets
-      file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-      params:
-        ONS_PREFIX: ons-paas
-        ENVIRONMENT: ((environment))
-        NAMESPACE: cf
-      on_success:
-        put: cf-terraform
-        params:
-          terraform_source: paas-bootstrap-git/terraform/cf/aws
-          env_name: ((environment))
-          var_files:
-          - vpc-vars/vars.json
-          - bosh-vars/vars.json
-          - concourse-vars/vars.json
-          - jumpbox-vars/vars.json
-          action: destroy
-        get_params:
-          action: destroy
+  - task: empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: cf
+  - task: get_terraform_vars
+    file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: cf-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/cf/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - bosh-vars/vars.json
+      - concourse-vars/vars.json
+      - jumpbox-vars/vars.json
+      action: destroy
+    get_params:
+      action: destroy
 
 - name: destroy-bosh
   serial_groups: [destruction]
@@ -233,8 +234,6 @@ jobs:
     - get: paas-bootstrap-git
     - get: bosh-deployment-git
       version: { ref: ((bosh_commit_ref)) }
-    - get: bosh-tfstate-s3
-    - get: bosh-vars-s3
     - get: bosh-state-s3
     - get: bosh-manifest-s3
     - get: vpc-tfstate-s3
@@ -247,21 +246,30 @@ jobs:
   - task: destroy-bosh
     file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
     on_success:
-      aggregate:
-      - put: bosh-state-s3
-        params:
-          file: bosh-state/bosh-state.json
-      - put: bosh-terraform
-        params:
-          terraform_source: paas-bootstrap-git/terraform/bosh/aws
-          env_name: ((environment))
-          var_files:
-          - vpc-vars/vars.json
-          - concourse-vars/vars.json
-          - jumpbox-vars/vars.json
-          action: destroy
-        get_params:
-          action: destroy
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
+  - task: empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: bosh
+  - task: get_terraform_vars
+    file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: bosh-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/bosh/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - concourse-vars/vars.json
+      - jumpbox-vars/vars.json
+      action: destroy
+    get_params:
+      action: destroy
 
 - name: destroy-jumpbox
   serial_groups: [destruction]
@@ -272,8 +280,6 @@ jobs:
       trigger: true
       passed: [destroy-bosh]
     - get: paas-bootstrap-git
-    - get: jumpbox-tfstate-s3
-    - get: jumpbox-vars-s3
     - get: jumpbox-state-s3
     - get: jumpbox-manifest-s3
     - get: vpc-tfstate-s3
@@ -286,15 +292,24 @@ jobs:
       put: jumpbox-state-s3
       params:
         file: jumpbox-state/jumpbox-state.json
-      put: jumpbox-terraform
-      params:
-        terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
-        env_name: ((environment))
-        var_files:
-        - vpc-vars/vars.json
-        - concourse-vars/vars.json
-        - jumpbox-vars/vars.json
-        action: destroy
-      get_params:
-        action: destroy
+  - task: empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: jumpbox
+  - task: get_terraform_vars
+    file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: jumpbox-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/jumpbox/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - concourse-vars/vars.json
+      action: destroy
+    get_params:
+      action: destroy
 
