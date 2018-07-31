@@ -31,3 +31,4 @@
     lb_target_groups:
       - ((grafana_target_group_name))
       - ((prometheus_target_group_name))
+      - ((alertmanager_target_group_name))

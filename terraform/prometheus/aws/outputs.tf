@@ -18,6 +18,10 @@ output "prometheus_target_group_name" {
   value = "${aws_lb_target_group.prometheus.name}"
 }
 
+output "alertmanager_target_group_name" {
+  value = "${aws_lb_target_group.alertmanager.name}"
+}
+
 output "grafana_fqdn" {
   value = "${aws_route53_record.grafana.name}"
 }
