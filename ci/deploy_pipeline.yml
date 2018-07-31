@@ -811,10 +811,6 @@ jobs:
     - get: bosh-manifest-s3
     - get: prometheus-tfstate-s3
     - get: jumpbox-tfstate-s3
-  - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
   - task: interpolate-prometheus
     file: paas-bootstrap-git/ci/tasks/prometheus/interpolate/task.yml
     params:
@@ -840,10 +836,10 @@ jobs:
     passed: [deploy-prometheus]
     trigger: true
   - aggregate:
-    - task: ensure concourse can connect to grafana on port 3000
+    - task: ensure concourse can connect to grafana on port 443
       file: paas-bootstrap-git/ci/tasks/common/test_connectivity/task.yml
       params:
         HOST: grafana
         DOMAIN: ((domain))
-        PORT: 3000
+        PORT: 443
         EXPECTED_OUTCOME: success
