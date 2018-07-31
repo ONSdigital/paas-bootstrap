@@ -4,6 +4,7 @@ resource "aws_acm_certificate" "prometheus" {
   subject_alternative_names = [
     "prometheus.${var.environment}.${var.parent_dns_zone}",
     "grafana.${var.environment}.${var.parent_dns_zone}",
+    "alertmanager.${var.environment}.${var.parent_dns_zone}",
   ]
 
   validation_method = "DNS"

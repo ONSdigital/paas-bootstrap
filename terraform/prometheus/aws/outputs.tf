@@ -25,3 +25,7 @@ output "grafana_fqdn" {
 output "prometheus_fqdn" {
   value = "${aws_route53_record.prometheus.fqdn}"
 }
+
+output "alertmanager_fqdn" {
+  value = "${aws_route53_record.alertmanager.fqdn}"
+}

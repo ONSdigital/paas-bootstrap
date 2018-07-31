@@ -91,3 +91,40 @@ resource "aws_lb_listener_rule" "prometheus_host_routing" {
     values = ["prometheus.*"]
   }
 }
+
+resource "aws_lb_target_group" "alertmanager" {
+  name                 = "${var.environment}-alertmanager-target-group"
+  port                 = 9092
+  protocol             = "HTTP"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = "30"
+
+  tags {
+    Name        = "${var.environment}-alertmanager-target-group"
+    Environment = "${var.environment}"
+  }
+
+  health_check {
+    path                = "/login"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 3
+    interval            = 5
+    matcher             = "401"
+  }
+}
+
+resource "aws_lb_listener_rule" "alertmanager_host_routing" {
+  listener_arn = "${aws_lb_listener.prometheus_443.arn}"
+  priority     = 5
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.alertmanager.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["alertmanager.*"]
+  }
+}
