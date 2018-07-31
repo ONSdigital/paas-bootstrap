@@ -94,7 +94,7 @@ resource "aws_lb_listener_rule" "prometheus_host_routing" {
 
 resource "aws_lb_target_group" "alertmanager" {
   name                 = "${var.environment}-alertmanager-target-group"
-  port                 = 9092
+  port                 = 9093
   protocol             = "HTTP"
   vpc_id               = "${var.vpc_id}"
   deregistration_delay = "30"
