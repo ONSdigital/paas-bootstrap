@@ -21,23 +21,17 @@ trap 'rm -rf "$VARS"' EXIT
 
 aws s3 cp "s3://${ENVIRONMENT}-states/prometheus/prometheus-variables.yml" $VARS/prometheus-creds --quiet
 aws s3 cp "s3://${ENVIRONMENT}-states/prometheus/${ENVIRONMENT}.tfstate" $VARS/state-tmp --quiet
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/state-tmp" > "$VARS/vars.json"
 
-grafana() {
-    echo "Grafana"
-    jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/state-tmp" > "$VARS/vars.json"
-    GRAFANA_FQDN=$(jq -r '.grafana_fqdn' < "$VARS/vars.json")
-    echo "URL https://${GRAFANA_FQDN}"
-    egrep '^grafana_password' $VARS/prometheus-creds
+creds() {
+  SVC=$1
+  KEY=$2
+  echo "$SVC"
+  echo "URL https://$(jq -r .${KEY}_fqdn < "$VARS/vars.json")"
+  egrep "^${KEY}_password:" $VARS/prometheus-creds
+  echo
 }
 
-prometheus() {
-    echo ''
-    echo "Prometheus"
-    jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/state-tmp" > "$VARS/vars.json"
-    PROMETHEUS_FQDN=$(jq -r '.prometheus_fqdn' < "$VARS/vars.json")
-    echo "URL https://${PROMETHEUS_FQDN}"
-    egrep '^prometheus_password' $VARS/prometheus-creds
-}
-
-grafana
-prometheus
+creds Grafana grafana
+creds Prometheus prometheus
+creds Alertmanager alertmanager

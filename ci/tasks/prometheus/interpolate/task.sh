@@ -16,6 +16,7 @@ bosh interpolate --path /default_ca/ca bosh-vars-s3/bosh-variables.yml > bosh_ca
 bosh -d prometheus interpolate "$PROMETHEUS_MANIFESTS"/prometheus.yml \
   --vars-store prometheus-manifests/prometheus-variables.yml \
   -o "$PROMETHEUS_MANIFESTS"/operators/monitor-bosh.yml \
+  -o "$PROMETHEUS_MANIFESTS"/operators/monitor-cf.yml \
   -o paas-bootstrap-git/operations/prometheus/networks.yml \
   -v bosh_url="$(jq -r .bosh_director_fqdn < bosh-vars.json)" \
   -v bosh_username="admin" \
