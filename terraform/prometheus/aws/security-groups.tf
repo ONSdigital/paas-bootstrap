@@ -230,3 +230,23 @@ resource "aws_security_group_rule" "prometheus_alb_access" {
   source_security_group_id = "${aws_security_group.prometheus_alb.id}"
   description              = "Access to Prometheus"
 }
+
+resource "aws_security_group_rule" "prometheus_alb_to_alertmanager_access" {
+  security_group_id        = "${aws_security_group.prometheus_alb.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 9093
+  to_port                  = 9093
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+  description              = "Route traffic to Alertmanager"
+}
+
+resource "aws_security_group_rule" "alertmanager_alb_access" {
+  security_group_id        = "${aws_security_group.prometheus.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 9093
+  to_port                  = 9093
+  source_security_group_id = "${aws_security_group.prometheus_alb.id}"
+  description              = "Access to Alertmanager"
+}
