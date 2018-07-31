@@ -389,11 +389,14 @@
       "Action": [
           "elasticloadbalancing:ModifyListener",
           "elasticloadbalancing:DeleteListener",
-          "elasticloadbalancing:CreateRule"
+          "elasticloadbalancing:CreateRule",
+          "elasticloadbalancing:DeleteRule",
+          "elasticloadbalancing:ModifyRule"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/net/${environment}-*",
-        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-*"
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener/app/${environment}-*",
+        "arn:aws:elasticloadbalancing:${region}:${account_id}:listener-rule/app/${environment}-*"
       ]
     },
     {
