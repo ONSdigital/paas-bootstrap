@@ -116,7 +116,7 @@ resource "aws_lb_target_group" "alertmanager" {
 
 resource "aws_lb_listener_rule" "alertmanager_host_routing" {
   listener_arn = "${aws_lb_listener.prometheus_443.arn}"
-  priority     = 5
+  priority     = 6
 
   action {
     type             = "forward"
