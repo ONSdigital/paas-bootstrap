@@ -25,5 +25,10 @@
   - name: prometheus
 
 - type: replace
+  path: /instance_groups/name=firehose/networks
+  value:
+  - name: prometheus
+
+- type: replace
   path: /instance_groups/name=nginx/vm_extensions?/-
   value: prometheus-nginx-network-properties
