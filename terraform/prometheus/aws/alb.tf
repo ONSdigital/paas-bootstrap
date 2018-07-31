@@ -48,8 +48,6 @@ resource "aws_lb_target_group" "grafana" {
 
   health_check {
     path                = "/metrics"
-    port                = 3000
-    protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 3
@@ -71,13 +69,11 @@ resource "aws_lb_target_group" "prometheus" {
 
   health_check {
     path                = "/login"
-    port                = 9090
-    protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 3
     interval            = 5
-    port                = "401"
+    matcher             = "401"
   }
 }
 
