@@ -67,6 +67,12 @@ The username is `admin` and you can get the password through:
 bin/concourse_password.sh -e <env>
 ```
 
+or using
+
+```sh
+make concourse_password ENVIRONMENT=<env>
+```
+
 ## Testing that Concourse works
 
 ```sh

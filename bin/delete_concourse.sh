@@ -35,10 +35,15 @@ aws s3 cp "s3://${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FI
     exit 0
   }
 
-
 aws s3 cp "s3://${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
   {
     echo "Remote concourse state does not exist, assuming the environment does not exist...";
+    exit 0
+  }
+
+aws s3 cp "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" "${PRIVATE_KEY_FILE}" ||
+  {
+    echo "Remote concourse pruvate key does not exist, assuming the environment does not exist...";
     exit 0
   }
 
@@ -58,3 +63,5 @@ aws s3 rm "s3://${ENVIRONMENT}-states/concourse/creds.yml" || true
 rm "${CONCOURSE_CREDS_FILE}" || true
 aws s3 rm "s3://${ENVIRONMENT}-states/concourse/state.json" || true
 rm "${CONCOURSE_STATE_FILE}" || true
+aws s3 rm "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" || true
+rm "${PRIVATE_KEY_FILE}" || true

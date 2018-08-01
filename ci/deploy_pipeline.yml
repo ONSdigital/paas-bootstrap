@@ -159,7 +159,7 @@ resources:
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
-      sse_kms_key_id: ((s3_kms_key_id))  
+      sse_kms_key_id: ((s3_kms_key_id))
 
 - name: cf-terraform
   type: terraform
@@ -181,7 +181,7 @@ resources:
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
-      sse_kms_key_id: ((s3_kms_key_id))      
+      sse_kms_key_id: ((s3_kms_key_id))
 
 - name: cf-vars-s3
   type: s3-iam
@@ -192,6 +192,9 @@ resources:
     versioned_file: cf/cf-variables.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
 
 - name: cf-manifest-s3
   type: s3-iam
@@ -420,12 +423,15 @@ jobs:
   - aggregate:
     - get: concourse-tfstate-s3
     - get: jumpbox-terraform
+    - get: jumpbox-tfstate-s3
     - get: vpc-tfstate-s3
     - get: paas-bootstrap-git
       passed: [verify-jumpbox]
       trigger: true
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
   - put: bosh-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/bosh/aws
@@ -455,7 +461,7 @@ jobs:
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
-      - bosh-vars/vars.json    
+      - bosh-vars/vars.json
 
 
 - name: create-bosh
@@ -555,7 +561,7 @@ jobs:
       env_name: ((environment))
       var_files:
       - vpc-vars/vars.json
-      - cf-vars/vars.json    
+      - cf-vars/vars.json
 
 - name: verify-cf
   serial: true

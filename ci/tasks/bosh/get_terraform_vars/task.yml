@@ -9,10 +9,12 @@ inputs:
 - name: paas-bootstrap-git
 - name: vpc-tfstate-s3
 - name: concourse-tfstate-s3
+- name: jumpbox-tfstate-s3
 
 outputs:
 - name: vpc-vars
 - name: concourse-vars
+- name: jumpbox-vars
 
 run:
   path: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.sh
