@@ -48,16 +48,6 @@ resources:
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
 
-# - name: jumpbox-vars-s3
-#   type: s3-iam
-#   source:
-#     bucket: ((environment))-states
-#     private: true
-#     region_name: ((region))
-#     versioned_file: jumpbox/jumpbox-variables.yml
-#     server_side_encryption: 'aws:kms'
-#     sse_kms_key_id: ((s3_kms_key_id))
-
 - name: jumpbox-state-s3
   type: s3-iam
   source:
@@ -128,19 +118,6 @@ resources:
     versioned_file: bosh/bosh.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
-
-# - name: cf-manifest-s3
-#   type: s3-iam
-#   source:
-#     bucket: ((environment))-states
-#     private: true
-#     region_name: ((region))
-#     versioned_file: cf/cf.yml
-#     server_side_encryption: 'aws:kms'
-#     sse_kms_key_id: ((s3_kms_key_id))
-#     initial_version: "-"
-#     initial_content_text: |
-#         ---
 
 - name: vpc-tfstate-s3
   type: s3-iam
@@ -312,4 +289,3 @@ jobs:
       action: destroy
     get_params:
       action: destroy
-
