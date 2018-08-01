@@ -1,0 +1,18 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+  - name: paas-bootstrap-git
+
+outputs:
+
+run:
+  path: paas-bootstrap-git/ci/tasks/prometheus/dashboard/task.sh
+
+params:
+  USERNAME: 
+  PASSWORD: 
+  HOST_GRAFANA: 
