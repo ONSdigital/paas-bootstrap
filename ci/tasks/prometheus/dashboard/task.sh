@@ -28,6 +28,4 @@ apikey_id=$(curl -s -X GET \
 curl -s -X DELETE \
   https://${HOST_GRAFANA}/api/auth/keys/${apikey_id} \
   -H "Authorization: Bearer ${apikey}" \
-  -H 'Cache-Control: no-cache'
-
-
+  -H 'Cache-Control: no-cache' -o /dev/null
