@@ -16,3 +16,5 @@ variable "state_bucket_id" {}
 
 variable "jumpbox_security_group_id" {}
 variable "nat_az1_id" {}
+
+variable "public_ip" {}

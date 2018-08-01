@@ -187,7 +187,7 @@ resource "aws_security_group_rule" "prometheus_alb_web_access" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = "${var.ingress_whitelist}"
+  cidr_blocks       = ["${concat(var.ingress_whitelist,formatlist("%s/32", list(var.public_ip)))}"]
   description       = "External access to Prometheus service"
 }
 
