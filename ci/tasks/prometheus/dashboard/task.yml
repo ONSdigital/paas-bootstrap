@@ -6,6 +6,8 @@ image_resource:
 
 inputs:
   - name: paas-bootstrap-git
+  - name: prometheus-tfstate-s3
+  - name: prometheus-vars-s3
 
 outputs:
 
@@ -13,6 +15,4 @@ run:
   path: paas-bootstrap-git/ci/tasks/prometheus/dashboard/task.sh
 
 params:
-  USERNAME: 
-  PASSWORD: 
-  HOST_GRAFANA: 
+   ENVIRONMENT: 
