@@ -13,7 +13,11 @@
         }
       ]
     },
-    "editable": true,
+    "editable": false,
+    "hideControls": true,
+    "nav": [{
+      "enable":false
+    }],
     "gnetId": null,
     "graphTooltip": 0,
     "id": null,

@@ -7,7 +7,7 @@ image_resource:
 inputs:
   - name: paas-bootstrap-git
   - name: prometheus-tfstate-s3
-  - name: prometheus-manifests
+  - name: prometheus-manifest-s3
 
 outputs:
 
@@ -15,4 +15,6 @@ run:
   path: paas-bootstrap-git/ci/tasks/prometheus/dashboard/task.sh
 
 params:
-   ENVIRONMENT: 
+  ENVIRONMENT:
+  SNAPSHOT_NAME:
+  TEMPLATE:
