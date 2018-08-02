@@ -843,3 +843,23 @@ jobs:
         DOMAIN: ((domain))
         PORT: 443
         EXPECTED_OUTCOME: success
+
+- name: deploy-dashboard-snapshots
+  serial: true
+  serial_groups: [main]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+      trigger: true
+      passed: [verify-prometheus]
+    - get: prometheus-manifest-s3
+    - get: prometheus-tfstate-s3
+  - task: create radiator snapshot(s)
+    file: paas-bootstrap-git/ci/tasks/prometheus/dashboard/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      SNAPSHOT_NAME: radiator
+      TEMPLATE: paas-bootstrap-git/grafana/bosh_cpu.json
+  # - task: create CF app wrapper for grafana snapshot(s)
+
+
