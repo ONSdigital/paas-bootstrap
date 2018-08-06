@@ -4,7 +4,7 @@ resource "aws_kms_key" "paas_state_key" {
 }
 
 resource "aws_s3_bucket" "paas_states" {
-  bucket = "${var.environment}-states"
+  bucket = "ons-paas-${var.environment}-states"
   acl    = "private"
 
   versioning {
@@ -33,7 +33,7 @@ resource "aws_s3_bucket" "paas_states" {
         "s3:PutObjectAcl"
       ],
       "Resource": [
-        "arn:aws:s3:::${var.environment}-states/*"
+        "arn:aws:s3:::ons-paas-${var.environment}-states/*"
       ],
       "Condition": {
         "StringEquals": {

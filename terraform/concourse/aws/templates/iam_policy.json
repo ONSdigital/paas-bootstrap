@@ -18,7 +18,7 @@
         "s3:DeleteObjectVersion"
       ],
       "Resource": [
-        "arn:aws:s3:::${environment}-states/*"
+        "arn:aws:s3:::ons-paas-${environment}-states/*"
       ]
     },
     {
