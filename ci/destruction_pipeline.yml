@@ -160,27 +160,43 @@ resources:
       use_ec2_role: true
       region_name: ((region))
       server_side_encryption: 'aws:kms'
-      sse_kms_key_id: ((s3_kms_key_id))
+      sse_kms_key_id: ((s3_kms_key_id))c
 
-- name: prometheus-vars-s3
+- name: cf-vars-s3
   type: s3-iam
   source:
     bucket: ((environment))-states
     private: true
     region_name: ((region))
-    versioned_file: prometheus/prometheus-variables.yml
+    versioned_file: cf/cf-variables.yml
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
 
-- name: prometheus-tfstate-s3
+- name: cf-tfstate-s3
   type: s3-iam
   source:
     bucket: ((environment))-states
     private: true
     region_name: ((region))
-    versioned_file: prometheus/((environment)).tfstate
+    versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
+ 
+- name: prometheus-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: prometheus/prometheus.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
 
 jobs:
 - name: trigger-destroy
@@ -205,6 +221,8 @@ jobs:
     - get: bosh-vars-s3
     - get: bosh-manifest-s3
     - get: jumpbox-tfstate-s3
+    - get: concourse-tfstate-s3
+    - get: prometheus-manifest-s3
   - task: destroy-prometheus
     file: paas-bootstrap-git/ci/tasks/prometheus/destroy/task.yml
     params:
