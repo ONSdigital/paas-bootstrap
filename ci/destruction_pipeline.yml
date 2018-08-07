@@ -31,7 +31,7 @@ resources:
   type: terraform
   source:
     storage:
-      bucket: ((environment))-states
+      bucket: ons-paas-((environment))-states
       bucket_path: jumpbox/
       use_ec2_role: true
       region_name: ((region))
@@ -41,7 +41,7 @@ resources:
 - name: jumpbox-tfstate-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: jumpbox/((environment)).tfstate
@@ -51,7 +51,7 @@ resources:
 - name: jumpbox-state-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: jumpbox/jumpbox-state.json
@@ -61,7 +61,7 @@ resources:
 - name: jumpbox-manifest-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: jumpbox/jumpbox.yml
@@ -72,7 +72,7 @@ resources:
   type: terraform
   source:
     storage:
-      bucket: ((environment))-states
+      bucket: ons-paas-((environment))-states
       bucket_path: bosh/
       use_ec2_role: true
       region_name: ((region))
@@ -82,7 +82,7 @@ resources:
 - name: bosh-tfstate-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: bosh/((environment)).tfstate
@@ -92,7 +92,7 @@ resources:
 - name: bosh-vars-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: bosh/bosh-variables.yml
@@ -102,7 +102,7 @@ resources:
 - name: bosh-state-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: bosh/bosh-state.json
@@ -112,7 +112,7 @@ resources:
 - name: bosh-manifest-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: bosh/bosh.yml
@@ -122,7 +122,7 @@ resources:
 - name: vpc-tfstate-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: vpc/tfstate.json
@@ -133,7 +133,7 @@ resources:
 - name: concourse-tfstate-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: concourse/tfstate.json
@@ -144,7 +144,7 @@ resources:
   type: terraform
   source:
     storage:
-      bucket: ((environment))-states
+      bucket: ons-paas-((environment))-states
       bucket_path: cf/
       use_ec2_role: true
       region_name: ((region))
