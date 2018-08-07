@@ -377,7 +377,8 @@
           "elasticloadbalancing:CreateLoadBalancerListeners",
           "elasticloadbalancing:ConfigureHealthCheck",
           "elasticloadbalancing:ApplySecurityGroupsToLoadBalancer",
-          "elasticloadbalancing:AttachLoadBalancerToSubnets"
+          "elasticloadbalancing:AttachLoadBalancerToSubnets",
+          "elasticloadbalancing:AddTags"
                 ],
       "Resource": [
         "arn:aws:elasticloadbalancing:${region}:${account_id}:loadbalancer/${environment}-*",
