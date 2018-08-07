@@ -26,8 +26,8 @@ trap 'rm -rf "$VARS"' EXIT
 
 set -euo pipefail
 
-aws s3 cp "s3://${ENVIRONMENT}-states/vpc/tfstate.json" "$VARS/"
-aws s3 cp "s3://${ENVIRONMENT}-states/jumpbox/jumpbox-variables.yml" "$VARS/"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/vpc/tfstate.json" "$VARS/"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/jumpbox/jumpbox-variables.yml" "$VARS/"
 bosh int --path /jumpbox_ssh/private_key "$VARS/jumpbox-variables.yml" > "$VARS/jumpbox.key"
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/tfstate.json" > "$VARS/vars.json"
 

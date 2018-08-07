@@ -42,10 +42,10 @@ VARS=/var/tmp/tmp$$
 mkdir -p "$VARS"
 trap 'rm -rf "$VARS"' EXIT
 
-aws s3 cp "s3://${ENVIRONMENT}-states/vpc/tfstate.json" "$VARS/"
-aws s3 cp "s3://${ENVIRONMENT}-states/jumpbox/jumpbox-variables.yml" "$VARS/"
-aws s3 cp "s3://${ENVIRONMENT}-states/bosh/bosh-variables.yml" "$VARS/"
-aws s3 cp "s3://${ENVIRONMENT}-states/bosh/bosh.yml" "$VARS/"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/vpc/tfstate.json" "$VARS/"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/jumpbox/jumpbox-variables.yml" "$VARS/"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/bosh/bosh-variables.yml" "$VARS/"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/bosh/bosh.yml" "$VARS/"
 bosh int --path /jumpbox_ssh/private_key "$VARS/jumpbox-variables.yml" > "$VARS/jumpbox.key"
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/tfstate.json" > "$VARS/vars.json"
 

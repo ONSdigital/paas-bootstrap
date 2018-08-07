@@ -18,7 +18,7 @@
         "s3:DeleteObjectVersion"
       ],
       "Resource": [
-        "arn:aws:s3:::${environment}-states/*"
+        "arn:aws:s3:::ons-paas-${environment}-states/*"
       ]
     },
     {
@@ -344,7 +344,8 @@
         "iam:PutRolePolicy",
         "iam:GetRolePolicy",
         "iam:PassRole",
-        "iam:ListInstanceProfilesForRole"
+        "iam:ListInstanceProfilesForRole",
+        "iam:DeleteRolePermissionsBoundary"
       ],
       "Resource": [
         "arn:aws:iam::${account_id}:role/*"

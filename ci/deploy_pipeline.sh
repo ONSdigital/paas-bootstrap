@@ -14,9 +14,9 @@ bosh_commit_ref="010bd498bb97dee707c167e60469b0f5d2cc90fb"
 cf_commit_ref="a8bb2b3938c0896e60f97ebaab6d71df72aebee4"
 
 # Grab pre-requisite files from S3
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}"
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}"
-aws s3 cp "s3://${ENVIRONMENT}-states/vpc/tfstate.json" "${VPC_STATE_FILE}"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}"
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/vpc/tfstate.json" "${VPC_STATE_FILE}"
 
 REGION=$(terraform output -state="${ENVIRONMENT}_concourse.tfstate.json" region)
 S3_KMS_KEY_ID=$(terraform output -state="${ENVIRONMENT}_concourse.tfstate.json" s3_kms_key_id)

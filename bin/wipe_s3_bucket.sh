@@ -6,7 +6,7 @@ set -euo pipefail
 
 echo "Removing all versions from $ENVIRONMENT"
 
-bucket="${ENVIRONMENT}-states"
+bucket="ons-paas-${ENVIRONMENT}-states"
 
 versions=$(aws s3api list-object-versions --bucket "$bucket" | jq '.Versions')
 markers=$(aws s3api list-object-versions --bucket "$bucket" | jq '.DeleteMarkers')

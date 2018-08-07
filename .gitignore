@@ -13,3 +13,6 @@ tmp*.tfvars.json
 
 tmp*.yml
 foo.yml
+
+.vs
+.vs/*

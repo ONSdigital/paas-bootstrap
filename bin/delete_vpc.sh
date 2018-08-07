@@ -8,7 +8,7 @@ set -euo pipefail
 
 TERRAFORM_DIR=terraform/aws
 
-aws s3 cp "s3://${ENVIRONMENT}-states/vpc/tfstate.json" "${VPC_STATE_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/vpc/tfstate.json" "${VPC_STATE_FILE}" ||
   {
     echo "Remote VPC Terraform state does not exist. Assuming is has already been deleted";
     exit 0

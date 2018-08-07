@@ -18,7 +18,7 @@ fi
 
 git submodule update --init
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}" ||
   {
     echo "Remote terraform state for concourse does not exist, assuming the environment does not exist...";
     exit 0
@@ -31,19 +31,19 @@ terraform output -state="$CONCOURSE_TERRAFORM_STATE_FILE" -json | jq 'with_entri
 
 SUBMODULE=concourse-bosh-deployment
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}" ||
   {
     echo "Remote concourse creds do not exist, assuming the environment does not exist...";
     exit 0
   }
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
   {
     echo "Remote concourse state does not exist, assuming the environment does not exist...";
     exit 0
   }
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" "${PRIVATE_KEY_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/ssh-key.pem" "${PRIVATE_KEY_FILE}" ||
   {
     echo "Remote concourse pruvate key does not exist, assuming the environment does not exist...";
     exit 0
@@ -63,9 +63,9 @@ bosh delete-env "$SUBMODULE"/lite/concourse.yml \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"
 
-aws s3 rm "s3://${ENVIRONMENT}-states/concourse/creds.yml" || true
+aws s3 rm "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" || true
 rm "${CONCOURSE_CREDS_FILE}" || true
-aws s3 rm "s3://${ENVIRONMENT}-states/concourse/state.json" || true
+aws s3 rm "s3://ons-paas-${ENVIRONMENT}-states/concourse/state.json" || true
 rm "${CONCOURSE_STATE_FILE}" || true
-aws s3 rm "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" || true
+aws s3 rm "s3://ons-paas-${ENVIRONMENT}-states/concourse/ssh-key.pem" || true
 rm "${PRIVATE_KEY_FILE}" || true

@@ -26,10 +26,10 @@ terraform output -state="$CONCOURSE_TERRAFORM_STATE_FILE" -json | jq 'with_entri
 
 SUBMODULE=concourse-bosh-deployment
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}" ||
   echo "Remote concourse creds do not exist, assuming they need to be generated"
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
   echo "Remote concourse state does not exist, assuming this is a new deployment"
 
 bosh create-env "$SUBMODULE"/lite/concourse.yml \
@@ -50,7 +50,7 @@ bosh create-env "$SUBMODULE"/lite/concourse.yml \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"
 
-aws s3 cp "${CONCOURSE_CREDS_FILE}" "s3://${ENVIRONMENT}-states/concourse/creds.yml" --acl=private
-aws s3 cp "${CONCOURSE_STATE_FILE}" "s3://${ENVIRONMENT}-states/concourse/state.json" --acl=private
+aws s3 cp "${CONCOURSE_CREDS_FILE}" "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" --acl=private
+aws s3 cp "${CONCOURSE_STATE_FILE}" "s3://ons-paas-${ENVIRONMENT}-states/concourse/state.json" --acl=private
 
 

@@ -16,14 +16,14 @@ fi
 
 TERRAFORM_DIR=terraform/concourse/aws
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" "${PUBLIC_KEY_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" "${PUBLIC_KEY_FILE}" ||
   {
     echo "Remote SSH key does not exist. Assuming the deployment does not exist";
     exit 0
   }
 _public_key=$(cat $PUBLIC_KEY_FILE)
 
-aws s3 cp "s3://${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}" ||
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/tfstate.json" "${CONCOURSE_TERRAFORM_STATE_FILE}" ||
   {
     echo "Remote Concourse Terraform state does not exist. Assuming the deployment does not exist";
     exit 0
@@ -42,9 +42,9 @@ terraform destroy -auto-approve \
   -state="$CONCOURSE_TERRAFORM_STATE_FILE" \
   "$TERRAFORM_DIR"
 
-aws s3 rm "s3://${ENVIRONMENT}-states/concourse/tfstate.json" || true
+aws s3 rm "s3://ons-paas-${ENVIRONMENT}-states/concourse/tfstate.json" || true
 rm "${CONCOURSE_TERRAFORM_STATE_FILE}" || true
-aws s3 rm "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem" || true
+aws s3 rm "s3://ons-paas-${ENVIRONMENT}-states/concourse/ssh-key.pem" || true
 rm "${PRIVATE_KEY_FILE}" || true
-aws s3 rm "s3://${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" || true
+aws s3 rm "s3://ons-paas-${ENVIRONMENT}-states/concourse/ssh-key.pem.pub" || true
 rm "${PUBLIC_KEY_FILE}" || true

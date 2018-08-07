@@ -4,7 +4,7 @@ resources:
 # - name: s3
 #   type: s3
 #   source:
-#     bucket: ((environment))-states
+#     bucket: ons-paas-((environment))-states
 #     # private: true
 #     region_name: ((region))
 #     versioned_file: vpc/vars.tfvars
@@ -26,7 +26,7 @@ jobs:
         args:
           - s3
           - cp
-          - 's3://((environment))-states/vpc/vars.tfvars'
+          - 's3://ons-paas-((environment))-states/vpc/vars.tfvars'
           - foo
           - '--sse'
           - 'aws:kms'
