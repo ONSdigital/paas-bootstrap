@@ -5,10 +5,12 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-if [ -z "${AWS_PROFILE:-}" ]; then
-  : $AWS_ACCESS_KEY_ID
-  : $AWS_SECRET_ACCESS_KEY
+if [ -n "${AWS_PROFILE:-}" ]; then
+  export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+  export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
 fi
+: $AWS_ACCESS_KEY_ID
+: $AWS_SECRET_ACCESS_KEY
 : $CONCOURSE_TERRAFORM_STATE_FILE
 : $CONCOURSE_STATE_FILE
 : $CONCOURSE_CREDS_FILE
@@ -55,6 +57,8 @@ bosh delete-env "$SUBMODULE"/lite/concourse.yml \
   -o operations/concourse/fqdn.yml \
   -l "$SUBMODULE"/versions.yml \
   -l "$_vars_file" \
+  -v access_key_id="$AWS_ACCESS_KEY_ID" \
+  -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
   --var-file private_key="$PRIVATE_KEY_FILE" \
   --vars-store "$CONCOURSE_CREDS_FILE" \
   --state "$CONCOURSE_STATE_FILE"
