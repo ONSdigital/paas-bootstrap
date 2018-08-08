@@ -155,7 +155,7 @@ resources:
   type: terraform
   source:
     storage:
-      bucket: ((environment))-states
+      bucket: ons-paas-((environment))-states
       bucket_path: prometheus/
       use_ec2_role: true
       region_name: ((region))
@@ -165,7 +165,7 @@ resources:
 - name: cf-vars-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: cf/cf-variables.yml
@@ -178,7 +178,7 @@ resources:
 - name: cf-tfstate-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: cf/((environment)).tfstate
@@ -188,7 +188,7 @@ resources:
 - name: prometheus-manifest-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: prometheus/prometheus.yml
