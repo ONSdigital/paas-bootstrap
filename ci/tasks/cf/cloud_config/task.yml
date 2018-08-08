@@ -12,6 +12,7 @@ inputs:
   - name: bosh-vars-s3
   - name: bosh-manifest-s3
   - name: concourse-tfstate-s3
+  - name: prometheus-tfstate-s3
 
 outputs:
   - name: cf-manifests

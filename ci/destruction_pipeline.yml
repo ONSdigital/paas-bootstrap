@@ -151,12 +151,105 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
+- name: prometheus-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ons-paas-((environment))-states
+      bucket_path: prometheus/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))c
+
+- name: cf-vars-s3
+  type: s3-iam
+  source:
+    bucket: ons-paas-((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: cf/cf-variables.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
+
+- name: cf-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ons-paas-((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: cf/((environment)).tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+ 
+- name: prometheus-manifest-s3
+  type: s3-iam
+  source:
+    bucket: ons-paas-((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: prometheus/prometheus.yml
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+    initial_version: "-"
+    initial_content_text: |
+        ---
+
 jobs:
 - name: trigger-destroy
   serial_groups: [destruction]
   serial: true
   plan:
   - get: manual-force
+
+- name: destroy-prometheus
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - aggregate:
+    - get: manual-force
+      trigger: true
+      passed: [trigger-destroy]
+    - get: paas-bootstrap-git
+    - get: vpc-tfstate-s3
+    - get: bosh-tfstate-s3
+    - get: cf-tfstate-s3
+    - get: cf-vars-s3
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
+    - get: jumpbox-tfstate-s3
+    - get: concourse-tfstate-s3
+    - get: prometheus-manifest-s3
+  - task: destroy-prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/destroy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - task: empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: prometheus
+  - task: get_terraform_vars
+    file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+  - put: prometheus-terraform
+    params:
+      terraform_source: paas-bootstrap-git/terraform/prometheus/aws
+      env_name: ((environment))
+      var_files:
+      - vpc-vars/vars.json
+      - concourse-vars/vars.json
+      - bosh-vars/vars.json
+      - cf-vars/vars.json
+      - jumpbox-vars/vars.json
+      action: destroy
+    get_params:
+      action: destroy
 
 - name: destroy-cf
   serial_groups: [destruction]
@@ -165,7 +258,7 @@ jobs:
   - aggregate:
     - get: manual-force
       trigger: true
-      passed: [trigger-destroy]
+      passed: [destroy-prometheus]
     - get: paas-bootstrap-git
     - get: bosh-vars-s3
     - get: bosh-manifest-s3

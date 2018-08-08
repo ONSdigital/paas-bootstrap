@@ -1,0 +1,34 @@
+---
+# Not actually CF, used by Prometheus in lieu of a LB
+- type: replace
+  path: /networks/-
+  value: 
+    name: vip
+    type: vip
+
+- type: replace
+  path: /networks/name=prometheus?
+  value:
+    name: prometheus
+    type: manual
+    subnets:
+    - range: ((prometheus_subnet_az1_cidr))
+      gateway: ((prometheus_subnet_az1_gateway))
+      az: z1
+      dns:
+      - ((private_dns_nameserver))
+      - 1.1.1.1
+      reserved: [10.0.11.0-10.0.11.3]
+      cloud_properties:
+        subnet: ((prometheus_subnet_az1_id))
+        security_groups: [ ((prometheus_security_group))]
+
+- type: replace
+  path: /vm_extensions/-
+  value:
+   name: prometheus-nginx-network-properties
+   cloud_properties:
+    lb_target_groups:
+      - ((grafana_target_group_name))
+      - ((prometheus_target_group_name))
+      - ((alertmanager_target_group_name))

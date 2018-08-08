@@ -97,3 +97,7 @@ output "cf_rds_password" {
 output "cf_rds_client_security_group_id" {
   value = "${aws_security_group.cf_rds_client.id}"
 }
+
+output "cf_traffic_controller_port" {
+  value = "${aws_lb_listener.cf_4443.port}"
+}

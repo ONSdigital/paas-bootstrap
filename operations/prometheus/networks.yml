@@ -1,0 +1,34 @@
+---
+- type: replace
+  path: /instance_groups/name=alertmanager/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=prometheus2/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=database/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=grafana/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=nginx/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=firehose/networks
+  value:
+  - name: prometheus
+
+- type: replace
+  path: /instance_groups/name=nginx/vm_extensions?/-
+  value: prometheus-nginx-network-properties

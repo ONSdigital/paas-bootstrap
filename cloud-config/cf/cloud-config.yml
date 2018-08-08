@@ -93,6 +93,7 @@ networks:
     cloud_properties:
       subnet: ((private_subnet_az3_id))
       security_groups: [ ((internal_security_group))]
+  
 
 compilation:
   workers: 8

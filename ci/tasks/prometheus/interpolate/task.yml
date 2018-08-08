@@ -6,19 +6,22 @@ image_resource:
 
 inputs:
   - name: paas-bootstrap-git
-  - name: cf-deployment-git
+  - name: prometheus-deployment-git
+  - name: prometheus-vars-s3
   - name: cf-vars-s3
   - name: cf-tfstate-s3
   - name: vpc-tfstate-s3
-  - name: databases-tfstate-s3
-  - name: prometheus-deployment-git
+  - name: bosh-vars-s3
+  - name: bosh-tfstate-s3
+  - name: prometheus-tfstate-s3
 
 outputs:
-  - name: cf-manifests
+  - name: prometheus-manifests
 
 run:
-  path: paas-bootstrap-git/ci/tasks/cf/interpolate/task.sh
+  path: paas-bootstrap-git/ci/tasks/prometheus/interpolate/task.sh
 
 params:
   ENVIRONMENT:
   DOMAIN:
+  CF_DEPLOYMENT_NAME:

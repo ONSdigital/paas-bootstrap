@@ -43,6 +43,9 @@ concourse_password: ## Retrieves the concourse password for a given environment
 concourse_login: require_vars ## Logs fly into concourse
 	@bin/login_fly.sh
 
+prometheus_credentials: ## Get credentials for prometheus stack
+	@bin/prometheus_credentials.sh
+
 test_pipeline: require_vars ## Deploy a test pipeline to concourse
 	@test/deploy_test_pipeline.sh
 
@@ -67,5 +70,6 @@ destroy_concourse_network: destroy_concourse ## Destroy concourse and its networ
 destroy_concourse: require_vars ## Destroy concourse only
 	@bin/delete_concourse.sh
 
-decode_aws_error:
+decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
+
