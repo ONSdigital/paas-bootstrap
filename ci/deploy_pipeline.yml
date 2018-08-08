@@ -228,7 +228,7 @@ resources:
 - name: prometheus-vars-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: prometheus/prometheus-variables.yml
@@ -238,7 +238,7 @@ resources:
 - name: prometheus-manifest-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: prometheus/prometheus.yml
@@ -251,7 +251,7 @@ resources:
 - name: prometheus-tfstate-s3
   type: s3-iam
   source:
-    bucket: ((environment))-states
+    bucket: ons-paas-((environment))-states
     private: true
     region_name: ((region))
     versioned_file: prometheus/((environment)).tfstate
@@ -339,7 +339,7 @@ jobs:
   serial: true
   plan:
   - get: paas-bootstrap-git
-    # trigger: true
+    trigger: true
   - get: concourse-tfstate-s3
   - aggregate:
     - task: ensure world cannot connect to concourse on port 22
@@ -373,7 +373,7 @@ jobs:
 
 - name: terraform-jumpbox
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
@@ -393,7 +393,7 @@ jobs:
 
 - name: terraform-bosh
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
@@ -418,7 +418,7 @@ jobs:
 
 - name: terraform-bosh-databases
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -440,7 +440,7 @@ jobs:
 
 - name: terraform-cf
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -466,7 +466,7 @@ jobs:
 
 - name: terraform-cf-databases
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -488,7 +488,7 @@ jobs:
 
 - name: verify-terraform-cf
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - get: paas-bootstrap-git
     trigger: true
@@ -507,11 +507,11 @@ jobs:
 
 - name: terraform-prometheus
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      # passed: [verify-terraform-cf]
+      passed: [verify-terraform-cf]
       trigger: true
     - get: vpc-tfstate-s3
     - get: concourse-tfstate-s3
@@ -535,7 +535,7 @@ jobs:
 
 - name: create-jumpbox
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -574,7 +574,7 @@ jobs:
 
 - name: verify-jumpbox
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - get: paas-bootstrap-git
     passed: [create-jumpbox]
@@ -609,7 +609,7 @@ jobs:
 
 - name: create-bosh
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -651,7 +651,7 @@ jobs:
 
 - name: verify-bosh
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - get: paas-bootstrap-git
     passed: [create-bosh]
@@ -664,7 +664,7 @@ jobs:
 
 - name: deploy-cf
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -728,7 +728,7 @@ jobs:
 
 - name: verify-cf-endpoints
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - get: paas-bootstrap-git
     passed: [deploy-cf]
@@ -750,11 +750,11 @@ jobs:
 
 - name: cf-smoke-tests
   serial: true
-  serial_groups: [main]
+  serial_groups: [smoke-tests]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      passed: [deploy-cf]
+      passed: [verify-cf-endpoints]
       trigger: true
     - get: bosh-vars-s3
     - get: bosh-manifest-s3
@@ -763,12 +763,12 @@ jobs:
 
 - name: cats
   serial: true
-  serial_groups: [main]
+  serial_groups: [cf]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
       trigger: true
-      passed: [deploy-cf]
+      passed: [verify-cf-endpoints]
     - get: cf-deployment-concourse-tasks-git
     - get: cf-acceptance-tests-git
     - get: cf-vars-s3
@@ -797,12 +797,12 @@ jobs:
 
 - name: deploy-prometheus
   serial: true
-  serial_groups: [main]
+  serial_groups: [prometheus]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
-      # trigger: true
-      # passed: [deploy-cf]
+      trigger: true
+      passed: [verify-cf-endpoints]
     - get: prometheus-deployment-git
       version: { ref: ((prometheus_commit_ref)) }
     - get: prometheus-vars-s3
@@ -833,7 +833,7 @@ jobs:
 
 - name: verify-prometheus
   serial: true
-  serial_groups: [main]
+  serial_groups: [prometheus]
   plan:
   - get: paas-bootstrap-git
     passed: [deploy-prometheus]
@@ -849,7 +849,7 @@ jobs:
 
 - name: deploy-dashboard-snapshots
   serial: true
-  serial_groups: [main]
+  serial_groups: [prometheus]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -863,6 +863,3 @@ jobs:
       ENVIRONMENT: ((environment))
       SNAPSHOT_NAME: radiator
       TEMPLATE: paas-bootstrap-git/grafana/bosh_cpu.json
-  # - task: create CF app wrapper for grafana snapshot(s)
-
-
