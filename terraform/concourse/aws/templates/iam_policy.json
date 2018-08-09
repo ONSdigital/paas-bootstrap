@@ -41,7 +41,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "kms:CreateKey"
+        "kms:CreateKey",
+        "kms:GenerateDataKey"
       ],
       "Resource": [
         "*"
@@ -65,15 +66,6 @@
       ],
       "Resource": [
         "${default_s3_kms_key_arn}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:GenerateDataKey"
-      ],
-      "Resource": [
-        "*"
       ]
     },
     {
@@ -249,7 +241,8 @@
       "Effect": "Allow",
       "Action": [
         "ec2:CreateTags",
-        "ec2:DeleteTags"
+        "ec2:DeleteTags",
+        "ec2:RunInstances"
       ],
       "Resource": [
         "arn:aws:ec2:${region}:${account_id}:instance/*",
@@ -258,38 +251,6 @@
         "arn:aws:ec2:${region}:${account_id}:network-interface/*",
         "arn:aws:ec2:*::image/*",
         "arn:aws:ec2:${region}:${account_id}:security-group/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:RunInstances"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:subnet/*",
-        "arn:aws:ec2:${region}:${account_id}:volume/*",
-        "arn:aws:ec2:${region}:${account_id}:network-interface/*",
-        "arn:aws:ec2:*::image/*",
-        "arn:aws:ec2:${region}:${account_id}:security-group/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "ec2:Region": "${region}"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:RunInstances"
-      ],
-      "Resource": [
-        "arn:aws:ec2:${region}:${account_id}:instance/*"
       ],
       "Condition": {
         "StringEquals": {
@@ -442,18 +403,18 @@
         "elasticloadbalancing:DescribeRules",
         "ec2:DescribeNatGateways",
         "ec2:CreateNatGateway",
-          "ec2:DeleteNatGateway",
-          "ec2:DescribeAccountAttributes",
-          "ec2:CreateRoute",
-          "ec2:CreateRouteTable",
-          "ec2:DescribeRouteTables",
-          "ec2:AssociateRouteTable",
-          "ec2:ReplaceRouteTableAssociation",
-          "ec2:DisassociateRouteTable",
-          "s3:HeadBucket",
-          "s3:Get*",
-          "s3:List*",
-          "s3:PutBucketEncryption"
+        "ec2:DeleteNatGateway",
+        "ec2:DescribeAccountAttributes",
+        "ec2:CreateRoute",
+        "ec2:CreateRouteTable",
+        "ec2:DescribeRouteTables",
+        "ec2:AssociateRouteTable",
+        "ec2:ReplaceRouteTableAssociation",
+        "ec2:DisassociateRouteTable",
+        "s3:HeadBucket",
+        "s3:Get*",
+        "s3:List*",
+        "s3:PutBucketEncryption"
       ],
       "Resource": "*"
     },
