@@ -93,14 +93,14 @@ resource "aws_lb_listener_rule" "prometheus_host_routing" {
 }
 
 resource "aws_lb_target_group" "alertmanager" {
-  name                 = "${var.environment}-alertmanager-target-group"
+  name                 = "${var.environment}-alertmgr-target-group"
   port                 = 9093
   protocol             = "HTTP"
   vpc_id               = "${var.vpc_id}"
   deregistration_delay = "30"
 
   tags {
-    Name        = "${var.environment}-alertmanager-target-group"
+    Name        = "${var.environment}-alertmgr-target-group"
     Environment = "${var.environment}"
   }
 
