@@ -7,5 +7,7 @@
     secret: "((uaa_clients_cf_mgmt_secret))"
 
 - type: replace
-  path: /variables/uaa_clients_cf_mgmt_secret?
-  value: password
+  path: /variables/-
+  value:
+    - name: uaa_clients_cf_mgmt_secret
+    - type: password
