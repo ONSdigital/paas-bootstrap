@@ -13,7 +13,7 @@ outputs:
   - name: cf_mgmt_vars
 
 run:
-  path: paas-bootstrap-git/ci/tasks/management/task.sh
+  path: paas-bootstrap-git/ci/tasks/cf/management/task.sh
 
 params:
   ENVIRONMENT:

@@ -873,11 +873,11 @@ jobs:
     passed: [verify-cf-endpoints]
   - get: cf-vars-s3  
   - task: get management variables
-    file: paas-bootstrap-git/ci/tasks/get_management_vars/task.yml
+    file: paas-bootstrap-git/ci/tasks/cf/get_management_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
       DOMAIN: ((domain))  
   - task: create orgs spaces etc
-    file: paas-bootstrap-git/ci/tasks/management/task.yml
+    file: paas-bootstrap-git/ci/tasks/cf/management/task.yml
     params:
       ENVIRONMENT: ((environment))
