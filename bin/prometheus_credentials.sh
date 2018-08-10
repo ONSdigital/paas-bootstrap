@@ -19,8 +19,8 @@ VARS=/var/tmp/tmp$$
 mkdir -p "$VARS"
 trap 'rm -rf "$VARS"' EXIT
 
-aws s3 cp "s3://${ENVIRONMENT}-states/prometheus/prometheus-variables.yml" $VARS/prometheus-creds --quiet
-aws s3 cp "s3://${ENVIRONMENT}-states/prometheus/${ENVIRONMENT}.tfstate" $VARS/state-tmp --quiet
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/prometheus/prometheus-variables.yml" $VARS/prometheus-creds #--quiet
+aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/prometheus/${ENVIRONMENT}.tfstate" $VARS/state-tmp #--quiet
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/state-tmp" > "$VARS/vars.json"
 
 creds() {
