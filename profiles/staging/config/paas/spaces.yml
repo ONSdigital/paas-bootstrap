@@ -1,0 +1,4 @@
+org: paas
+spaces:
+- services
+enable-delete-spaces: true
