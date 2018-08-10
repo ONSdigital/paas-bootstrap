@@ -373,7 +373,7 @@ jobs:
 
 - name: terraform-jumpbox
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
@@ -393,7 +393,7 @@ jobs:
 
 - name: terraform-bosh
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: concourse-tfstate-s3
@@ -418,7 +418,7 @@ jobs:
 
 - name: terraform-bosh-databases
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -440,7 +440,7 @@ jobs:
 
 - name: terraform-cf
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -466,7 +466,7 @@ jobs:
 
 - name: terraform-cf-databases
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
@@ -488,7 +488,7 @@ jobs:
 
 - name: verify-terraform-cf
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - get: paas-bootstrap-git
     trigger: true
@@ -507,7 +507,7 @@ jobs:
 
 - name: terraform-prometheus
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -535,7 +535,7 @@ jobs:
 
 - name: create-jumpbox
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -574,7 +574,7 @@ jobs:
 
 - name: verify-jumpbox
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - get: paas-bootstrap-git
     passed: [create-jumpbox]
@@ -609,7 +609,7 @@ jobs:
 
 - name: create-bosh
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -651,7 +651,7 @@ jobs:
 
 - name: verify-bosh
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - get: paas-bootstrap-git
     passed: [create-bosh]
@@ -664,7 +664,7 @@ jobs:
 
 - name: deploy-cf
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -728,7 +728,7 @@ jobs:
 
 - name: verify-cf-endpoints
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cf,prometheus,smoke-tests,cats]
   plan:
   - get: paas-bootstrap-git
     passed: [deploy-cf]
@@ -763,7 +763,7 @@ jobs:
 
 - name: cats
   serial: true
-  serial_groups: [cf]
+  serial_groups: [cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
@@ -863,3 +863,21 @@ jobs:
       ENVIRONMENT: ((environment))
       SNAPSHOT_NAME: radiator
       TEMPLATE: paas-bootstrap-git/grafana/bosh_cpu.json
+
+- name: cf-management
+  serial: true
+  serial_groups: [cf]
+  plan:
+  - get: paas-bootstrap-git
+    trigger: true
+    passed: [verify-cf-endpoints]
+  - get: cf-vars-s3  
+  - task: get management variables
+    file: paas-bootstrap-git/ci/tasks/get_management_vars/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      DOMAIN: ((domain))  
+  - task: create orgs spaces etc
+    file: paas-bootstrap-git/ci/tasks/management/task.yml
+    params:
+      ENVIRONMENT: ((environment))
