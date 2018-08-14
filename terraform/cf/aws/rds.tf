@@ -23,6 +23,7 @@ resource "aws_db_instance" "cf_rds" {
   storage_type              = "gp2"
   skip_final_snapshot       = true
   option_group_name         = "${aws_db_option_group.cf_rds_audit_logging.name}"
+  name                      = "paastest"
 
   tags {
     Name        = "${var.environment}-cf-rds"

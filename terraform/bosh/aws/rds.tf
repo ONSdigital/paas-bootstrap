@@ -22,6 +22,7 @@ resource "aws_db_instance" "bosh_rds" {
   storage_encrypted         = true
   storage_type              = "gp2"
   skip_final_snapshot       = true
+  name                      = "paastest"
 
   tags {
     Name        = "${var.environment}-bosh-rds"
