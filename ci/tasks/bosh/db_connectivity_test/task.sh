@@ -3,7 +3,7 @@
 set -euo pipefail
 
 set -a
-source bosh_vars/env
+source bosh-vars/env
 set +a
 
 : $USER_DB
