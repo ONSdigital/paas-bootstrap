@@ -427,10 +427,13 @@ jobs:
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-bosh]
-  - task: get-database-vars
+  - task: get database vars
     file: paas-bootstrap-git/ci/tasks/bosh/get_database_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
+  - task: bosh db connectivity test
+    file: paas-bootstrap-git/ci/tasks/bosh/db_connectivity_test/task.yml
+    timeout: 5m
   - put: databases-bosh-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/bosh-databases/aws

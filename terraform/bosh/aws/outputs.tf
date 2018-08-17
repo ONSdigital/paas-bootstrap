@@ -46,6 +46,10 @@ output "bosh_db_username" {
   value = "${aws_db_instance.bosh_rds.username}"
 }
 
+output "bosh_dummy_db" {
+  value = "${aws_db_instance.bosh_rds.name}"
+}
+
 output "bosh_db_type" {
   value = "${aws_db_instance.bosh_rds.engine}"
 }
