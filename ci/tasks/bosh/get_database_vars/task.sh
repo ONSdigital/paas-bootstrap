@@ -3,7 +3,7 @@
 set -euo pipefail
 
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars/vars.json
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < "bosh-tfstate-s3/${ENVIRONMENT}.tfstate" > bosh-vars/vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "bosh-terraform/terraform.tfstate" > bosh-vars/vars.json
 
 cat >bosh-vars/env <<-EOS
 USER_DB=$(jq -r .bosh_db_username < bosh-vars/vars.json)
