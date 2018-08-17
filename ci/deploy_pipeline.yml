@@ -424,7 +424,8 @@ jobs:
   - aggregate:
     - get: vpc-tfstate-s3
     - get: bosh-terraform
-      output_statefile: true
+      params:
+        output_statefile: true
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-bosh]
