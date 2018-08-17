@@ -98,3 +98,7 @@ output "nat_az3_private_ip" {
 output "concourse_role" {
   value = "${aws_iam_role_policy.concourse.role}"
 }
+
+output "vpc_dns_nameserver" {
+  value = "${var.vpc_dns_nameserver}"
+}

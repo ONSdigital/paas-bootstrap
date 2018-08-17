@@ -6,6 +6,10 @@
     type: vip
 
 - type: replace
+  path: /networks/name=default/subnets/0/dns/0:before
+  value: ((vpc_dns_nameserver))
+
+- type: replace
   path: /instance_groups/name=concourse/networks/-
   value:
     name: public
@@ -14,3 +18,4 @@
 - type: replace
   path: /cloud_provider/ssh_tunnel/host?
   value: ((concourse_direct_fqdn))
+
