@@ -1,0 +1,21 @@
+---
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/users/-
+  value:
+    groups:
+      - cloud_controller.admin
+      - doppler.firehose
+      - network.admin
+      - openid
+      - routing.router_groups.read
+      - routing.router_groups.write
+      - scim.read
+      - scim.write
+      name: admin
+      password: ((cf_test_user_password))
+
+- type: replace
+  path: /variables/-
+  value:
+    name: cf_test_user_password
+    type: password
