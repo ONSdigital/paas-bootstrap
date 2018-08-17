@@ -11,8 +11,8 @@
       - routing.router_groups.write
       - scim.read
       - scim.write
-      name: admin
-      password: ((cf_test_user_password))
+    name: admin
+    password: ((cf_test_user_password))
 
 - type: replace
   path: /variables/-
