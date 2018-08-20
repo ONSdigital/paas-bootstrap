@@ -156,16 +156,16 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
-- name: databases-bosh-terraform
-  type: terraform
-  source:
-    storage:
-      bucket: ons-paas-((environment))-states
-      bucket_path: bosh-databases/
-      use_ec2_role: true
-      region_name: ((region))
-      server_side_encryption: 'aws:kms'
-      sse_kms_key_id: ((s3_kms_key_id))
+# - name: databases-bosh-terraform
+#   type: terraform
+#   source:
+#     storage:
+#       bucket: ons-paas-((environment))-states
+#       bucket_path: bosh-databases/
+#       use_ec2_role: true
+#       region_name: ((region))
+#       server_side_encryption: 'aws:kms'
+#       sse_kms_key_id: ((s3_kms_key_id))
 
 - name: cf-terraform
   type: terraform
