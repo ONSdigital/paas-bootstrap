@@ -18,3 +18,4 @@ cd paas-bootstrap-git/profiles/${profile}
 cf-mgmt create-orgs
 cf-mgmt create-spaces
 cf-mgmt update-org-users
+cf-mgmt update-space-users
