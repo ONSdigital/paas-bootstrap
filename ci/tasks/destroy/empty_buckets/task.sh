@@ -17,15 +17,15 @@ function isVersioned {
   local version=$(aws s3api get-bucket-versioning --bucket "${bucket}" | jq -r '.Status')
   
   if [ "${version}" == "Enabled" ]; then
-    return 0
-  else
     return 1
+  else
+    return 0
   fi
 }
 
 function deleteFiles {
   local bucket=$1;
-  aws s3 rm s3://${bucket} --recursive --dryrun --verbose
+  aws s3 rm s3://${bucket} --recursive
 }
 
 function emptyBucket {
