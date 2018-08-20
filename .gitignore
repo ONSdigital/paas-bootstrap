@@ -16,3 +16,5 @@ foo.yml
 
 .vs
 .vs/*
+
+*.lock.info

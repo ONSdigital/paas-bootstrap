@@ -13,6 +13,10 @@ resource "aws_s3_bucket" "cf_buildpacks" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-buildpacks"
   acl    = "private"
 
+  versioning {
+    enabled = false
+  }
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -31,6 +35,10 @@ resource "aws_s3_bucket" "cf_buildpacks" {
 resource "aws_s3_bucket" "cf_droplets" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-droplets"
   acl    = "private"
+
+  versioning {
+    enabled = false
+  }
 
   server_side_encryption_configuration {
     rule {
@@ -51,6 +59,10 @@ resource "aws_s3_bucket" "cf_packages" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-packages"
   acl    = "private"
 
+  versioning {
+    enabled = false
+  }
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -70,6 +82,10 @@ resource "aws_s3_bucket" "cf_resource_pool" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-resource-pool"
   acl    = "private"
 
+  versioning {
+    enabled = false
+  }
+  
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {

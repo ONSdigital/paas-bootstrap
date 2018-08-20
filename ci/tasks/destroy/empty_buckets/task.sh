@@ -10,7 +10,23 @@ prefix=${ONS_PREFIX}-${ENVIRONMENT}-${NAMESPACE}
 
 NAMES=$(aws s3api list-buckets --query "Buckets[?starts_with(Name, '${prefix}')].Name" --output text)
 
-echo "Removing all versions from ${prefix}-* (${NAMES})"
+echo "Removing all files/versions from ${prefix}-* (${NAMES})"
+
+function isVersioned {
+  local bucket=$1;
+  local version=$(aws s3api get-bucket-versioning --bucket "${bucket}" | jq -r '.Status')
+  
+  if [ "${version}" == "Enabled" ]; then
+    return 1
+  else
+    return 0
+  fi
+}
+
+function deleteFiles {
+  local bucket=$1;
+  aws s3 rm s3://${bucket} --recursive
+}
 
 function emptyBucket {
 
@@ -49,5 +65,9 @@ function emptyBucket {
 
 for name in $NAMES
 do
+  if isVersioned ${name}; then
+    deleteFiles ${name}
+  else
     emptyBucket ${name}
+  fi
 done
