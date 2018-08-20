@@ -23,12 +23,13 @@ function isVersioned {
   fi
 }
 
-function deleteFiles {
+function emptyBucket {
+  echo "Emptying $1"
   local bucket=$1;
   aws s3 rm s3://${bucket} --recursive
 }
 
-function emptyBucket {
+function emptyVersionedBucket {
 
   echo "Emptying $1"
   local bucket=$1;
@@ -66,8 +67,8 @@ function emptyBucket {
 for name in $NAMES
 do
   if isVersioned ${name}; then
-    deleteFiles ${name}
-  else
     emptyBucket ${name}
+  else
+    emptyVersionedBucket ${name}
   fi
 done
