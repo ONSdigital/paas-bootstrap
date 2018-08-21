@@ -1,48 +1,15 @@
 ---
 - type: replace
-  path: /releases/-
-  value:
-    name: bosh-aws-cpi
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=60
-    sha1: 8e40a9ff892204007889037f094a1b0d23777058
+  path: /cloud_provider/ssh_tunnel/host
+  value: ((internal_ip))
 
 - type: replace
-  path: /resource_pools/name=vms/stemcell?
-  value:
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3363.15
-    sha1: 4a1eed3037a88a2b6516133d823cdb71bc9291c4
+  path: /cloud_provider/properties/aws/credentials_source?
+  value: env_or_profile
 
-# Configure AWS sizes
-- type: replace
-  path: /resource_pools/name=vms/cloud_properties?
-  value:
-    instance_type: t2.micro
-    ephemeral_disk: {size: 20_000}
-    availability_zone: ((az))
+- type: remove
+  path: /cloud_provider/properties/aws/access_key_id
 
-- type: replace
-  path: /networks/name=private/subnets/0/cloud_properties?
-  value: {subnet: ((subnet_id))}
+- type: remove
+  path: /cloud_provider/properties/aws/secret_access_key
 
-# Add CPI job
-- type: replace
-  path: /cloud_provider/template?
-  value:
-    name: aws_cpi
-    release: bosh-aws-cpi
-
-- type: replace
-  path: /cloud_provider/ssh_tunnel?
-  value:
-    host: ((internal_ip))
-    port: 22
-    user: vcap
-    private_key: ((private_key))
-
-- type: replace
-  path: /cloud_provider/properties/aws?
-  value:
-    credentials_source: env_or_profile
-    default_key_name: ((default_key_name))
-    default_security_groups: ((default_security_groups))
-    region: ((region))
