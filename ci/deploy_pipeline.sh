@@ -11,7 +11,6 @@ bin/login_fly.sh
 
 jumpbox_commit_ref="32c162b16f2a5a2639c78d905ba852487b93d507"
 bosh_commit_ref="04c85a5c79a9fa6b92775386a334104b9a165013"
-cf_commit_ref="521767df78b70219800df340fec40fb34b818b8a"
 prometheus_commit_ref="a381c0af550550fc1d740ef409c2e2f22a589202"
 cf_tag="v2.7.0"
 
