@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+- name: paas-bootstrap-git
+- name: cf-vars
+
+run:
+  path: paas-bootstrap-git/ci/tasks/cf/databases/db_connectivity_test/task.sh
+

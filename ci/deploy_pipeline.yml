@@ -156,16 +156,16 @@ resources:
       server_side_encryption: 'aws:kms'
       sse_kms_key_id: ((s3_kms_key_id))
 
-# - name: databases-bosh-terraform
-#   type: terraform
-#   source:
-#     storage:
-#       bucket: ons-paas-((environment))-states
-#       bucket_path: bosh-databases/
-#       use_ec2_role: true
-#       region_name: ((region))
-#       server_side_encryption: 'aws:kms'
-#       sse_kms_key_id: ((s3_kms_key_id))
+- name: databases-bosh-terraform
+  type: terraform
+  source:
+    storage:
+      bucket: ons-paas-((environment))-states
+      bucket_path: bosh-databases/
+      use_ec2_role: true
+      region_name: ((region))
+      server_side_encryption: 'aws:kms'
+      sse_kms_key_id: ((s3_kms_key_id))
 
 - name: cf-terraform
   type: terraform
@@ -485,6 +485,9 @@ jobs:
     file: paas-bootstrap-git/ci/tasks/cf/databases/get_database_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
+  - task: cf db connectivity test
+    file: paas-bootstrap-git/ci/tasks/cf/databases/db_connectivity_test/task.yml
+    timeout: 5m
   - put: cf-databases-terraform
     params:
       terraform_source: paas-bootstrap-git/terraform/cf-databases/aws

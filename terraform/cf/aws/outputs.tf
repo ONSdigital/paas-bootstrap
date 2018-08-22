@@ -101,3 +101,7 @@ output "cf_rds_client_security_group_id" {
 output "cf_traffic_controller_port" {
   value = "${aws_lb_listener.cf_4443.port}"
 }
+
+output "cf_dummy_db" {
+  value = "${aws_db_instance.cf_rds.name}"
+}
