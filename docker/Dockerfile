@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash jq netcat dnsutils curl postgresql-client \
+    bash jq netcat dnsutils curl postgresql-client mysql-client \
     build-essential zlibc zlib1g-dev ruby ruby-dev openssl \
     libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev \
     libsqlite3-dev sqlite3

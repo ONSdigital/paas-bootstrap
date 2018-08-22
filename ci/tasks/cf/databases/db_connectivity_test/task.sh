@@ -15,6 +15,6 @@ set +a
 set +e
 while :
 do
-  mysql -u $USER_DB -p $PASSWORD_DB -h $FQDN_DB $DUMMY_DB "select 1;" && break
+  mysql -u$USER_DB -p$PASSWORD_DB -h $FQDN_DB $DUMMY_DB <<<"select 1;" && break
   sleep 1
 done
