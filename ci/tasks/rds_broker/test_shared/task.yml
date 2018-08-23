@@ -8,6 +8,7 @@ image_resource:
 inputs:
   - name: paas-bootstrap-git
   - name: cf_user_credentials
+  - name: cf-tests-git
 
 run:
   path: paas-bootstrap-git/ci/tasks/rds_broker/test_shared/task.sh
