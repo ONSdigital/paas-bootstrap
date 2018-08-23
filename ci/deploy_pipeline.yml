@@ -477,7 +477,7 @@ jobs:
   plan:
   - aggregate:
     - get: vpc-tfstate-s3
-    - get: cf-tfstate-s3
+    - get: cf-terraform
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-cf]
