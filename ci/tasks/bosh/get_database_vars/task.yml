@@ -16,6 +16,3 @@ outputs:
 
 run:
   path: paas-bootstrap-git/ci/tasks/bosh/get_database_vars/task.sh
-
-params:
-  ENVIRONMENT:
