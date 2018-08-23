@@ -2,7 +2,8 @@ org: paas
 space: test
 space-developer:
   ldap_users: []
-  users: []
+  users:
+  - cf_test_user
   saml_users: []
   ldap_groups: []
 space-manager:
