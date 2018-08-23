@@ -1,10 +1,10 @@
 FROM ubuntu:16.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash jq netcat dnsutils curl postgresql-client mysql-client \
+    bash openssh-client jq netcat dnsutils curl wget postgresql-client mysql-client \
     build-essential zlibc zlib1g-dev ruby ruby-dev openssl \
     libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev \
-    libsqlite3-dev sqlite3
+    libsqlite3-dev sqlite3 
 
 RUN curl -Lo /usr/local/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-5.1.2-linux-amd64
 RUN chmod +x /usr/local/bin/bosh
