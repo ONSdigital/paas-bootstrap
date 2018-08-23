@@ -478,6 +478,9 @@ jobs:
   - aggregate:
     - get: vpc-tfstate-s3
     - get: cf-terraform
+      passed: [terraform-cf]
+      params:
+        output_statefile: true
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-cf]
