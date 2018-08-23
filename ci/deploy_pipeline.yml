@@ -54,6 +54,11 @@ resources:
   source:
     uri: https://github.com/bosh-prometheus/prometheus-boshrelease.git
 
+- name: cf-tests-git
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/cf-tests
+
 - name: jumpbox-terraform
   type: terraform
   source:
@@ -794,6 +799,7 @@ jobs:
       cf-acceptance-tests: cf-acceptance-tests-git
     params:
       CAPTURE_CONFIG: true
+      NODES: 6
     on_failure:
       put: slack-alert
       params:
@@ -895,6 +901,7 @@ jobs:
   serial: true
   serial_groups: [rds]
   plan:
+  - get: cf-tests-git
   - get: paas-bootstrap-git
     trigger: true
     passed: [cf-management]
