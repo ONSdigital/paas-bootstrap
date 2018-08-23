@@ -3,7 +3,7 @@
 set -euo pipefail
 
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars/vars.json
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-terraform/${ENVIRONMENT}.tfstate" > cf-vars/vars.json
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-terraform/terraform.tfstate" > cf-vars/vars.json
 
 cat >cf-vars/env <<-EOS
 USER_DB=$(jq -r .cf_db_username < cf-vars/vars.json)
