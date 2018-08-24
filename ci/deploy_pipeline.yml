@@ -17,6 +17,14 @@ resource_types:
     tag: latest
 
 resources:
+- name: trigger-weekday-morning
+  type: time
+  source:
+    start: 5:00 AM
+    stop: 5:05 AM
+    location: Europe/London
+    days: [Monday, Tuesday, Wednesday, Thursday, Friday]
+
 - name: paas-bootstrap-git
   type: git
   source:
@@ -344,6 +352,8 @@ jobs:
 - name: verify-concourse
   serial: true
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
   - get: paas-bootstrap-git
     trigger: true
   - get: concourse-tfstate-s3
@@ -384,8 +394,11 @@ jobs:
   - aggregate:
     - get: concourse-tfstate-s3
     - get: vpc-tfstate-s3
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-concourse]
     - get: paas-bootstrap-git
-      passed: [ verify-concourse ]
+      passed: [verify-concourse]
       trigger: true
   - task: get-terraform-vars
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
@@ -406,6 +419,9 @@ jobs:
     - get: jumpbox-terraform
     - get: vpc-tfstate-s3
     - get: jumpbox-tfstate-s3
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [terraform-jumpbox]
     - get: paas-bootstrap-git
       passed: [terraform-jumpbox]
       trigger: true
@@ -432,6 +448,9 @@ jobs:
       passed: [terraform-bosh]
       params:
         output_statefile: true
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [terraform-bosh]
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-bosh]
@@ -457,6 +476,9 @@ jobs:
     - get: jumpbox-tfstate-s3
     - get: bosh-tfstate-s3
     - get: concourse-tfstate-s3
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [terraform-bosh-databases]
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-bosh-databases]
@@ -484,6 +506,9 @@ jobs:
       passed: [terraform-cf]
       params:
         output_statefile: true
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [terraform-cf]
     - get: paas-bootstrap-git
       trigger: true
       passed: [terraform-cf]
@@ -504,6 +529,9 @@ jobs:
   serial: true
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [terraform-cf-databases]
   - get: paas-bootstrap-git
     trigger: true
     passed: [terraform-cf-databases]
@@ -524,6 +552,9 @@ jobs:
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-terraform-cf]
     - get: paas-bootstrap-git
       passed: [verify-terraform-cf]
       trigger: true
@@ -552,6 +583,9 @@ jobs:
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [terraform-prometheus]
     - get: paas-bootstrap-git
       passed: [terraform-prometheus]
       trigger: true
@@ -590,6 +624,9 @@ jobs:
   serial: true
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [create-jumpbox]
   - get: paas-bootstrap-git
     passed: [create-jumpbox]
     trigger: true
@@ -626,6 +663,9 @@ jobs:
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-jumpbox]
     - get: paas-bootstrap-git
       passed: [verify-jumpbox]
       trigger: true
@@ -667,6 +707,9 @@ jobs:
   serial: true
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [create-bosh]
   - get: paas-bootstrap-git
     passed: [create-bosh]
     trigger: true
@@ -681,6 +724,9 @@ jobs:
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-bosh]
     - get: paas-bootstrap-git
       trigger: true
       passed: [verify-bosh]
@@ -744,6 +790,9 @@ jobs:
   serial: true
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [deploy-cf]
   - get: paas-bootstrap-git
     passed: [deploy-cf]
     trigger: true
@@ -767,6 +816,9 @@ jobs:
   serial_groups: [smoke-tests]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-cf-endpoints]
     - get: paas-bootstrap-git
       passed: [verify-cf-endpoints]
       trigger: true
@@ -780,6 +832,9 @@ jobs:
   serial_groups: [cats]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-cf-endpoints]
     - get: paas-bootstrap-git
       trigger: true
       passed: [verify-cf-endpoints]
@@ -815,6 +870,9 @@ jobs:
   serial_groups: [prometheus]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-cf-endpoints]
     - get: paas-bootstrap-git
       trigger: true
       passed: [verify-cf-endpoints]
@@ -850,6 +908,9 @@ jobs:
   serial: true
   serial_groups: [prometheus]
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [deploy-prometheus]
   - get: paas-bootstrap-git
     passed: [deploy-prometheus]
     trigger: true
@@ -867,6 +928,9 @@ jobs:
   serial_groups: [prometheus]
   plan:
   - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-prometheus]
     - get: paas-bootstrap-git
       trigger: true
       passed: [verify-prometheus]
@@ -883,6 +947,9 @@ jobs:
   serial: true
   serial_groups: [rds]
   plan:
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [verify-cf-endpoints]
   - get: paas-bootstrap-git
     trigger: true
     passed: [verify-cf-endpoints]
@@ -902,6 +969,9 @@ jobs:
   serial_groups: [rds]
   plan:
   - get: cf-tests-git
+  - get: trigger-weekday-morning
+    trigger: true
+    passed: [cf-management]
   - get: paas-bootstrap-git
     trigger: true
     passed: [cf-management]

@@ -14,8 +14,8 @@ resources:
 - name: trigger-weekday-evening
   type: time
   source:
-    start: 11:05 AM
-    stop: 11:10 AM
+    start: 7:30 PM
+    stop: 8:00 PM
     location: Europe/London
     days: [Monday, Tuesday, Wednesday, Thursday, Friday]
 
