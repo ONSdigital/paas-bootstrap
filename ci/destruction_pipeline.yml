@@ -11,6 +11,14 @@ resource_types:
     repository: governmentpaas/s3-resource
 
 resources:
+- name: trigger-weekday-evening
+  type: time
+  source:
+    start: 11:05 AM
+    stop: 11:10 AM
+    location: Europe/London
+    days: [Monday, Tuesday, Wednesday, Thursday, Friday]
+
 - name: paas-bootstrap-git
   type: git
   source:
@@ -210,6 +218,8 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: trigger-weekday-evening
+      trigger: true
     - get: manual-force
       trigger: true
       passed: [trigger-destroy]
@@ -223,10 +233,10 @@ jobs:
     - get: jumpbox-tfstate-s3
     - get: concourse-tfstate-s3
     - get: prometheus-manifest-s3
-  # - task: destroy-prometheus
-  #   file: paas-bootstrap-git/ci/tasks/prometheus/destroy/task.yml
-  #   params:
-  #     ENVIRONMENT: ((environment))
+  - task: destroy-prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/destroy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
   - task: empty-buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
@@ -256,6 +266,9 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: trigger-weekday-evening
+      trigger: true
+      passed: [destroy-prometheus]
     - get: manual-force
       trigger: true
       passed: [destroy-prometheus]
@@ -266,10 +279,10 @@ jobs:
     - get: concourse-tfstate-s3
     - get: bosh-tfstate-s3
     - get: jumpbox-tfstate-s3
-  # - task: destroy-cf
-  #   file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
-  #   params:
-  #     ENVIRONMENT: ((environment))
+  - task: destroy-cf
+    file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
   - task: empty-buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
@@ -298,6 +311,9 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: trigger-weekday-evening
+      trigger: true
+      passed: [destroy-cf]
     - get: manual-force
       trigger: true
       passed: [destroy-cf]
@@ -313,12 +329,12 @@ jobs:
     file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
-  # - task: destroy-bosh
-  #   file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
-  #   on_success:
-  #     put: bosh-state-s3
-  #     params:
-  #       file: bosh-state/bosh-state.json
+  - task: destroy-bosh
+    file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
+    on_success:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
   - task: empty-buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
@@ -346,6 +362,9 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: trigger-weekday-evening
+      trigger: true
+      passed: [destroy-bosh]
     - get: manual-force
       trigger: true
       passed: [destroy-bosh]
