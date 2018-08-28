@@ -213,6 +213,7 @@ jobs:
   plan:
   - get: manual-force
     trigger: false
+    
 - name: destroy-prometheus
   serial_groups: [destruction]
   serial: true
@@ -237,6 +238,7 @@ jobs:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: prometheus
+
 - name: destroy-cf
   serial_groups: [destruction]
   serial: true
@@ -261,6 +263,7 @@ jobs:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: cf
+
 - name: destroy-bosh
   serial_groups: [destruction]
   serial: true
@@ -287,6 +290,7 @@ jobs:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: bosh
+
 - name: destroy-jumpbox
   serial_groups: [destruction]
   serial: true
@@ -315,6 +319,7 @@ jobs:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: jumpbox
+
 - name: terraform-destroy
   serial_groups: [destruction]
   serial: true
