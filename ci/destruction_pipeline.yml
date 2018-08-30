@@ -296,16 +296,52 @@ jobs:
       params:
         file: jumpbox-state/jumpbox-state.json
 
+- name: delete-buckets
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - get: manual-force
+    trigger: true
+    passed: [destroy-jumpbox]
+  - get: trigger-weekday-evening
+    trigger: true
+    passed: [destroy-jumpbox]
+  - get: paas-bootstrap-git
+  - task: prometheus-empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: prometheus
+  - task: cf-empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: cf
+  - task: bosh-empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: bosh
+  - task: jumpbox-empty-buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: jumpbox
+
 - name: terraform-destroy
   serial_groups: [destruction]
   serial: true
   plan:
   - get: trigger-weekday-evening
     trigger: true
-    passed: [destroy-jumpbox]
+    passed: [delete-buckets]
   - get: manual-force
     trigger: true
-    passed: [destroy-jumpbox]
+    passed: [delete-buckets]
   - aggregate:
     - get: paas-bootstrap-git
     - get: vpc-tfstate-s3
@@ -385,38 +421,3 @@ jobs:
     get_params:
       action: destroy
 
-- name: delete-buckets
-  serial_groups: [destruction]
-  serial: true
-  plan:
-  - get: manual-force
-    trigger: true
-    passed: [terraform-destroy]
-  - get: trigger-weekday-evening
-    trigger: true
-    passed: [terraform-destroy]
-  - get: paas-bootstrap-git
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: prometheus
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: cf
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: bosh
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: jumpbox
