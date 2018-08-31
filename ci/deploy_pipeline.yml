@@ -21,7 +21,7 @@ resources:
   type: time
   source:
     start: 5:00 AM
-    stop: 5:05 AM
+    stop: 10:05 AM
     location: Europe/London
     days: [Monday, Tuesday, Wednesday, Thursday, Friday]
 
@@ -56,7 +56,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
-    
+
 - name: prometheus-deployment-git
   type: git
   source:
@@ -953,12 +953,12 @@ jobs:
   - get: paas-bootstrap-git
     trigger: true
     passed: [verify-cf-endpoints]
-  - get: cf-vars-s3  
+  - get: cf-vars-s3
   - task: get management variables
     file: paas-bootstrap-git/ci/tasks/cf/get_management_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
-      DOMAIN: ((domain))  
+      DOMAIN: ((domain))
   - task: create orgs spaces etc
     file: paas-bootstrap-git/ci/tasks/cf/management/task.yml
     params:
@@ -979,6 +979,6 @@ jobs:
   - task: get cf credentials
     file: paas-bootstrap-git/ci/tasks/common/get_cf_tester_credentials/task.yml
     params:
-      DOMAIN: ((domain)) 
+      DOMAIN: ((domain))
   - task: create service and test useability
     file: paas-bootstrap-git/ci/tasks/rds_broker/test_shared/task.yml
