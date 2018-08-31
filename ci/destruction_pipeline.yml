@@ -33,7 +33,7 @@ resources:
 - name: manual-force
   type: time
   source:
-    interval: 24000h
+    interval: 1m
 
 - name: jumpbox-terraform
   type: terraform
@@ -192,7 +192,7 @@ resources:
     versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
- 
+
 - name: prometheus-manifest-s3
   type: s3-iam
   source:
@@ -212,17 +212,101 @@ jobs:
   serial: true
   plan:
   - get: manual-force
+    trigger: false
 
 - name: destroy-prometheus
   serial_groups: [destruction]
   serial: true
   plan:
+  - get: manual-force
+    trigger: true
+    passed: [trigger-destroy]
+  - get: trigger-weekday-evening
+    trigger: true
   - aggregate:
-    - get: trigger-weekday-evening
-      trigger: true
-    - get: manual-force
-      trigger: true
-      passed: [trigger-destroy]
+    - get: paas-bootstrap-git
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
+    - get: prometheus-manifest-s3
+  - task: destroy-prometheus
+    file: paas-bootstrap-git/ci/tasks/prometheus/destroy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+
+- name: destroy-cf
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - get: trigger-weekday-evening
+    trigger: true
+    passed: [destroy-prometheus]
+  - get: manual-force
+    trigger: true
+    passed: [destroy-prometheus]
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: bosh-vars-s3
+    - get: bosh-manifest-s3
+  - task: destroy-cf
+    file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+
+- name: destroy-bosh
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - get: trigger-weekday-evening
+    trigger: true
+    passed: [destroy-cf]
+  - get: manual-force
+    trigger: true
+    passed: [destroy-cf]
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: bosh-state-s3
+    - get: bosh-manifest-s3
+  - task: destroy-bosh
+    file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
+    on_success:
+      put: bosh-state-s3
+      params:
+        file: bosh-state/bosh-state.json
+
+- name: destroy-jumpbox
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - get: trigger-weekday-evening
+    trigger: true
+    passed: [destroy-bosh]
+  - get: manual-force
+    trigger: true
+    passed: [destroy-bosh]
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: jumpbox-state-s3
+    - get: jumpbox-manifest-s3
+  - task: destroy-jumpbox
+    file: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+    on_success:
+      put: jumpbox-state-s3
+      params:
+        file: jumpbox-state/jumpbox-state.json
+
+- name: terraform-destroy
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - get: trigger-weekday-evening
+    trigger: true
+    passed: [destroy-jumpbox]
+  - get: manual-force
+    trigger: true
+    passed: [destroy-jumpbox]
+  - aggregate:
     - get: paas-bootstrap-git
     - get: vpc-tfstate-s3
     - get: bosh-tfstate-s3
@@ -233,17 +317,12 @@ jobs:
     - get: jumpbox-tfstate-s3
     - get: concourse-tfstate-s3
     - get: prometheus-manifest-s3
-  - task: destroy-prometheus
-    file: paas-bootstrap-git/ci/tasks/prometheus/destroy/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: prometheus
-  - task: get_terraform_vars
+    - get: bosh-deployment-git
+      version: { ref: ((bosh_commit_ref)) }
+    - get: bosh-state-s3
+    - get: jumpbox-state-s3
+    - get: jumpbox-manifest-s3
+  - task: Prometheus - get vars for destruction
     file: paas-bootstrap-git/ci/tasks/prometheus/get_terraform_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
@@ -260,36 +339,7 @@ jobs:
       action: destroy
     get_params:
       action: destroy
-
-- name: destroy-cf
-  serial_groups: [destruction]
-  serial: true
-  plan:
-  - aggregate:
-    - get: trigger-weekday-evening
-      trigger: true
-      passed: [destroy-prometheus]
-    - get: manual-force
-      trigger: true
-      passed: [destroy-prometheus]
-    - get: paas-bootstrap-git
-    - get: bosh-vars-s3
-    - get: bosh-manifest-s3
-    - get: vpc-tfstate-s3
-    - get: concourse-tfstate-s3
-    - get: bosh-tfstate-s3
-    - get: jumpbox-tfstate-s3
-  - task: destroy-cf
-    file: paas-bootstrap-git/ci/tasks/cf/destroy/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: cf
-  - task: get_terraform_vars
+  - task: CF - get vars for destruction
     file: paas-bootstrap-git/ci/tasks/cf/get_terraform_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
@@ -305,43 +355,7 @@ jobs:
       action: destroy
     get_params:
       action: destroy
-
-- name: destroy-bosh
-  serial_groups: [destruction]
-  serial: true
-  plan:
-  - aggregate:
-    - get: trigger-weekday-evening
-      trigger: true
-      passed: [destroy-cf]
-    - get: manual-force
-      trigger: true
-      passed: [destroy-cf]
-    - get: paas-bootstrap-git
-    - get: bosh-deployment-git
-      version: { ref: ((bosh_commit_ref)) }
-    - get: bosh-state-s3
-    - get: bosh-manifest-s3
-    - get: vpc-tfstate-s3
-    - get: concourse-tfstate-s3
-    - get: jumpbox-tfstate-s3
-  - task: get-terraform-vars
-    file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-  - task: destroy-bosh
-    file: paas-bootstrap-git/ci/tasks/bosh/destroy/task.yml
-    on_success:
-      put: bosh-state-s3
-      params:
-        file: bosh-state/bosh-state.json
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: bosh
-  - task: get_terraform_vars
+  - task: Bosh - get vars for destruction
     file: paas-bootstrap-git/ci/tasks/bosh/get_terraform_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
@@ -356,38 +370,7 @@ jobs:
       action: destroy
     get_params:
       action: destroy
-
-- name: destroy-jumpbox
-  serial_groups: [destruction]
-  serial: true
-  plan:
-  - aggregate:
-    - get: trigger-weekday-evening
-      trigger: true
-      passed: [destroy-bosh]
-    - get: manual-force
-      trigger: true
-      passed: [destroy-bosh]
-    - get: paas-bootstrap-git
-    - get: jumpbox-state-s3
-    - get: jumpbox-manifest-s3
-    - get: vpc-tfstate-s3
-    - get: concourse-tfstate-s3
-  - task: destroy-jumpbox
-    file: paas-bootstrap-git/ci/tasks/jumpbox/destroy/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-    on_success:
-      put: jumpbox-state-s3
-      params:
-        file: jumpbox-state/jumpbox-state.json
-  - task: empty-buckets
-    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
-    params:
-      ONS_PREFIX: ons-paas
-      ENVIRONMENT: ((environment))
-      NAMESPACE: jumpbox
-  - task: get_terraform_vars
+  - task: Jumpbox - get vars for destruction
     file: paas-bootstrap-git/ci/tasks/jumpbox/get_terraform_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
@@ -401,3 +384,39 @@ jobs:
       action: destroy
     get_params:
       action: destroy
+
+- name: delete-buckets
+  serial_groups: [destruction]
+  serial: true
+  plan:
+  - get: manual-force
+    trigger: true
+    passed: [terraform-destroy]
+  - get: trigger-weekday-evening
+    trigger: true
+    passed: [terraform-destroy]
+  - get: paas-bootstrap-git
+  - task: empty prometheus buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: prometheus
+  - task: empty cf buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: cf
+  - task: empty bosh buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: bosh
+  - task: empty jumpbox buckets
+    file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
+    params:
+      ONS_PREFIX: ons-paas
+      ENVIRONMENT: ((environment))
+      NAMESPACE: jumpbox
