@@ -192,7 +192,7 @@ resources:
     versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
- 
+
 - name: prometheus-manifest-s3
   type: s3-iam
   source:
@@ -213,7 +213,7 @@ jobs:
   plan:
   - get: manual-force
     trigger: false
-    
+
 - name: destroy-prometheus
   serial_groups: [destruction]
   serial: true
@@ -396,25 +396,25 @@ jobs:
     trigger: true
     passed: [terraform-destroy]
   - get: paas-bootstrap-git
-  - task: empty-buckets
+  - task: empty prometheus buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: prometheus
-  - task: empty-buckets
+  - task: empty cf buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: cf
-  - task: empty-buckets
+  - task: empty bosh buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
       ONS_PREFIX: ons-paas
       ENVIRONMENT: ((environment))
       NAMESPACE: bosh
-  - task: empty-buckets
+  - task: empty jumpbox buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
     params:
       ONS_PREFIX: ons-paas
