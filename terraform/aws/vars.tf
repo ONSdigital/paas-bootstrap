@@ -1,26 +1,19 @@
-variable "region" {
-  default = "eu-west-1"
-}
+variable "region" {}
 
 variable "environment" {}
 
 variable "parent_dns_zone" {}
 
+variable "cidr_block" {}
+
 variable "ingress_whitelist" {
   type    = "list"
-  default = ["0.0.0.0/0"]
+  default = []
 }
 
-variable "az1" {
-  default = "eu-west-1a"
-}
-
-variable "az2" {
-  default = "eu-west-1b"
-}
-
-variable "az3" {
-  default = "eu-west-1c"
+variable "availability_zones" {
+  type = "list"
+  default = []
 }
 
 variable "s3_prefix" {
