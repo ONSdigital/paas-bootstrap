@@ -10,7 +10,7 @@ DB_HOST=$(bin/outputs.sh rds | jq -r .bosh_db_host)
 DB_PORT=$(bin/outputs.sh rds | jq -r .bosh_db_port)
 DB_PASS=$(bin/outputs.sh rds | jq -r .bosh_rds_password)
 JUMPBOX_IP=$(bin/outputs.sh | jq -r .jumpbox_public_ip)
-KEYFILE=~/.ssh/jumpbox.$$.pem
+KEYFILE=~/.ssh/$ENVIRONMENT.jumpbox.$$.pem
 bin/outputs.sh | jq -r .jumpbox_private_key >$KEYFILE
 chmod 600 $KEYFILE
 
