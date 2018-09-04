@@ -1,5 +1,6 @@
 
 .EXPORT_ALL_VARIABLES:
+.PHONY: terraform
 
 # Environment variables that you have to set yourself:
 #
@@ -9,66 +10,27 @@
 
 # You could override these, but you really shouldn't
 VAR_FILE = ${ENVIRONMENT}_vpc.tfvars
-VPC_STATE_FILE = ${ENVIRONMENT}_vpc.tfstate.json
-CONCOURSE_TERRAFORM_STATE_FILE = ${ENVIRONMENT}_concourse.tfstate.json
-CONCOURSE_STATE_FILE = ${ENVIRONMENT}_concourse.state.json
-CONCOURSE_CREDS_FILE = ${ENVIRONMENT}_concourse.creds.yml
-PRIVATE_KEY_FILE = ${ENVIRONMENT}_concourse.pem
-PUBLIC_KEY_FILE = ${PRIVATE_KEY_FILE}.pub
-
-## FIXME: delete
-JUMPBOX_TERRAFORM_STATE_FILE = ${ENVIRONMENT}_jumpbox.tfstate.json
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-require_vars:
-	@bin/require_vars.sh
+terraform: ## create main terraform environment
+	@bin/terraform.sh apply
 
-vpc: require_vars ## Setup a VPC to deploy concourse to
-	@bin/create_vpc.sh
+terraform_init: ## initialize terraform provider
+	@terraform init terraform/base	
 
-keypair: ## Create the SSH key pair used to log into the VMs
-	@bin/create_ssh_keypair.sh
+terraform_plan: ## plan what would be applied if we ran make terraform
+	@bin/terraform.sh plan
 
-concourse_network: vpc keypair ## Setup networks for concourse to consume
-	@bin/create_concourse_network.sh
+destroy_terraform: ## destroy main terraform environment
+	@bin/terraform.sh destroy
 
-concourse: concourse_network ## Deploy concourse with all prereqs
-	@bin/deploy_concourse.sh
+outputs: ## base terraform outputs
+	@bin/outputs.sh
 
-concourse_password: ## Retrieves the concourse password for a given environment
-	@bin/concourse_creds.sh
-
-concourse_login: require_vars ## Logs fly into concourse
-	@bin/login_fly.sh
-
-prometheus_credentials: ## Get credentials for prometheus stack
-	@bin/prometheus_credentials.sh
-
-test_pipeline: require_vars ## Deploy a test pipeline to concourse
-	@test/deploy_test_pipeline.sh
-
-test_s3_pipeline: require_vars ## Deploy a pipeline that tests S3 access to concourse
-	@test/deploy_s3_test_pipeline.sh
-
-deploy_pipeline: require_vars ## Deploy the CF deployment pipeline
-	@ci/deploy_pipeline.sh
-
-destruction_pipeline: require_vars ## Deploy the CF destruction pipeline
-	@ci/destruction_pipeline.sh
-
-docker_image:  ## Build the general-purpose tooled docker image for Concourse tasks
-	@bin/create_docker_image.sh
-
-destroy: destroy_concourse_network ## Destroy an entire environment
-	@bin/delete_vpc.sh
-
-destroy_concourse_network: destroy_concourse ## Destroy concourse and its network
-	@bin/delete_concourse_network.sh
-
-destroy_concourse: require_vars ## Destroy concourse only
-	@bin/delete_concourse.sh
+rds: ## create rds instances
+	@bin/rds.sh apply
 
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .

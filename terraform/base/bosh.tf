@@ -51,6 +51,26 @@ resource "aws_iam_role_policy" "bosh" {
 
   policy = "${data.template_file.iam_policy.rendered}"
 }
+
+# S3
+resource "aws_s3_bucket_object" "bosh-var-store" {
+  bucket                 = "${aws_s3_bucket.paas_states.id}"
+  acl                    = "private"
+  key                    = "bosh/bosh-variables.yml"
+  source                 = "/dev/null"
+  server_side_encryption = "aws:kms"
+  kms_key_id             = "${aws_kms_key.paas_state_key.arn}"
+}
+
+resource "aws_s3_bucket_object" "bosh-state" {
+  bucket                 = "${aws_s3_bucket.paas_states.id}"
+  acl                    = "private"
+  key                    = "bosh/bosh-state.json"
+  content                = "{}"
+  server_side_encryption = "aws:kms"
+  kms_key_id             = "${aws_kms_key.paas_state_key.arn}"
+}
+
 # SG
 resource "aws_security_group_rule" "allow-all" {
   security_group_id = "${aws_security_group.bosh.id}"
@@ -189,4 +209,23 @@ resource "aws_security_group" "bosh_rds" {
     Name        = "${var.environment}-bosh-rds-security-group"
     Environment = "${var.environment}"
   }
+}
+resource "aws_security_group_rule" "allow_postgres_from_concourse" {
+  security_group_id        = "${aws_security_group.bosh_rds.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.bosh_rds_port}"
+  to_port                  = "${var.bosh_rds_port}"
+  source_security_group_id = "${aws_security_group.concourse.id}"
+  description              = "Provide ingress PostgreSQL traffic from Concourse"
+}
+
+resource "aws_security_group_rule" "allow_postgres_from_bosh" {
+  security_group_id        = "${aws_security_group.bosh_rds.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.bosh_rds_port}"
+  to_port                  = "${var.bosh_rds_port}"
+  source_security_group_id = "${aws_security_group.bosh.id}"
+  description              = "Provide ingress PostgreSQL traffic from BOSH"
 }
