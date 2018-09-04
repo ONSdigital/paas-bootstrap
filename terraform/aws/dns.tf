@@ -1,7 +1,3 @@
-data "aws_route53_zone" "parent" {
-  name = "${var.parent_dns_zone}."
-}
-
 resource "aws_route53_zone" "child_zone" {
   name = "${var.environment}.${data.aws_route53_zone.parent.name}"
 
