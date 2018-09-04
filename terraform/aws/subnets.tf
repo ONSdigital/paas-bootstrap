@@ -2,7 +2,7 @@
 resource "aws_subnet" "public" {
   count = "${local.num_azs}"
   vpc_id            = "${aws_vpc.default.id}"
-  cidr_block        = "${cidrsubnet(aws_vpc.default.cidr_block, 8, count.index+local.public_subnet_offset)}"
+  cidr_block        = "${element(local.public_subnets, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
@@ -15,7 +15,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "internal" {
   count = "${local.num_azs}"
   vpc_id            = "${aws_vpc.default.id}"
-  cidr_block        = "${cidrsubnet(aws_vpc.default.cidr_block, 8, count.index+local.internal_subnet_offset)}"
+  cidr_block        = "${element(local.internal_subnets, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
@@ -28,7 +28,7 @@ resource "aws_subnet" "internal" {
 resource "aws_subnet" "services" {
   count = "${local.num_azs}"
   vpc_id            = "${aws_vpc.default.id}"
-  cidr_block        = "${cidrsubnet(aws_vpc.default.cidr_block, 8, count.index+local.services_subnet_offset)}"
+  cidr_block        = "${element(local.services_subnets, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
