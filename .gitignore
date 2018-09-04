@@ -19,3 +19,4 @@ foo.yml
 
 *.lock.info
 **/.DS_Store
+data/**

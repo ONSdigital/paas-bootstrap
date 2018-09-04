@@ -4,4 +4,6 @@ set -euo pipefail
 
 : $ENVIRONMENT
 
-terraform output -state="$ENVIRONMENT.tfstate" -json | jq '. | with_entries(.value = .value.value)'
+STEP=${1:+-$1}
+
+terraform output -state="data/$ENVIRONMENT$STEP.tfstate" -json | jq '. | with_entries(.value = .value.value)'

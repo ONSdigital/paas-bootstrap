@@ -12,6 +12,6 @@ terraform init terraform/rds
 
 terraform $COMMAND \
   $OPTS \
-  -var-file="$ENVIRONMENT.tfvars" \
+  -var-file="data/$ENVIRONMENT.tfvars" \
   -var-file=<(bin/outputs.sh) \
-  -state="$ENVIRONMENT-rds.tfstate" terraform/rds/
+  -state="data/$ENVIRONMENT-rds.tfstate" terraform/rds/
