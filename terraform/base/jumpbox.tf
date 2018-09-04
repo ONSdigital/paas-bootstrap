@@ -9,3 +9,66 @@ resource "aws_security_group" "jumpbox" {
     Environment = "${var.environment}"
   }
 }
+resource "aws_security_group_rule" "jumpbox_ssh" {
+  security_group_id = "${aws_security_group.jumpbox.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 22
+  to_port           = 22
+  cidr_blocks       = "${var.ingress_whitelist}"
+}
+
+resource "aws_security_group_rule" "allow_jumpbox_to_postgres" {
+  security_group_id        = "${aws_security_group.jumpbox.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.bosh_rds_port}"
+  to_port                  = "${var.bosh_rds_port}"
+  source_security_group_id = "${aws_security_group.bosh_rds.id}"
+  description              = "Provide egress PostgreSQL traffic from jumpbox"
+}
+
+# SSH
+resource "tls_private_key" "jumpbox" {
+  algorithm   = "RSA"
+  rsa_bits = "2048"
+}
+
+resource "aws_key_pair" "jumpbox" {
+  key_name = "${var.environment}-jumpbox"
+  public_key = "${tls_private_key.jumpbox.public_key_openssh}"
+}
+# instance
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
+resource "aws_instance" "jumpbox" {
+  ami           = "${data.aws_ami.ubuntu.id}"
+  instance_type = "t2.micro"
+  key_name = "${aws_key_pair.jumpbox.key_name}"
+  subnet_id = "${aws_subnet.public.0.id}"
+  vpc_security_group_ids = ["${aws_security_group.jumpbox.id}"]
+
+  tags {
+    Name        = "${var.environment}-jumpbox"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_eip" "jumpbox" {
+  instance = "${aws_instance.jumpbox.id}"
+  vpc      = true
+}

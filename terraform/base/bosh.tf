@@ -229,3 +229,13 @@ resource "aws_security_group_rule" "allow_postgres_from_bosh" {
   source_security_group_id = "${aws_security_group.bosh.id}"
   description              = "Provide ingress PostgreSQL traffic from BOSH"
 }
+
+resource "aws_security_group_rule" "allow_postgres_from_jumpbox" {
+  security_group_id        = "${aws_security_group.bosh_rds.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "${var.bosh_rds_port}"
+  to_port                  = "${var.bosh_rds_port}"
+  source_security_group_id = "${aws_security_group.jumpbox.id}"
+  description              = "Provide ingress PostgreSQL traffic from jumpbox"
+}

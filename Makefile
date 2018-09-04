@@ -32,6 +32,9 @@ outputs: ## base terraform outputs
 rds: ## create rds instances
 	@bin/rds.sh apply
 
+databases: ## create databases
+	@bin/databases.sh
+
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 
