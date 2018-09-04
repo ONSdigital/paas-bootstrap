@@ -23,3 +23,7 @@ variable "s3_prefix" {
 variable "cidr_blocks" {
   type = "map"
 }
+
+variable "bosh_rds_port" {
+  default = "5432"
+}

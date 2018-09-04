@@ -37,3 +37,16 @@ resource "aws_subnet" "services" {
     Visibility  = "private"
   }
 }
+
+resource "aws_subnet" "rds" {
+  count = "${local.num_azs}"
+  vpc_id            = "${aws_vpc.default.id}"
+  cidr_block        = "${element(local.rds_subnets, count.index)}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
+
+  tags {
+    Name        = "${var.environment}-rds-az${count.index+1}-subnet"
+    Environment = "${var.environment}"
+    Visibility  = "private"
+  }
+}
