@@ -2,6 +2,9 @@ output "bosh_db_type" {
   value = "${aws_db_instance.bosh_rds.engine}"
 }
 
+output "bosh_rds_fqdn" {
+  value = "${aws_db_instance.bosh_rds.address}"
+}
 output "bosh_db_host" {
   value = "${aws_db_instance.bosh_rds.address}"
 }

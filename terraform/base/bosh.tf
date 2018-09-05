@@ -110,6 +110,15 @@ resource "aws_security_group_rule" "bosh_uaa_concourse" {
   source_security_group_id = "${aws_security_group.concourse.id}"
 }
 
+resource "aws_security_group_rule" "bosh_mbus_jumpbox" {
+  security_group_id        = "${aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 6868
+  to_port                  = 6868
+  source_security_group_id = "${aws_security_group.jumpbox.id}"
+}
+
 resource "aws_security_group_rule" "bosh_uaa_jumpbox" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
@@ -238,4 +247,15 @@ resource "aws_security_group_rule" "allow_postgres_from_jumpbox" {
   to_port                  = "${var.bosh_rds_port}"
   source_security_group_id = "${aws_security_group.jumpbox.id}"
   description              = "Provide ingress PostgreSQL traffic from jumpbox"
+}
+
+# BOSH default key pair
+resource "tls_private_key" "bosh" {
+  algorithm   = "RSA"
+  rsa_bits = "2048"
+}
+
+resource "aws_key_pair" "bosh" {
+  key_name = "${var.environment}-bosh"
+  public_key = "${tls_private_key.bosh.public_key_openssh}"
 }

@@ -28,6 +28,16 @@ resource "aws_security_group_rule" "allow_jumpbox_to_postgres" {
   description              = "Provide egress PostgreSQL traffic from jumpbox"
 }
 
+resource "aws_security_group_rule" "allow_jumpbox_to_the_world" {
+  security_group_id        = "${aws_security_group.jumpbox.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port = "0"
+  to_port = "65535"
+  cidr_blocks              = ["0.0.0.0/0"]
+  description              = "Sod it, let jumpbox see the world"
+}
+
 # SSH
 resource "tls_private_key" "jumpbox" {
   algorithm   = "RSA"
@@ -61,6 +71,7 @@ resource "aws_instance" "jumpbox" {
   key_name = "${aws_key_pair.jumpbox.key_name}"
   subnet_id = "${aws_subnet.public.0.id}"
   vpc_security_group_ids = ["${aws_security_group.jumpbox.id}"]
+  user_data = "${data.template_cloudinit_config.jumpbox.rendered}"
 
   tags {
     Name        = "${var.environment}-jumpbox"
@@ -71,4 +82,20 @@ resource "aws_instance" "jumpbox" {
 resource "aws_eip" "jumpbox" {
   instance = "${aws_instance.jumpbox.id}"
   vpc      = true
+}
+
+data "template_file" "jumpbox_cloudinit" {
+  template = "${file("${path.module}/templates/jumpbox_init.cfg")}"
+}
+
+data "template_cloudinit_config" "jumpbox" {
+
+  gzip = false
+  base64_encode = false
+
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = "${data.template_file.jumpbox_cloudinit.rendered}"
+  }
 }

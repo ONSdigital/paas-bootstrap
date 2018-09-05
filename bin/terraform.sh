@@ -9,4 +9,4 @@ OPTS=
 [ "$COMMAND" = plan ] || OPTS=-auto-approve
 
 terraform init terraform/base
-terraform $COMMAND $OPTS -var-file="data/$ENVIRONMENT.tfvars" -state="data/$ENVIRONMENT.tfstate" terraform/base/
+terraform $COMMAND $OPTS -var-file="data/$ENVIRONMENT.tfvars" -state="data/$ENVIRONMENT-base.tfstate" terraform/base/
