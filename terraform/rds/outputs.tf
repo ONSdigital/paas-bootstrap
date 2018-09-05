@@ -40,6 +40,10 @@ output "cf_rds_fqdn" {
   value = "${aws_db_instance.cf_rds.address}"
 }
 
+output "cf_db_host" {
+  value = "${aws_db_instance.cf_rds.address}"
+}
+
 output "cf_db_endpoint" {
   value = "${aws_db_instance.cf_rds.endpoint}"
 }

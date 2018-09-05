@@ -2,6 +2,10 @@ output "vpc_dns_nameserver" {
   value = "${cidrhost(aws_vpc.default.cidr_block, 2)}"
 }
 
+output "domain" {
+  value = "${replace(aws_route53_zone.child_zone.name, "/\\.$/", "")}"
+}
+
 output "bosh_rds_security_group_id" {
     value = "${aws_security_group.bosh_rds.id}"
 }
@@ -73,9 +77,9 @@ output "internal_subnet_gateway_ips" {
 #                    so you will have to change this if you add more AZs
 output "internal_subnet_reserved_cidr_blocks" {
   value = [
-      "${cidrsubnet(aws_subnet.internal.*.cidr_block[0],8,0)}",
-      "${cidrsubnet(aws_subnet.internal.*.cidr_block[1],8,0)}",
-      "${cidrsubnet(aws_subnet.internal.*.cidr_block[2],8,0)}"
+      "${cidrsubnet(aws_subnet.internal.*.cidr_block[0],7,0)}",
+      "${cidrsubnet(aws_subnet.internal.*.cidr_block[1],7,0)}",
+      "${cidrsubnet(aws_subnet.internal.*.cidr_block[2],7,0)}"
   ]
 }
 
@@ -113,4 +117,27 @@ output "cf_s3_iam_instance_profile" {
 
 output "cf_rds_client_security_group_id" {
   value = "${aws_security_group.cf_rds_client.id}"
+}
+
+output "cf_buildpacks_bucket_name" {
+  value = "${aws_s3_bucket.cf_buildpacks.id}"
+}
+
+output "cf_droplets_bucket_name" {
+  value = "${aws_s3_bucket.cf_droplets.id}"
+}
+
+output "cf_resource_pool_bucket_name" {
+  value = "${aws_s3_bucket.cf_resource_pool.id}"
+}
+
+output "cf_packages_bucket_name" {
+  value = "${aws_s3_bucket.cf_packages.id}"
+}
+output "cf_blobstore_s3_kms_key_id" {
+  value = "${aws_kms_key.cf_blobstore_key.id}"
+}
+
+output "cf_blobstore_s3_kms_key_arn" {
+  value = "${aws_kms_key.cf_blobstore_key.arn}"
 }

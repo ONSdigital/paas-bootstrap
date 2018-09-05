@@ -27,6 +27,9 @@ variable "cidr_blocks" {
 variable "bosh_rds_port" {
   default = "5432"
 }
+variable "cf_rds_port" {
+  default = "3306"
+}
 
 variable "bosh_availability_zone_index" {
   default = "0"

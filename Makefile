@@ -38,8 +38,14 @@ databases: ## create databases
 bosh: ## create bosh
 	@bin/create_bosh.sh
 
+runtime_config: ## Deploy runtime config
+	@bin/runtime_config.sh
+
 cloud_config: ## Deploy cloud config	
 	@bin/cloud_config.sh
+
+stemcells: ## Upload stemcells
+	@bin/stemcells.sh
 
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
