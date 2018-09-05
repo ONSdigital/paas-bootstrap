@@ -13,10 +13,13 @@ bosh int \
   bosh-deployment/bosh.yml \
   --vars-store data/$ENVIRONMENT-bosh-variables.yml \
   -o bosh-deployment/aws/cpi.yml \
+  -o bosh-deployment/uaa.yml \
+  -o bosh-deployment/credhub.yml \
   -o bosh-deployment/misc/external-db.yml \
   -o operations/bosh/tags.yml \
-  -o operations/bosh/dns-resolution.yml \
   -o operations/bosh/certificate.yml \
+  -o operations/bosh/external-uaa-db.yml \
+  -o operations/bosh/external-credhub-db.yml \
   -v director_name=bosh \
   -v internal_cidr="$(output base .bosh_subnet_cidr_block)" \
   -v internal_gw="$(output base .bosh_gateway_ip)" \
@@ -40,7 +43,6 @@ bosh int \
   -v access_key_id="$AWS_ACCESS_KEY_ID" \
   -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
   > data/$ENVIRONMENT-bosh-manifest.yml
-
 
 JUMPBOX_IP=$(output base .jumpbox_public_ip)
 JUMPBOX_KEY=~/.ssh/$ENVIRONMENT.jumpbox.$$.pem
