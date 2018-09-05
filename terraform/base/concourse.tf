@@ -9,3 +9,8 @@ resource "aws_security_group" "concourse" {
     Environment = "${var.environment}"
   }
 }
+
+# IP
+resource "aws_eip" "concourse" {
+  vpc = true
+}

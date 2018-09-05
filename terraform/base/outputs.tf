@@ -55,3 +55,62 @@ output "bosh_private_key" {
     value = "${tls_private_key.bosh.private_key_pem}"
 }
 
+output "cf_rds_security_group_id" {
+  value = "${aws_security_group.cf_rds.id}"
+}
+
+# NASTY HACK ALERT - we cannot find a way in terraform to perform an action on all elements of a list
+#                    so you will have to change this if you add more AZs
+output "internal_subnet_gateway_ips" {
+  value = [
+      "${cidrhost(aws_subnet.internal.*.cidr_block[0],1)}",
+      "${cidrhost(aws_subnet.internal.*.cidr_block[1],1)}",
+      "${cidrhost(aws_subnet.internal.*.cidr_block[2],1)}"
+  ]
+}
+
+# NASTY HACK ALERT - we cannot find a way in terraform to perform an action on all elements of a list
+#                    so you will have to change this if you add more AZs
+output "internal_subnet_reserved_cidr_blocks" {
+  value = [
+      "${cidrsubnet(aws_subnet.internal.*.cidr_block[0],8,0)}",
+      "${cidrsubnet(aws_subnet.internal.*.cidr_block[1],8,0)}",
+      "${cidrsubnet(aws_subnet.internal.*.cidr_block[2],8,0)}"
+  ]
+}
+
+output "internal_subnet_ids" {
+    value = ["${aws_subnet.internal.*.id}"]
+}
+
+output "internal_subnet_cidr_blocks" {
+    value = ["${aws_subnet.internal.*.cidr_block}"]
+}
+
+output "cf_internal_security_group_id" {
+    value = "${aws_security_group.internal.id}"
+}
+
+output "cf_router_target_group_name" {
+  value = "${aws_lb_target_group.cf.name}"
+}
+
+output "cf_router_lb_internal_security_group_id" {
+  value = "${aws_security_group.cf_router_lb_internal_security_group.id}"
+}
+
+output "cf_ssh_internal_security_group_id" {
+  value = "${aws_security_group.cf_ssh_internal.id}"
+}
+
+output "cf_ssh_lb_name" {
+  value = "${aws_elb.cf-ssh-lb.name}"
+}
+
+output "cf_s3_iam_instance_profile" {
+  value = "${aws_iam_instance_profile.s3_blobstore.name}"
+}
+
+output "cf_rds_client_security_group_id" {
+  value = "${aws_security_group.cf_rds_client.id}"
+}

@@ -31,3 +31,4 @@ variable "bosh_rds_port" {
 variable "bosh_availability_zone_index" {
   default = "0"
 }
+
