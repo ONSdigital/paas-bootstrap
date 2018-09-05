@@ -28,6 +28,16 @@ resource "aws_security_group_rule" "allow_jumpbox_to_postgres" {
   description              = "Provide egress PostgreSQL traffic from jumpbox"
 }
 
+resource "aws_security_group_rule" "allow_jumpbox_to_mysql" {
+  security_group_id        = "${aws_security_group.jumpbox.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "${var.cf_rds_port}"
+  to_port                  = "${var.cf_rds_port}"
+  source_security_group_id = "${aws_security_group.cf_rds.id}"
+  description              = "Provide egress MySQL traffic from jumpbox"
+}
+
 resource "aws_security_group_rule" "allow_jumpbox_to_the_world" {
   security_group_id        = "${aws_security_group.jumpbox.id}"
   type                     = "egress"

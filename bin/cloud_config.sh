@@ -11,7 +11,9 @@ output() {
     bin/outputs.sh $FILE | jq -r "$QUERY"
 }
 
-bin/bosh_credentials.sh -e $ENVIRONMENT bosh update-cloud-config -n \
+BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
+
+$BOSH update-cloud-config -n \
   ./cloud-config/cf/cloud-config.yml \
   -o ./operations/cloud-config/router-extensions.yml \
   -o ./operations/cloud-config/cf-scheduler-extensions.yml \
@@ -51,4 +53,4 @@ bin/bosh_credentials.sh -e $ENVIRONMENT bosh update-cloud-config -n \
 #   -v prometheus_target_group_name="$(jq -r .prometheus_target_group_name < prometheus-vars.json)" \
 #   -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)" 
 
-bin/bosh_credentials.sh -e $ENVIRONMENT bosh cloud-config > data/$ENVIRONMENT-cloud-config.yml
+$BOSH cloud-config > data/$ENVIRONMENT-cloud-config.yml
