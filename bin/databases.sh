@@ -56,7 +56,7 @@ create_bosh credhub
 create_cf uaa
 create_cf cc
 create_cf bbs
-create_cf routing
+create_cf routing_api
 create_cf policy_server
 create_cf silk_controller
 create_cf locket
