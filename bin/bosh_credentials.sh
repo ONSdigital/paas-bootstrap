@@ -41,11 +41,8 @@ trap cleanup EXIT
 
 export BOSH_CLIENT=admin
 export BOSH_CLIENT_SECRET=$(bosh int --path /admin_password "data/$ENVIRONMENT-bosh-variables.yml")
-export BOSH_ENVIRONMENT="$ENVIRONMENT"
+export BOSH_ENVIRONMENT=$(bin/outputs.sh base | jq -r .bosh_private_ip)
 export BOSH_ALL_PROXY=ssh+socks5://ubuntu@$JUMPBOX_IP:22?private-key=$JUMPBOX_KEY
-
-DIRECTOR_IP=$(bin/outputs.sh base | jq -r .bosh_private_ip)
-bosh alias-env "${ENVIRONMENT}" -e "${DIRECTOR_IP}"
 
 if [ -n "$COMMAND" ]; then
   ""$COMMAND""
