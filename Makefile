@@ -35,6 +35,9 @@ rds: ## create rds instances
 databases: ## create databases
 	@bin/databases.sh
 
+bosh: ## create bosh
+	@bin/create_bosh.sh
+
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 

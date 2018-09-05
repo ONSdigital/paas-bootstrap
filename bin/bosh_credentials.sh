@@ -1,87 +1,56 @@
 #!/bin/bash
 #
 # This script will set up a connection to a BOSH environment for you:
-#
-# - downloads from S3 the environment state files
-# - sets up an SSH socks5 proxy (listening on BOSH_PROXY_PORT)
-# - runs `bosh alias-env <env>`
-# - exports the BOSH_CLIENT, BOSH_CLIENT_SECRET and BOSH_ALL_PROXY environment variables
-#
-# You can either run it in the foreground (-f), or source the script. In the first case, 
-# you will run in a subshell and everything will be cleaned up when you exit that shell.
-# In the second, you are responsible for killing the SSH proxy.
 
 usage() {
-    echo "Usage: [source] $(basename $0) -e <env> [-p ssh_port] [-f] [command]"
+    echo "Usage: [source] $(basename $0) -e <env> [command]"
     echo
     echo "Options:"
     echo "          -e  Connect to this environment, e.g. eng2 (ENVIRONMENT)"
-    echo "          -p  Have SSH proxy listen on this port (BOSH_PROXY_PORT)"
-    echo "          -f  Run this session in a shell, when you exit, the SSH proxy will be killed"
     echo
     echo "              If you specify a command, it will run, then detach the proxy"
+    echo "              otherwise, you will be placed in a shell with the environment set"
     exit 1
 }
 
-: ${BOSH_PROXY_PORT:=30123}
-FOREGROUND=false
 
-while getopts 'e:p:f' option; do
+while getopts 'e:f' option; do
   case $option in
     e) ENVIRONMENT="$OPTARG";;
-    p) BOSH_PROXY_PORT="$OPTARG";;
-    f) FOREGROUND=true;;
     *) usage;;
   esac
 done
+export ENVIRONMENT
 
 shift $((OPTIND-1))
 COMMAND=$*
 
-VARS=/var/tmp/tmp$$
-mkdir -p "$VARS"
-trap 'rm -rf "$VARS"' EXIT
+JUMPBOX_IP=$(bin/outputs.sh base | jq -r .jumpbox_public_ip)
+JUMPBOX_KEY=~/.ssh/$ENVIRONMENT.jumpbox.$$.pem
+bin/outputs.sh base | jq -r .jumpbox_private_key >$JUMPBOX_KEY
+chmod 600 $JUMPBOX_KEY
+export BOSH_CA_CERT=/var/tmp/bosh_ca.$$.pem
+bosh int --path /default_ca/ca "data/$ENVIRONMENT-bosh-variables.yml" >$BOSH_CA_CERT
 
-aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/vpc/tfstate.json" "$VARS/"
-aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/jumpbox/jumpbox-variables.yml" "$VARS/"
-aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/bosh/bosh-variables.yml" "$VARS/"
-aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/bosh/bosh.yml" "$VARS/"
-bosh int --path /jumpbox_ssh/private_key "$VARS/jumpbox-variables.yml" > "$VARS/jumpbox.key"
-jq '.modules[0].outputs | with_entries(.value = .value.value)' < "$VARS/tfstate.json" > "$VARS/vars.json"
+cleanup() {
+  rm -f $JUMPBOX_KEY
+  rm -f $BOSH_CA_CERT
+}
+trap cleanup EXIT
 
-ZONE=$(jq -r '.dns_zone' < "$VARS/vars.json" | sed 's/\.$//')
-JUMPBOX_TARGET="jumpbox.${ZONE}"
-chmod 600 "$VARS/jumpbox.key"
-DIRECTOR_IP=$(bosh int --path '/cloud_provider/ssh_tunnel/host' "$VARS/bosh.yml")
 
-if ! netstat -na | grep -q "127.0.0.1.${BOSH_PROXY_PORT}.*LISTEN"; then
-  ssh -4 -D $BOSH_PROXY_PORT -fNC jumpbox@${JUMPBOX_TARGET} -i "${VARS}/jumpbox.key" && STARTED_SSH=true
-fi
-
-bosh int --path /default_ca/ca "$VARS/bosh-variables.yml" > "${VARS}/bosh_ca.pem"
-export BOSH_CA_CERT="${VARS}/bosh_ca.pem"
 export BOSH_CLIENT=admin
-export BOSH_CLIENT_SECRET=$(bosh int --path /admin_password "$VARS/bosh-variables.yml")
-export BOSH_ALL_PROXY="socks5://localhost:$BOSH_PROXY_PORT"
+export BOSH_CLIENT_SECRET=$(bosh int --path /admin_password "data/$ENVIRONMENT-bosh-variables.yml")
 export BOSH_ENVIRONMENT="$ENVIRONMENT"
+export BOSH_ALL_PROXY=ssh+socks5://ubuntu@$JUMPBOX_IP:22?private-key=$JUMPBOX_KEY
 
+DIRECTOR_IP=$(bin/outputs.sh base | jq -r .bosh_private_ip)
 bosh alias-env "${ENVIRONMENT}" -e "${DIRECTOR_IP}"
 
-kill_tunnel() {
-  if [ -n "$STARTED_SSH" ]; then
-    echo "Killing the SSH proxy on $BOSH_PROXY_PORT"
-    kill $(ps -ef | awk "/ssh -4 -D $BOSH_PROXY_PORT/ && ! /awk/ { print \$2 }")
-  fi
-}
-
-if [ "$FOREGROUND" = true -o -n "$COMMAND" ]; then
-  trap 'kill_tunnel' EXIT
-fi
-
-if [ "$FOREGROUND" = true ]; then
+if [ -n "$COMMAND" ]; then
+  ""$COMMAND""
+else
   echo "OK, you are set up"
   export PS1="BOSH<$ENVIRONMENT>:\W \u\$ "
   bash
-elif [ -n "$COMMAND" ]; then
-  ""$COMMAND""
 fi
