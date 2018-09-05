@@ -38,3 +38,7 @@
 - type: replace
   path: /instance_groups/name=tcp-router/instances
   value: ((tcp-router-instance-count))
+- type: replace
+  path: /instance_groups/name=credhub/instances
+  value: ((credhub-instance-count))
+

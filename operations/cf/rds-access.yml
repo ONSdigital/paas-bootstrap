@@ -17,3 +17,7 @@
 - type: replace
   path: /instance_groups/name=diego-api/vm_extensions?/-
   value: cf-rds-sec-group
+
+- type: replace
+  path: /instance_groups/name=credhub/vm_extensions?/-
+  value: cf-rds-sec-group

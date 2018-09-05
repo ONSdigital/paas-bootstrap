@@ -21,13 +21,12 @@ CF_DB_ENDPOINT="$(output rds .cf_rds_fqdn)"
 CF_DB_USERNAME="$(output rds .cf_db_username)"
 CF_DB_PASSWORD="$(output rds .cf_rds_password)"
 
-if [[ ${ENVIRONMENT} = "eng"* ]]; then
-  profile="engineering"
-else
-  profile="${ENVIRONMENT}"
-fi
+profile="${ENVIRONMENT}"
+[ -d "profiles/${ENVIRONMENT}" ] || profile="engineering"
+
 instance_count_file=./profiles/${profile}/instance-count.yml
 
+echo "Interpolating"
 bosh int \
   ./cf-deployment/cf-deployment.yml \
   --vars-store data/$ENVIRONMENT-cf-variables.yml \
@@ -35,9 +34,8 @@ bosh int \
   -o cf-deployment/operations/aws.yml \
   -o cf-deployment/operations/override-app-domains.yml \
   -o cf-deployment/operations/use-external-blobstore.yml \
-  -o cf-deployment/operations/use-external-dbs.yml \  
+  -o cf-deployment/operations/use-external-dbs.yml \
   -o ./operations/bosh/tags.yml \
-  -o ./operations/cf/stemcells.yml \
   -o ./operations/cf/router-sec-group.yml \
   -o ./operations/cf/scheduler.yml \
   -o ./operations/cf/s3_blobstore_with_kms_and_iam.yml \
@@ -86,7 +84,13 @@ bosh int \
   -v external_locket_database_address="${CF_DB_ENDPOINT}" \
   -v external_locket_database_password="${CF_DB_PASSWORD}" \
   -v external_locket_database_username="${CF_DB_USERNAME}" \
-    > cf-manifests/cf.yml
-\
+  -v external_credhub_database_name="credhub" \
+  -v external_credhub_database_address="${CF_DB_ENDPOINT}" \
+  -v external_credhub_database_password="${CF_DB_PASSWORD}" \
+  -v external_credhub_database_username="${CF_DB_USERNAME}" \
+  > data/$ENVIRONMENT-cf-manifest.yml
+
+echo "Deploying"
+$BOSH deploy -n -d cf data/$ENVIRONMENT-cf-manifest.yml
 
 # -o prometheus-deployment-git/manifests/operators/cf/add-prometheus-uaa-clients.yml \

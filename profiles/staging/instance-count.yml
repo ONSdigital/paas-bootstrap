@@ -12,3 +12,4 @@ adapter-instance-count: 3
 doppler-instance-count: 3
 log-api-instance-count: 3
 tcp-router-instance-count: 3
+credhub-instance-count: 3

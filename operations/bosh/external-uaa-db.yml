@@ -1,0 +1,14 @@
+---
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaadb
+  value:
+    address: ((external_db_host))
+    port: ((external_db_port))
+    db_scheme: ((external_db_adapter))
+    databases:
+    - tag: uaa
+      name: uaa
+    roles:
+    - tag: admin
+      name: ((external_db_user))
+      password: ((external_db_password))

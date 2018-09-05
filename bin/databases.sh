@@ -60,3 +60,4 @@ create_cf routing
 create_cf policy_server
 create_cf silk_controller
 create_cf locket
+create_cf credhub
