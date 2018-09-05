@@ -3,7 +3,7 @@ resource_types:
 - name: terraform
   type: docker-image
   source:
-    repository: robertgruber/terraform-resource
+    repository: onsdigital/terraform-resource
 
 - name: s3-iam
   type: docker-image
@@ -192,7 +192,7 @@ resources:
     versioned_file: cf/((environment)).tfstate
     server_side_encryption: 'aws:kms'
     sse_kms_key_id: ((s3_kms_key_id))
- 
+
 - name: prometheus-manifest-s3
   type: s3-iam
   source:
@@ -213,7 +213,7 @@ jobs:
   plan:
   - get: manual-force
     trigger: false
-    
+
 - name: destroy-prometheus
   serial_groups: [destruction]
   serial: true
@@ -420,4 +420,3 @@ jobs:
       action: destroy
     get_params:
       action: destroy
-
