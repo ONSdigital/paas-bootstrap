@@ -47,6 +47,9 @@ cloud_config: ## Deploy cloud config
 stemcells: ## Upload stemcells
 	@bin/stemcells.sh
 
+cf: ## Deploy CF
+	@bin/deploy_cf.sh
+	
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 
