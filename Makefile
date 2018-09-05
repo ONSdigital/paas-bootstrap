@@ -38,6 +38,9 @@ databases: ## create databases
 bosh: ## create bosh
 	@bin/create_bosh.sh
 
+cloud_config: ## Deploy cloud config	
+	@bin/cloud_config.sh
+
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 
