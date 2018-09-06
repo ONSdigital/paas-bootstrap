@@ -370,35 +370,16 @@ resource "aws_security_group" "cf_ssh_lb" {
   }
 }
 
-resource "aws_security_group_rule" "allow_tcp_2222_from_whitelist" {
-  security_group_id = "${aws_security_group.cf_ssh_lb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 2222
-  to_port           = 2222
-  cidr_blocks       = ["${var.ingress_whitelist}"]
-  description       = "Allow SSH proxy traffic from whitelist"
-}
-
 resource "aws_security_group_rule" "allow_tcp_2222_from_nat_gateways" {
   security_group_id = "${aws_security_group.cf_ssh_lb.id}"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 2222
   to_port           = 2222
-  cidr_blocks       = ["${formatlist("%s/32", aws_nat_gateway.nat.*.public_ip)}"]
+  cidr_blocks       = ["${local.loadbalancer_whitelist}"]
   description       = "Allow SSH proxy traffic from internal components"
 }
 
-resource "aws_security_group_rule" "allow_tcp_2222_from_concourse" {
-  security_group_id = "${aws_security_group.cf_ssh_lb.id}"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 2222
-  to_port           = 2222
-  cidr_blocks       = ["${aws_eip.concourse.public_ip}/32"]
-  description       = "Allow SSH proxy traffic from Concourse"
-}
 
 resource "aws_security_group_rule" "allow_tcp_2222_to_proxies" {
   security_group_id        = "${aws_security_group.cf_ssh_lb.id}"

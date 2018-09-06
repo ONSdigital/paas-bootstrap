@@ -5,52 +5,47 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-# BOSH create-env still requires the access credentials, rather than AWS_PROFILE
-if [ -n "${AWS_PROFILE:-}" ]; then
-  export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
-  export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
-fi
-: $AWS_ACCESS_KEY_ID
-: $AWS_SECRET_ACCESS_KEY
-: $CONCOURSE_TERRAFORM_STATE_FILE
-: $CONCOURSE_STATE_FILE
-: $CONCOURSE_CREDS_FILE
-: $PRIVATE_KEY_FILE
 
-git submodule update --init
+output() {
+    FILE=$1
+    QUERY=$2
 
-# Convert the terraform outputs to YAML
-_vars_file=tmp.$$.yml
-trap 'rm -f $_vars_file' EXIT
-terraform output -state="$CONCOURSE_TERRAFORM_STATE_FILE" -json | jq 'with_entries(.value = .value.value)' | yq r - >"$_vars_file"
+    bin/outputs.sh $FILE | jq -r "$QUERY"
+}
 
-SUBMODULE=concourse-bosh-deployment
+secret() {
+  KEY=$1
+  bin/secret.sh -e $ENVIRONMENT -d cf -k $KEY
+}
 
-aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" "${CONCOURSE_CREDS_FILE}" ||
-  echo "Remote concourse creds do not exist, assuming they need to be generated"
+BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 
-aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/concourse/state.json" "${CONCOURSE_STATE_FILE}" ||
-  echo "Remote concourse state does not exist, assuming this is a new deployment"
+CREDHUB_CA_CERT=/var/tmp/credhub_ca.$$.pem
+bosh int --path /credhub_ca/ca "data/$ENVIRONMENT-bosh-variables.yml" >$CREDHUB_CA_CERT
+CREDHUB_SERVER=https://$(output base .bosh_private_ip):8844
+CREDHUB_CLIENT=credhub-admin
+CREDHUB_SECRET=$(bosh int --path /credhub_admin_client_secret "data/$ENVIRONMENT-bosh-variables.yml")
 
-bosh create-env "$SUBMODULE"/lite/concourse.yml \
-  -o "$SUBMODULE"/lite/infrastructures/aws.yml \
-  -o operations/concourse/public-network.yml \
-  -o operations/concourse/basic-auth.yml \
-  -o operations/concourse/alb.yml \
-  -o operations/concourse/fqdn.yml \
-  -o operations/concourse/iam_instance_profile.yml \
-  -o operations/concourse/ephemeral_disk.yml \
-  -o operations/concourse/tags.yml \
-  -l "$SUBMODULE"/versions.yml \
-  -l "$_vars_file" \
-  -v environment="$ENVIRONMENT" \
-  -v access_key_id="$AWS_ACCESS_KEY_ID" \
-  -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
-  --var-file private_key="$PRIVATE_KEY_FILE" \
-  --vars-store "$CONCOURSE_CREDS_FILE" \
-  --state "$CONCOURSE_STATE_FILE"
+cleanup() {
+  rm -f $CREDHUB_CA_CERT
+}
+trap cleanup EXIT
 
-aws s3 cp "${CONCOURSE_CREDS_FILE}" "s3://ons-paas-${ENVIRONMENT}-states/concourse/creds.yml" --acl=private
-aws s3 cp "${CONCOURSE_STATE_FILE}" "s3://ons-paas-${ENVIRONMENT}-states/concourse/state.json" --acl=private
-
-
+$BOSH -d concourse deploy -n concourse-bosh-deployment/cluster/concourse.yml \
+  -l concourse-bosh-deployment/versions.yml \
+  -o concourse-bosh-deployment/cluster/operations/credhub.yml \
+  -o ./operations/concourse/alb.yml \
+  -o ./operations/concourse/tags.yml \
+  -o ./operations/concourse/local-auth.yml \
+  -v environment=$ENVIRONMENT \
+  -v external_url=https://$(output base .concourse_fqdn) \
+  -v network_name=concourse \
+  -v web_vm_type=concourse \
+  -v db_vm_type=concourse \
+  -v db_persistent_disk_type=10GB \
+  -v worker_vm_type=concourse \
+  -v deployment_name=concourse \
+  -v credhub_url="$CREDHUB_SERVER" \
+  -v credhub_client_id="$CREDHUB_CLIENT" \
+  -v credhub_client_secret="$CREDHUB_SECRET" \
+  --var-file credhub_ca_cert="$CREDHUB_CA_CERT"

@@ -7,10 +7,11 @@ locals {
   services_subnets = "${var.cidr_blocks["services"]}"
   rds_subnets = "${var.cidr_blocks["rds"]}"
   prometheus_subnets = "${var.cidr_blocks["prometheus"]}"
+  concourse_subnets = "${var.cidr_blocks["concourse"]}"
   bosh_subnet_id = "${aws_subnet.internal.*.id[var.bosh_availability_zone_index]}"
 
   bosh_subnet_cidr_block = "${aws_subnet.internal.*.cidr_block[var.bosh_availability_zone_index]}"
   bosh_private_ip = "${cidrhost(aws_subnet.internal.*.cidr_block[var.bosh_availability_zone_index], 6)}"
   bosh_gateway_ip = "${cidrhost(aws_subnet.internal.*.cidr_block[var.bosh_availability_zone_index], 1)}"
-  loadbalancer_whitelist = ["${concat(var.ingress_whitelist,formatlist("%s/32", concat(list(aws_eip.concourse.public_ip), aws_nat_gateway.nat.*.public_ip)))}"]
+  loadbalancer_whitelist = ["${concat(var.ingress_whitelist,formatlist("%s/32", aws_nat_gateway.nat.*.public_ip))}"]
 }

@@ -10,5 +10,5 @@ cat $CATS_CONFIG_FILE | jq "
 .api = \"api.system.${DOMAIN}\" | 
 .apps_domain = \"apps.${DOMAIN}\" |
 .admin_user = \"admin\" |
-.admin_password = \"${CF_ADMIN_PASSWORD}\"
+.admin_password = \"${ADMIN_PASSWORD}\"
 " > integration-config/integration_config.json

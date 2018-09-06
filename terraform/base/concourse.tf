@@ -101,8 +101,6 @@ resource "aws_security_group_rule" "jumpbox_ssh_concourse" {
   source_security_group_id = "${aws_security_group.concourse.id}"
 }
 
-
-
 resource "aws_security_group_rule" "concourse_outbound" {
   security_group_id = "${aws_security_group.concourse.id}"
   type              = "egress"
@@ -110,6 +108,33 @@ resource "aws_security_group_rule" "concourse_outbound" {
   from_port         = 0
   to_port           = 0
   cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "concourse_rule_tcp" {
+  security_group_id = "${aws_security_group.concourse.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 0
+  to_port           = 65535
+  self              = true
+}
+
+resource "aws_security_group_rule" "concourse_rule_udp" {
+  security_group_id = "${aws_security_group.concourse.id}"
+  type              = "ingress"
+  protocol          = "udp"
+  from_port         = 0
+  to_port           = 65535
+  self              = true
+}
+
+resource "aws_security_group_rule" "concourse_rule_icmp" {
+  security_group_id = "${aws_security_group.concourse.id}"
+  type              = "ingress"
+  protocol          = "icmp"
+  from_port         = -1
+  to_port           = -1
+  self              = true
 }
 
 resource "aws_security_group" "concourse_alb" {
@@ -129,7 +154,7 @@ resource "aws_security_group_rule" "concourse_alb_https" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = "${var.ingress_whitelist}"
+  cidr_blocks       = ["${local.loadbalancer_whitelist}"]
 }
 
 resource "aws_security_group_rule" "concourse_alb_to_web" {

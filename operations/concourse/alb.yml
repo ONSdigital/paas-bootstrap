@@ -1,4 +1,4 @@
 ---
 - type: replace
-  path: /resource_pools/name=vms/cloud_properties/lb_target_groups?
-  value: [((concourse_alb_target_group))]
+  path: /instance_groups/name=web/vm_extensions?/-
+  value: concourse_web

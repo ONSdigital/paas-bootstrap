@@ -1,0 +1,45 @@
+---
+resources:
+- name: paas-bootstrap-git
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/paas-bootstrap.git
+    branch: ((branch))
+
+- name: cf-deployment-concourse-tasks-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+
+- name: cf-acceptance-tests-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+
+
+jobs:
+- name: cats
+  serial: true
+  serial_groups: [cats]
+  plan:
+  - aggregate:
+    - get: paas-bootstrap-git
+    - get: cf-deployment-concourse-tasks-git
+    - get: cf-acceptance-tests-git
+  - task: interpolate CATS config
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
+    params:
+      DOMAIN: ((domain))
+      ENVIRONMENT: ((environment))
+      CATS_CONFIG_FILE: paas-bootstrap-git/profiles/staging/cats_config.json
+      CF_ADMIN_PASSWORD: ((/bosh/cf/cf_admin_password))
+  - task: run CATS tests
+    file: cf-deployment-concourse-tasks-git/run-cats/task.yml
+    input_mapping:
+      cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
+      cf-acceptance-tests: cf-acceptance-tests-git
+    params:
+      CAPTURE_CONFIG: true
+      NODES: 6
+
+
