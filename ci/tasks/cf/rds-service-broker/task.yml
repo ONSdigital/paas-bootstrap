@@ -7,6 +7,7 @@ image_resource:
 inputs:
   - name: paas-bootstrap-git
   - name: cf_user_credentials
+  - name: rds-broker-git
 
 run:
   path: paas-bootstrap-git/ci/tasks/cf/rds-service-broker/task.sh

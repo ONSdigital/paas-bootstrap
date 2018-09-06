@@ -349,6 +349,11 @@ resources:
   source:
     url: ((slack_webhook_uri))
 
+- name: rds-broker-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-community/rds-broker.git
+
 jobs:
 - name: verify-concourse
   serial: true
@@ -812,7 +817,6 @@ jobs:
         QUERY_PATH: /info
         REQUIRE_JSON: true
 
-### our stuff
 - name: cf-management
   serial: true
   serial_groups: [rds]
@@ -834,7 +838,7 @@ jobs:
     params:
       ENVIRONMENT: ((environment))
 
-- name: create-rds-service-brokers
+- name: create-rds-service-broker
   serial: true
   serial_groups: [service-brokers]
   plan:
@@ -844,6 +848,7 @@ jobs:
   - get: paas-bootstrap-git
     passed: [cf-management]
     trigger: true
+  - get: rds-broker-git
   - get: cf-vars-s3 
   - task: get cf credentials
     file: paas-bootstrap-git/ci/tasks/common/get_cf_tester_credentials/task.yml
@@ -866,10 +871,10 @@ jobs:
   - get: cf-tests-git
   - get: trigger-weekday-morning
     trigger: true
-    passed: [create-rds-service-brokers]
+    passed: [create-rds-service-broker]
   - get: paas-bootstrap-git
     trigger: true
-    passed: [create-rds-service-brokers]
+    passed: [create-rds-service-broker]
   - get: cf-vars-s3
   - task: get cf credentials
     file: paas-bootstrap-git/ci/tasks/common/get_cf_tester_credentials/task.yml
