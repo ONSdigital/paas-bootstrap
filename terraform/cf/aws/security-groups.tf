@@ -105,6 +105,15 @@ resource "aws_security_group_rule" "internal_rule_allow_internet" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "internal_to_service_broker_postgres" {
+  security_group_id = "${aws_security_group.internal.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.cf_service_brokers.id}"
+}
+
 resource "aws_security_group_rule" "cf_from_bosh_rule_tcp_ssh" {
   security_group_id        = "${aws_security_group.internal.id}"
   type                     = "ingress"
