@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # This script will set up a connection to a BOSH environment for you:
-
 usage() {
     echo "Usage: [source] $(basename $0) -e <env> [command]"
     echo
@@ -41,7 +40,7 @@ cleanup() {
   rm -f $UAA_CA_CERT
 
   if [ -n "$STARTED_SSH" ]; then
-    echo "Killing the SSH proxy on $PROXY_PORT"
+    [ -z "$COMMAND" ] && echo "Killing the SSH proxy on $PROXY_PORT"    
     kill $(ps -ef | awk "/ssh -4 -D $PROXY_PORT/ && ! /awk/ { print \$2 }")
   fi
 }
@@ -55,6 +54,7 @@ export CREDHUB_SERVER=https://$(bin/outputs.sh base | jq -r .bosh_private_ip):88
 export CREDHUB_CLIENT=credhub-admin
 export CREDHUB_SECRET=$(bosh int --path /credhub_admin_client_secret "data/$ENVIRONMENT-bosh-variables.yml")
 export HTTPS_PROXY=socks5://localhost:$PROXY_PORT
+credhub login --skip-tls-validation >/dev/null
 
 if [ -n "$COMMAND" ]; then
   ""$COMMAND""

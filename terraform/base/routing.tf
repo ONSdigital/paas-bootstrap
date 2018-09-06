@@ -57,3 +57,9 @@ resource "aws_route_table_association" "services" {
   subnet_id      = "${element(aws_subnet.services.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.az.*.id, count.index)}"
 }
+
+resource "aws_route_table_association" "prometheus" {
+  count = "${local.num_azs}"
+  subnet_id      = "${element(aws_subnet.prometheus.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.az.*.id, count.index)}"
+}

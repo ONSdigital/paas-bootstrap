@@ -49,7 +49,13 @@ stemcells: ## Upload stemcells
 
 cf: ## Deploy CF
 	@bin/deploy_cf.sh
-	
+
+prometheus: ## Deploy Prometheus
+	@bin/deploy_prometheus.sh
+
+concourse: ## Deploy concourse
+	@bin/deploy_concourse.sh	
+
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 
