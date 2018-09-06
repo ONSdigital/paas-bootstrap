@@ -113,6 +113,13 @@ or
   # it also sets BOSH_CLIENT, BOSH_CLIENT_SECRET environment variables
 ```
 
+## Versions
+
+concourse     v4.1.0
+cf            v4.0.0
+bosh          v1.1.0
+prometheus    v23.2.0
+
 ## LICENCE
 
 Copyright (c) 2018 Crown Copyright (Office for National Statistics)
