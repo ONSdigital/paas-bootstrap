@@ -21,11 +21,11 @@
   value:
     name: concourse
     network: concourse
-    ephemeral_disk:
-      size: 100_000
-      type: gp2
     cloud_properties:
       instance_type: c5.large
+      ephemeral_disk:
+        size: 100_000
+        type: gp2
 
 - type: replace
   path: /vm_extensions/-

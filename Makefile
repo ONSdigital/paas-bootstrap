@@ -59,6 +59,9 @@ concourse: ## Deploy concourse
 login_fly: ## Log in to fly
 	@bin/login_fly.sh
 
+set_concourse_secrets: ## Set the secrets that Concourse needs to run its pipelines
+	@bin/set_concourse_secrets.sh
+
 pipelines: login_fly ## Deploy pipelines
 	@ci/cf_pipeline.sh
 

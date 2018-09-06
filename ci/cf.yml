@@ -9,7 +9,7 @@ resources:
 - name: cf-deployment-concourse-tasks-git
   type: git
   source:
-    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+    uri: https://github.com/cloudfoundry/cf-deployment-concourse-tasks.git
 
 - name: cf-acceptance-tests-git
   type: git
@@ -32,7 +32,7 @@ jobs:
       DOMAIN: ((domain))
       ENVIRONMENT: ((environment))
       CATS_CONFIG_FILE: paas-bootstrap-git/profiles/staging/cats_config.json
-      CF_ADMIN_PASSWORD: ((/bosh/cf/cf_admin_password))
+      CF_ADMIN_PASSWORD: ((cf_admin_password))
   - task: run CATS tests
     file: cf-deployment-concourse-tasks-git/run-cats/task.yml
     input_mapping:

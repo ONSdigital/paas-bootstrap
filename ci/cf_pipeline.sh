@@ -9,8 +9,6 @@ echo "Using branch '${BRANCH}'"
 
 DOMAIN="$(bin/outputs.sh base | jq -r .domain)"
 
-bin/login_fly.sh
-
 fly -t "$ENVIRONMENT" set-pipeline \
     -v environment="$ENVIRONMENT" \
     -v branch="$BRANCH" \
