@@ -3,8 +3,7 @@
 set -eu
 
 : $DOMAIN
-
-ADMIN_PASSWORD="$(bosh int cf-vars-s3/cf-variables.yml --path /cf_admin_password)"
+: $CF_ADMIN_PASSWORD
 
 cat $CATS_CONFIG_FILE | jq "
 .api = \"api.system.${DOMAIN}\" | 
