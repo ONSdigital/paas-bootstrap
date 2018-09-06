@@ -3,7 +3,7 @@ output "vpc_dns_nameserver" {
 }
 
 output "domain" {
-  value = "${replace(aws_route53_zone.child_zone.name, "/\\.$/", "")}"
+  value = "${local.domain}"
 }
 
 output "bosh_rds_security_group_id" {
@@ -140,4 +140,63 @@ output "cf_blobstore_s3_kms_key_id" {
 
 output "cf_blobstore_s3_kms_key_arn" {
   value = "${aws_kms_key.cf_blobstore_key.arn}"
+}
+
+output "prometheus_subnet_gateway_ips" {
+  value = [
+      "${cidrhost(aws_subnet.prometheus.*.cidr_block[0],1)}",
+      "${cidrhost(aws_subnet.prometheus.*.cidr_block[1],1)}",
+      "${cidrhost(aws_subnet.prometheus.*.cidr_block[2],1)}"
+  ]
+}
+
+# NASTY HACK ALERT - we cannot find a way in terraform to perform an action on all elements of a list
+#                    so you will have to change this if you add more AZs
+output "prometheus_subnet_reserved_cidr_blocks" {
+  value = [
+      "${cidrsubnet(aws_subnet.prometheus.*.cidr_block[0],6,0)}",
+      "${cidrsubnet(aws_subnet.prometheus.*.cidr_block[1],6,0)}",
+      "${cidrsubnet(aws_subnet.prometheus.*.cidr_block[2],6,0)}"
+  ]
+}
+
+output "prometheus_subnet_ids" {
+    value = ["${aws_subnet.prometheus.*.id}"]
+}
+
+output "prometheus_subnet_cidr_blocks" {
+    value = ["${aws_subnet.prometheus.*.cidr_block}"]
+}
+
+
+output "prometheus_security_group_id" {
+  value = "${aws_security_group.prometheus.id}"
+}
+
+output "grafana_target_group_name" {
+  value = "${aws_lb_target_group.grafana.name}"
+}
+
+output "prometheus_target_group_name" {
+  value = "${aws_lb_target_group.prometheus.name}"
+}
+
+output "alertmanager_target_group_name" {
+  value = "${aws_lb_target_group.alertmanager.name}"
+}
+
+output "grafana_fqdn" {
+  value = "${aws_route53_record.grafana.name}"
+}
+
+output "prometheus_fqdn" {
+  value = "${aws_route53_record.prometheus.fqdn}"
+}
+
+output "alertmanager_fqdn" {
+  value = "${aws_route53_record.alertmanager.fqdn}"
+}
+
+output "cf_traffic_controller_port" {
+  value = "${aws_lb_listener.cf_4443.port}"
 }

@@ -92,14 +92,6 @@ resource "aws_security_group" "bosh" {
   }
 }
 
-resource "aws_security_group_rule" "bosh_mbus_concourse" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 6868
-  to_port                  = 6868
-  source_security_group_id = "${aws_security_group.concourse.id}"
-}
 
 resource "aws_security_group_rule" "bosh_uaa_concourse" {
   security_group_id        = "${aws_security_group.bosh.id}"
@@ -128,14 +120,6 @@ resource "aws_security_group_rule" "bosh_uaa_jumpbox" {
   source_security_group_id = "${aws_security_group.jumpbox.id}"
 }
 
-resource "aws_security_group_rule" "bosh_ssh_concourse" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 22
-  to_port                  = 22
-  source_security_group_id = "${aws_security_group.concourse.id}"
-}
 
 resource "aws_security_group_rule" "bosh_ssh_jumpbox" {
   security_group_id        = "${aws_security_group.bosh.id}"
@@ -161,15 +145,6 @@ resource "aws_security_group_rule" "bosh_credhub_concourse" {
   protocol                 = "tcp"
   from_port                = 8844
   to_port                  = 8844
-  source_security_group_id = "${aws_security_group.concourse.id}"
-}
-
-resource "aws_security_group_rule" "bosh_director_concourse" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 25555
-  to_port                  = 25555
   source_security_group_id = "${aws_security_group.concourse.id}"
 }
 

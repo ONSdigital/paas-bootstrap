@@ -18,7 +18,7 @@
       dns:
       - ((private_dns_nameserver))
       - 1.1.1.1
-      reserved: [10.0.11.0-10.0.11.3]
+      reserved: [((reserved_prometheus_az1_cidr))]
       cloud_properties:
         subnet: ((prometheus_subnet_az1_id))
         security_groups: [ ((prometheus_security_group))]

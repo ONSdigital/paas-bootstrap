@@ -10,5 +10,4 @@ done
 
 : $ENVIRONMENT
 
-PASSPATH='/instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/users/name=admin/password'
-bosh int --path $PASSPATH <(aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/cf/cf.yml" -)
+bin/credhub_credentials.sh -e $ENVIRONMENT credhub get -n /bosh/cf/cf_admin_password -j | jq -r .value

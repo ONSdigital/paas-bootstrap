@@ -13,3 +13,4 @@ output() {
 
 BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 $BOSH update-runtime-config bosh-deployment/runtime-configs/dns.yml --name dns -n
+$BOSH update-runtime-config ./runtime-config/bosh/node-exporter-config.yml --name node_exporter -n
