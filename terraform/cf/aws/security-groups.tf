@@ -322,3 +322,24 @@ resource "aws_security_group" "cf_rds_client" {
     Environment = "${var.environment}"
   }
 }
+
+resource "aws_security_group" "cf_service_brokers" {
+  name        = "${var.environment}_cf_service_brokers_security_group"
+  description = "CF service brokers access"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.environment}-cf-service-brokers-security-group"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "allow_postgres_from_cf_internal_clients" {
+  security_group_id        = "${aws_security_group.cf_service_brokers.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.cf_internal_security_group.id}"
+  description              = "Provide ingress service broker postgres traffic from CF"
+}

@@ -69,3 +69,39 @@ resource "aws_subnet" "rds_az3" {
     Visibility  = "private"
   }
 }
+
+resource "aws_subnet" "service_brokers_az1" {
+  vpc_id            = "${var.vpc_id}"
+  cidr_block        = "10.0.20.0/24"
+  availability_zone = "${var.az1}"
+
+  tags {
+    Name        = "${var.environment}-cf-service-brokers-az1-subnet"
+    Environment = "${var.environment}"
+    Visibility  = "private"
+  }
+}
+
+resource "aws_subnet" "service_brokers_az2" {
+  vpc_id            = "${var.vpc_id}"
+  cidr_block        = "10.0.21.0/24"
+  availability_zone = "${var.az2}"
+
+  tags {
+    Name        = "${var.environment}-cf-service-brokers-az2-subnet"
+    Environment = "${var.environment}"
+    Visibility  = "private"
+  }
+}
+
+resource "aws_subnet" "service_brokers_az3" {
+  vpc_id            = "${var.vpc_id}"
+  cidr_block        = "10.0.22.0/24"
+  availability_zone = "${var.az3}"
+
+  tags {
+    Name        = "${var.environment}-cf-service-brokers-az3-subnet"
+    Environment = "${var.environment}"
+    Visibility  = "private"
+  }
+}
