@@ -114,6 +114,17 @@ resource "aws_security_group_rule" "internal_to_service_broker_postgres" {
   source_security_group_id = "${aws_security_group.cf_service_brokers.id}"
 }
 
+
+resource "aws_security_group_rule" "internal_to_service_broker_redis" {
+  security_group_id = "${aws_security_group.internal.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 6379
+  to_port                  = 6379
+  source_security_group_id = "${aws_security_group.cf_service_brokers.id}"
+}
+
+
 resource "aws_security_group_rule" "cf_from_bosh_rule_tcp_ssh" {
   security_group_id        = "${aws_security_group.internal.id}"
   type                     = "ingress"
@@ -351,4 +362,14 @@ resource "aws_security_group_rule" "allow_postgres_from_cf_internal_clients" {
   to_port                  = 5432
   source_security_group_id = "${aws_security_group.internal.id}"
   description              = "Provide ingress service broker postgres traffic from CF"
+}
+
+resource "aws_security_group_rule" "allow_redis_from_cf_internal_clients" {
+  security_group_id        = "${aws_security_group.cf_service_brokers.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 6379
+  to_port                  = 6379
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "Provide ingress service broker elasticache (redis) traffic from CF"
 }
