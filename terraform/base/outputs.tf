@@ -200,3 +200,42 @@ output "alertmanager_fqdn" {
 output "cf_traffic_controller_port" {
   value = "${aws_lb_listener.cf_4443.port}"
 }
+
+output "concourse_subnet_gateway_ips" {
+  value = [
+      "${cidrhost(aws_subnet.concourse.*.cidr_block[0],1)}",
+      "${cidrhost(aws_subnet.concourse.*.cidr_block[1],1)}",
+      "${cidrhost(aws_subnet.concourse.*.cidr_block[2],1)}"
+  ]
+}
+
+# NASTY HACK ALERT - we cannot find a way in terraform to perform an action on all elements of a list
+#                    so you will have to change this if you add more AZs
+output "concourse_subnet_reserved_cidr_blocks" {
+  value = [
+      "${cidrsubnet(aws_subnet.concourse.*.cidr_block[0],6,0)}",
+      "${cidrsubnet(aws_subnet.concourse.*.cidr_block[1],6,0)}",
+      "${cidrsubnet(aws_subnet.concourse.*.cidr_block[2],6,0)}"
+  ]
+}
+
+output "concourse_subnet_ids" {
+    value = ["${aws_subnet.concourse.*.id}"]
+}
+
+output "concourse_subnet_cidr_blocks" {
+    value = ["${aws_subnet.concourse.*.cidr_block}"]
+}
+
+
+output "concourse_security_group_id" {
+  value = "${aws_security_group.concourse.id}"
+}
+
+output "concourse_alb_target_group_name" {
+  value = "${aws_lb_target_group.concourse.name}"
+}
+
+output "concourse_fqdn" {
+  value = "${aws_route53_record.concourse.name}"
+}

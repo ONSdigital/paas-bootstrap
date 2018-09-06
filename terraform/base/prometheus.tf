@@ -238,6 +238,16 @@ resource "aws_security_group_rule" "prometheus_cf_node_exporters" {
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
+resource "aws_security_group_rule" "prometheus_concourse_node_exporters" {
+  security_group_id        = "${aws_security_group.concourse.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 9100
+  to_port                  = 9100
+  description              = "Allow prometheus to access concourse node exporter"
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
 resource "aws_security_group_rule" "prometheus_cf_nats" {
   security_group_id        = "${aws_security_group.internal.id}"
   type                     = "ingress"

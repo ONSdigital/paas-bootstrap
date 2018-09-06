@@ -63,3 +63,16 @@ resource "aws_subnet" "prometheus" {
     Visibility  = "private"
   }
 }
+
+resource "aws_subnet" "concourse" {
+  count             = "${local.num_azs}"
+  vpc_id            = "${aws_vpc.default.id}"
+  cidr_block        = "${element(local.concourse_subnets, count.index)}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
+
+  tags {
+    Name        = "${var.environment}-concourse-az${count.index+1}-subnet"
+    Environment = "${var.environment}"
+    Visibility  = "private"
+  }
+}

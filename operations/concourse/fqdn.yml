@@ -1,8 +1,0 @@
----
-- type: replace
-  path: /instance_groups/name=concourse/jobs/name=atc/properties/external_url
-  value: https://((concourse_fqdn))
-
-- type: replace
-  path: /cloud_provider/mbus
-  value: https://mbus:((mbus_bootstrap_password))@((concourse_direct_fqdn)):6868

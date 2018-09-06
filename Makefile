@@ -56,6 +56,12 @@ prometheus: ## Deploy Prometheus
 concourse: ## Deploy concourse
 	@bin/deploy_concourse.sh	
 
+login_fly: ## Log in to fly
+	@bin/login_fly.sh
+
+pipelines: login_fly ## Deploy pipelines
+	@ci/cf_pipeline.sh
+
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 

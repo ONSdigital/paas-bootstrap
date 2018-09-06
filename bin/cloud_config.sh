@@ -20,6 +20,7 @@ $BOSH update-cloud-config -n \
   -o ./operations/cloud-config/cf-s3-blobstore.yml \
   -o ./operations/cloud-config/cf-rds-sec-group.yml \
   -o ./operations/cloud-config/prometheus.yml \
+  -o ./operations/cloud-config/concourse.yml \
   -v az1="$(jq -r .availability_zones[0] < data/$ENVIRONMENT.tfvars)" \
   -v az2="$(jq -r .availability_zones[1] < data/$ENVIRONMENT.tfvars)" \
   -v az3="$(jq -r .availability_zones[2] < data/$ENVIRONMENT.tfvars)" \
@@ -51,4 +52,10 @@ $BOSH update-cloud-config -n \
   -v reserved_prometheus_az1_cidr="$(output base .prometheus_subnet_reserved_cidr_blocks[0])" \
   -v grafana_target_group_name="$(output base  .grafana_target_group_name)" \
   -v prometheus_target_group_name="$(output base  .prometheus_target_group_name)" \
-  -v alertmanager_target_group_name="$(output base  .alertmanager_target_group_name)" 
+  -v alertmanager_target_group_name="$(output base  .alertmanager_target_group_name)" \
+  -v concourse_subnet_az1_cidr="$(output base .concourse_subnet_cidr_blocks[0])" \
+  -v concourse_subnet_az1_gateway="$(output base .concourse_subnet_gateway_ips[0])" \
+  -v reserved_concourse_az1_cidr="$(output base .concourse_subnet_reserved_cidr_blocks[0])" \
+  -v concourse_subnet_az1_id="$(output base .concourse_subnet_ids[0])" \
+  -v concourse_security_group="$(output base .concourse_security_group_id)" \
+  -v concourse_alb_target_group="$(output base .concourse_alb_target_group_name)"

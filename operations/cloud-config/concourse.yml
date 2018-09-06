@@ -1,0 +1,35 @@
+---
+- type: replace
+  path: /networks/name=concourse?
+  value:
+    name: concourse
+    type: manual
+    subnets:
+    - range: ((concourse_subnet_az1_cidr))
+      gateway: ((concourse_subnet_az1_gateway))
+      az: z1
+      dns:
+      - ((private_dns_nameserver))
+      - 1.1.1.1
+      reserved: [((reserved_concourse_az1_cidr))]
+      cloud_properties:
+        subnet: ((concourse_subnet_az1_id))
+        security_groups: [ ((concourse_security_group))]
+
+- type: replace
+  path: /vm_types/-
+  value:
+    name: concourse
+    network: concourse
+    ephemeral_disk:
+      size: 100_000
+      type: gp2
+    cloud_properties:
+      instance_type: c5.large
+
+- type: replace
+  path: /vm_extensions/-
+  value:
+    name: concourse_web
+    cloud_properties:
+      lb_target_groups: [((concourse_alb_target_group))]
