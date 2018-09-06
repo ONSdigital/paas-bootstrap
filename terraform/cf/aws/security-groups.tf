@@ -340,6 +340,6 @@ resource "aws_security_group_rule" "allow_postgres_from_cf_internal_clients" {
   protocol                 = "tcp"
   from_port                = 5432
   to_port                  = 5432
-  source_security_group_id = "${aws_security_group.cf_internal_security_group.id}"
+  source_security_group_id = "${aws_security_group.internal.id}"
   description              = "Provide ingress service broker postgres traffic from CF"
 }
