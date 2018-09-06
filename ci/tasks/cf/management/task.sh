@@ -19,3 +19,4 @@ cf-mgmt create-orgs
 cf-mgmt create-spaces
 cf-mgmt update-org-users
 cf-mgmt update-space-users
+cf-mgmt create-security-groups
