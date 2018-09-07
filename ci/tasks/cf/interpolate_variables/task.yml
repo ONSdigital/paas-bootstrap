@@ -1,0 +1,21 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: { repository: onsdigital/paas-ci-gp, tag: latest }
+
+inputs:
+  - name: paas-bootstrap-git
+  - name: cf-deployment-git
+  - name: prometheus-boshrelease-git
+
+outputs:
+  - name: vars-files
+  - name: ops-files
+
+run:
+  path: paas-bootstrap-git/ci/tasks/cf/interpolate_variables/task.sh
+
+params:
+  DOMAIN: 
+  ENVIRONMENT:

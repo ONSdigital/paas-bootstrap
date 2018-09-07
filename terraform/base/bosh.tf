@@ -71,6 +71,16 @@ resource "aws_s3_bucket_object" "bosh-state" {
   kms_key_id             = "${aws_kms_key.paas_state_key.arn}"
 }
 
+resource "aws_s3_bucket" "bosh_blobstore" {
+  bucket = "${var.s3_prefix}-${var.environment}-bosh-blobstore"
+  acl    = "private"
+
+  tags {
+    Name        = "${var.s3_prefix}-${var.environment}-bosh-blobstore"
+    Environment = "${var.environment}"
+  }
+}
+
 # SG
 resource "aws_security_group_rule" "allow-all" {
   security_group_id = "${aws_security_group.bosh.id}"

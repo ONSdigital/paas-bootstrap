@@ -11,6 +11,8 @@ output() {
     bin/outputs.sh $FILE | jq -r "$QUERY"
 }
 
+bin/get_states.sh -e $ENVIRONMENT
+
 BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 
 DOMAIN="$(output base .domain)"

@@ -25,6 +25,8 @@ export ENVIRONMENT
 shift $((OPTIND-1))
 COMMAND=$*
 
+bin/get_states.sh -e $ENVIRONMENT -x -f $ENVIRONMENT-bosh-variables.yml
+
 JUMPBOX_IP=$(bin/outputs.sh base | jq -r .jumpbox_public_ip)
 JUMPBOX_KEY=~/.ssh/$ENVIRONMENT.jumpbox.$$.pem
 bin/outputs.sh base | jq -r .jumpbox_private_key >$JUMPBOX_KEY

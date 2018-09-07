@@ -2,12 +2,18 @@
 
 set -euo pipefail
 
+: $ENVIRONMENT
+: $AWS_ACCESS_KEY_ID
+: $AWS_SECRET_ACCESS_KEY
+
 output() {
     FILE=$1
     QUERY=$2
 
     bin/outputs.sh $FILE | jq -r "$QUERY"
 }
+
+bin/get_states.sh -e $ENVIRONMENT
 
 bosh int \
   bosh-deployment/bosh.yml \
@@ -16,6 +22,7 @@ bosh int \
   -o bosh-deployment/uaa.yml \
   -o bosh-deployment/credhub.yml \
   -o bosh-deployment/misc/external-db.yml \
+  -o bosh-deployment/aws/s3-blobstore.yml \
   -o operations/bosh/tags.yml \
   -o operations/bosh/certificate.yml \
   -o operations/bosh/external-uaa-db.yml \
@@ -40,6 +47,10 @@ bosh int \
   -v external_db_password="$(output rds .bosh_rds_password)" \
   -v external_db_adapter="$(output rds .bosh_db_type)" \
   -v external_db_name='bosh' \
+  -v s3-bucket-name="$(output base .bosh_blobstore_bucket_name)" \
+  -v s3-access-key-id="$AWS_ACCESS_KEY_ID" \
+  -v s3-secret-access-key="$AWS_SECRET_ACCESS_KEY" \
+  -v s3-region="$(jq -r .region < data/$ENVIRONMENT.tfvars)" \
   -v access_key_id="$AWS_ACCESS_KEY_ID" \
   -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
   > data/$ENVIRONMENT-bosh-manifest.yml
@@ -59,3 +70,5 @@ export BOSH_ALL_PROXY=ssh+socks5://ubuntu@$JUMPBOX_IP:22?private-key=$JUMPBOX_KE
 bosh create-env \
   data/$ENVIRONMENT-bosh-manifest.yml \
   --state data/$ENVIRONMENT-bosh-state.json
+
+  bin/persist_states.sh -e $ENVIRONMENT -f $ENVIRONMENT-bosh-manifest.yml -f $ENVIRONMENT-bosh-variables.yml -f $ENVIRONMENT-bosh-state.json
