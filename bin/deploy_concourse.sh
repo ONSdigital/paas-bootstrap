@@ -18,6 +18,8 @@ secret() {
   bin/secret.sh -e $ENVIRONMENT -d cf -k $KEY
 }
 
+bin/get_states.sh -e $ENVIRONMENT
+
 BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 
 CREDHUB_CA_CERT=/var/tmp/credhub_ca.$$.pem

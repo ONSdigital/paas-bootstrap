@@ -59,6 +59,10 @@ output "bosh_private_key" {
     value = "${tls_private_key.bosh.private_key_pem}"
 }
 
+output "bosh_blobstore_bucket_name" {
+  value = "${aws_s3_bucket.bosh_blobstore.id}"
+}
+
 output "cf_rds_security_group_id" {
   value = "${aws_security_group.cf_rds.id}"
 }

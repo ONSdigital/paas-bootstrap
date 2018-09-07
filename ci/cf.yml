@@ -16,16 +16,50 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
 
+- name: cf-deployment-git
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-deployment.git
+    tag_filter: v*
+
+- name: prometheus-boshrelease-git
+  type: git
+  source:
+    uri: https://github.com/bosh-prometheus/prometheus-boshrelease.git
+    tag_filter: v*
 
 jobs:
+- name: deploy cloud foundry
+  serial: true
+  serial_groups: [cf, casts]
+  plan:
+  - aggregate: 
+    - get: paas-bootstrap-git
+    - get: cf-deployment-concourse-tasks-git
+    - get: cf-deployment-git
+      version: { ref: ((cf_tag)) }
+    - get: prometheus-boshrelease-git
+      version: { ref: ((prometheus_tag)) }
+  - task: interpolate cf deployment variables and ops files
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate-variables/task.yml
+  - task: deploy cf
+    file:  cf-deployment-concourse-tasks-git/bosh-deploy/task.yml
+    input_mapping:
+      cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
+      cf-deployment: cf-deployment-git
+    params:
+      OPS_FILES: instance-counts.yml ops.yml
+      SYSTEM_DOMAIN: system.((domain))
+
+
 - name: cats
   serial: true
-  serial_groups: [cats]
+  serial_groups: [cf, cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
     - get: cf-deployment-concourse-tasks-git
-    - get: cf-acceptance-tests-git
+    - get: cf-acceptance-tests-git    
   - task: interpolate CATS config
     file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
     params:
