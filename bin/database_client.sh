@@ -2,8 +2,17 @@
 
 set -euo pipefail
 
-: $ENVIRONMENT
 
+while getopts e:i:d: option; do
+  case $option in
+    e) export ENVIRONMENT=$OPTARG;;
+    i) DB_INSTANCE=$OPTARG;;
+    d) DATABASE=$OPTARG;;
+  esac
+done
+
+: $ENVIRONMENT
+: $DB_INSTANCE
 
 BOSH_DB_USER=$(bin/outputs.sh rds | jq -r .bosh_db_username)
 BOSH_DB_HOST=$(bin/outputs.sh rds | jq -r .bosh_db_host)
@@ -33,31 +42,15 @@ ssh -fN -L $BOSH_LOCAL_PORT:$BOSH_DB_HOST:$BOSH_DB_PORT ubuntu@$JUMPBOX_IP -i $K
 ssh -fN -L $CF_LOCAL_PORT:$CF_DB_HOST:$CF_DB_PORT ubuntu@$JUMPBOX_IP -i $KEYFILE
 trap cleanup EXIT
 
-sql() {
-    PGPASSWORD=$BOSH_DB_PASS psql -h localhost -p $BOSH_LOCAL_PORT -U $BOSH_DB_USER -d paastest -c "$*"
+bosh_db_client() {
+    PGPASSWORD=$BOSH_DB_PASS psql -h localhost -p $BOSH_LOCAL_PORT -U $BOSH_DB_USER -d $DATABASE
 }
 
-exists() {
-    PGPASSWORD=$BOSH_DB_PASS psql -h localhost -p $BOSH_LOCAL_PORT -U $BOSH_DB_USER -d paastest -l | grep -q "^\s*$1\s"
+cf_db_client() {
+    MYSQL_PWD=$CF_DB_PASS mysql --protocol=tcp -h localhost -P $CF_LOCAL_PORT -u $CF_DB_USER $DATABASE
 }
 
-create_bosh() {
-    exists $1 || { echo "create database $1"; sql "create database $1"; }
-}
-
-create_cf() {
-    echo "create database if not exists $1" | MYSQL_PWD=$CF_DB_PASS mysql --protocol=tcp -h localhost -P $CF_LOCAL_PORT -u $CF_DB_USER
-}
-
-create_bosh bosh
-create_bosh uaa
-create_bosh credhub
-
-create_cf uaa
-create_cf cc
-create_cf bbs
-create_cf routing_api
-create_cf policy_server
-create_cf silk_controller
-create_cf locket
-create_cf credhub
+case $DB_INSTANCE in
+    bosh) bosh_db_client;;
+    cf) cf_db_client;;
+esac
