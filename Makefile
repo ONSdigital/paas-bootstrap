@@ -65,6 +65,9 @@ set_concourse_secrets: ## Set the secrets that Concourse needs to run its pipeli
 pipelines: login_fly ## Deploy pipelines
 	@ci/cf_pipeline.sh
 
+destroy_bosh: ## Kill off bosh
+	@bin/destroy_bosh.sh
+
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 
