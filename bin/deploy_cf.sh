@@ -29,7 +29,7 @@ profile="${ENVIRONMENT}"
 instance_count_file=./profiles/${profile}/instance-count.yml
 
 echo "Deploying"
-$BOSH deploy -n \
+$BOSH deploy -n -d cf \
   ./cf-deployment/cf-deployment.yml \
   --vars-file="${instance_count_file}" \
   -o cf-deployment/operations/aws.yml \

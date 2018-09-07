@@ -51,7 +51,6 @@ jobs:
       OPS_FILES: instance-counts.yml ops.yml
       SYSTEM_DOMAIN: system.((domain))
 
-
 - name: cats
   serial: true
   serial_groups: [cf, cats]
