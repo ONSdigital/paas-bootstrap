@@ -53,23 +53,6 @@ resource "aws_iam_role_policy" "bosh" {
 }
 
 # S3
-resource "aws_s3_bucket_object" "bosh-var-store" {
-  bucket                 = "${aws_s3_bucket.paas_states.id}"
-  acl                    = "private"
-  key                    = "bosh/bosh-variables.yml"
-  source                 = "/dev/null"
-  server_side_encryption = "aws:kms"
-  kms_key_id             = "${aws_kms_key.paas_state_key.arn}"
-}
-
-resource "aws_s3_bucket_object" "bosh-state" {
-  bucket                 = "${aws_s3_bucket.paas_states.id}"
-  acl                    = "private"
-  key                    = "bosh/bosh-state.json"
-  content                = "{}"
-  server_side_encryption = "aws:kms"
-  kms_key_id             = "${aws_kms_key.paas_state_key.arn}"
-}
 
 resource "aws_s3_bucket" "bosh_blobstore" {
   bucket = "${var.s3_prefix}-${var.environment}-bosh-blobstore"

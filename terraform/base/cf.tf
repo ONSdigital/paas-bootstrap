@@ -611,13 +611,3 @@ resource "aws_s3_bucket" "cf_resource_pool" {
     Environment = "${var.environment}"
   }
 }
-
-# S3 General
-resource "aws_s3_bucket_object" "cf-var-store" {
-  bucket                 = "${aws_s3_bucket.paas_states.id}"
-  acl                    = "private"
-  key                    = "cf/cf-variables.yml"
-  source                 = "/dev/null"
-  server_side_encryption = "aws:kms"
-  kms_key_id             = "${aws_kms_key.paas_state_key.arn}"
-}
