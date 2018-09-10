@@ -49,7 +49,7 @@ cp "${instance_count_file}" vars-files/instance-counts.yml
 cat >vars-files/variables.yml <<-EOS
 environment: ${ENVIRONMENT}
 region: $(jq -r .region < states-variables-s3/$ENVIRONMENT.tfvars)
-system_domain:${SYSTEM_DOMAIN}
+system_domain: ${SYSTEM_DOMAIN}
 app_domains: [${APPS_DOMAIN}]
 smoke_test_app_domain: ${APPS_DOMAIN}
 buildpack_directory_key: $(output base .cf_buildpacks_bucket_name)
