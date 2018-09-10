@@ -46,6 +46,7 @@ $BOSH deploy -n -d cf \
   -o ./operations/cf/rds-access.yml \
   -o ./operations/cf/uaa-clients.yml \
   -o ./operations/cf/test-user.yml \
+  -o ./operations/cf/api-workers.yml \
   -v environment="${ENVIRONMENT}" \
   -v region="$(jq -r .region < data/$ENVIRONMENT.tfvars)" \
   -v system_domain="${SYSTEM_DOMAIN}" \
