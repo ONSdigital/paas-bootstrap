@@ -82,6 +82,8 @@ jobs:
     - get: rds-tfstate-s3
   - task: interpolate cf deployment variables and ops files
     file: paas-bootstrap-git/ci/tasks/cf/interpolate_variables/task.yml
+    params:
+      ENVIRONMENT: ((environment))
   - task: deploy cf
     file:  cf-deployment-concourse-tasks-git/bosh-deploy/task.yml
     input_mapping:
