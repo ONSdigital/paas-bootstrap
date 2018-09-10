@@ -52,3 +52,9 @@ resource "aws_db_option_group" "cf_rds_audit_logging" {
     }
   }
 }
+
+resource "aws_db_subnet_group" "cf_rds_broker" {
+  name        = "${var.environment}-cf-rds-broker-subnet-group"
+  description = "CF rds broker subnet group"
+  subnet_ids  = ["${aws_subnet.rds_broker_az1.id}", "${aws_subnet.rds_broker_az2.id}", "${aws_subnet.rds_broker_az3.id}"]
+}
