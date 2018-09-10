@@ -79,7 +79,7 @@ echo "Deploying"
 
 export BOSH_ENVIRONMENT=$(output base .bosh_private_ip)
 
-bosh deploy -d cf \
+bosh deploy -d cf cf-deployment-git/cf-deployment.yml \
   -o cf-deployment-git/operations/aws.yml \
   -o cf-deployment-git/operations/override-app-domains.yml \
   -o cf-deployment-git/operations/use-external-blobstore.yml \
