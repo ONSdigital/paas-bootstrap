@@ -11,17 +11,17 @@ hash cf-mgmt-config 2>/dev/null || { echo >&2 "Requires cf-mgmt-config but it's 
 
 ASG="[
   {
-    \"destination\": \"10.0.7.0/24\",
+    \"destination\": \"10.0.20.0/24\",
     \"ports\": \"5432\",
     \"protocol\": \"tcp\"
   },
   {
-    \"destination\": \"10.0.8.0/24\",
+    \"destination\": \"10.0.21.0/24\",
     \"ports\": \"5432\",
     \"protocol\": \"tcp\"
   },
   {
-    \"destination\": \"10.0.9.0/24\",
+    \"destination\": \"10.0.22.0/24\",
     \"ports\": \"5432\",
     \"protocol\": \"tcp\"
   }
