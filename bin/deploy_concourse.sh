@@ -40,6 +40,7 @@ $BOSH -d concourse deploy -n concourse-bosh-deployment/cluster/concourse.yml \
   -o ./operations/concourse/tags.yml \
   -o ./operations/concourse/local-auth.yml \
   -o ./operations/concourse/skip-credhub-tls-validation.yml \
+  -o ./operations/concourse/specific-dns.yml \
   -v environment=$ENVIRONMENT \
   -v external_url=https://$(output base .concourse_fqdn) \
   -v network_name=concourse \
@@ -51,4 +52,5 @@ $BOSH -d concourse deploy -n concourse-bosh-deployment/cluster/concourse.yml \
   -v credhub_url="$CREDHUB_SERVER" \
   -v credhub_client_id="$CREDHUB_CLIENT" \
   -v credhub_client_secret="$CREDHUB_SECRET" \
-  --var-file credhub_ca_cert="$CREDHUB_CA_CERT"
+  --var-file credhub_ca_cert="$CREDHUB_CA_CERT" \
+  -v private_dns_nameserver="$(output base .vpc_dns_nameserver)"

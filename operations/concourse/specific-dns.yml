@@ -1,0 +1,8 @@
+---
+  # With the latest BOSH they introduced bosh-dns, which pops a bosh-own DNS nameserver
+  # in front of the system ones, in the VMs and in the container. In our opinion, we
+  # shouldn't be exposing the BOSH-internal names in Concourse. Actually, the real
+  # reason is that bosh-dns is *slow* and causes CATS to time out and fail.
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=garden/properties/garden/dns_servers?
+  value: [ ((private_dns_nameserver)) ]

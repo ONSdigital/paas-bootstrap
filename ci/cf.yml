@@ -15,6 +15,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+    tag_filter: v*
 
 - name: cf-deployment-git
   type: git
@@ -31,7 +32,7 @@ resources:
 jobs:
 - name: deploy cloud foundry
   serial: true
-  serial_groups: [cf, casts]
+  serial_groups: [casts]
   plan:
   - aggregate: 
     - get: paas-bootstrap-git
@@ -53,12 +54,13 @@ jobs:
 
 - name: cats
   serial: true
-  serial_groups: [cf, cats]
+  serial_groups: [cats]
   plan:
   - aggregate:
     - get: paas-bootstrap-git
     - get: cf-deployment-concourse-tasks-git
-    - get: cf-acceptance-tests-git    
+    - get: cf-acceptance-tests-git
+      version: { ref: ((cats_tag)) }
   - task: interpolate CATS config
     file: paas-bootstrap-git/ci/tasks/cf/interpolate_cats/task.yml
     params:
@@ -73,6 +75,6 @@ jobs:
       cf-acceptance-tests: cf-acceptance-tests-git
     params:
       CAPTURE_CONFIG: true
-      NODES: 6
+      NODES: 4
 
 
