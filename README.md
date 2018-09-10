@@ -127,6 +127,7 @@ cd rds-broker
 # Amend catalog.yaml to remove the paid micro- and medium- options
 cf push
 cf create-service-broker rds <broker_username> <broker_password> <url_of_running_app>
+cf enable-service-access rds
 cf create-service rds shared-psql <desired_service_name>
 ```
 
