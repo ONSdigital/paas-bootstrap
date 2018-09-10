@@ -8,7 +8,7 @@ output() {
     FILE=$1
     QUERY=$2
 
-    FILE="${FILE}-states-s3/${ENVIRONMENT}-${FILE}.tfstate"
+    FILE="${FILE}-tfstate-s3/${ENVIRONMENT}-${FILE}.tfstate"
     jq -r ". | with_entries(.value = .value.value) | $QUERY" <"$FILE"
 }
 
@@ -48,7 +48,7 @@ cp "${instance_count_file}" vars-files/instance-counts.yml
 
 cat >vars-files/variables.yml <<-EOS
 environment: ${ENVIRONMENT}
-region: $(jq -r .region < state-variables-s3/$ENVIRONMENT.tfvars)
+region: $(jq -r .region < states-variables-s3/$ENVIRONMENT.tfvars)
 system_domain:${SYSTEM_DOMAIN}
 app_domains: [${APPS_DOMAIN}]
 smoke_test_app_domain: ${APPS_DOMAIN}
