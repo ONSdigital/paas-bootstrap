@@ -85,6 +85,7 @@ jobs:
     params:
       ENVIRONMENT: ((environment))
       BOSH_CLIENT_SECRET: ((bosh_admin_password))
+      BOSH_CA_CERT: ((bosh_ca_cert))
 
 - name: cats
   serial: true

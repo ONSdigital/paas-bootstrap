@@ -24,6 +24,7 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v cf_tag="$CF_TAG" \
     -v prometheus_tag="$PROMETHEUS_TAG" \
     -v s3_kms_key_id="$KMS_KEY_ID" \
+    -v bosh_ca_cert="$(bin/bosh_ca_cert.sh -e $ENVIRONMENT)" \
     -c ci/cf.yml -p cf -n
 
 fly -t "$ENVIRONMENT" unpause-pipeline -p cf
