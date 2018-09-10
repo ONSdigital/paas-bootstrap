@@ -105,6 +105,16 @@ resource "aws_security_group_rule" "internal_rule_allow_internet" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "internal_to_service_broker_postgres" {
+  security_group_id = "${aws_security_group.internal.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.cf_service_brokers.id}"
+  description              = "Allow internal to connect to rds service broker"
+}
+
 resource "aws_security_group_rule" "cf_from_bosh_rule_tcp_ssh" {
   security_group_id        = "${aws_security_group.internal.id}"
   type                     = "ingress"
@@ -321,4 +331,23 @@ resource "aws_security_group" "cf_rds_client" {
     Name        = "${var.environment}-cf-rds-client-security-group"
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_security_group" "cf_service_brokers" {
+  name        = "${var.environment}_cf_service_brokers_security_group"
+  description = "CF service brokers access"
+  vpc_id      = "${var.vpc_id}"
+   tags {
+    Name        = "${var.environment}-cf-service-brokers-security-group"
+    Environment = "${var.environment}"
+  }
+}
+ resource "aws_security_group_rule" "allow_postgres_from_cf_internal_clients" {
+  security_group_id        = "${aws_security_group.cf_service_brokers.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "Provide ingress service broker postgres traffic from CF"
 }
