@@ -132,6 +132,28 @@ cf create-service rds shared-psql <desired_service_name>
 
 There will now be a service available for binding to apps
 
+```yaml
+---
+applications:
+- name: rds-broker
+  memory: 256M
+  env:
+    DB_URL: <url_of_rds_instance>
+    DB_NAME: rds_broker
+    DB_USER: <instance_username>
+    DB_PASS: <instance_password>
+    DB_PORT: 5432
+    DB_TYPE: postgres
+    AWS_REGION: <region>
+    AWS_SEC_GROUP: <security_group_id_for_rds>
+    AWS_DB_SUBNET_GROUP: <name_of_subnet_group_containing_rds_instance>
+    GOVERSION: go1.10.3
+    ENC_KEY: <encryption_key_of_db>
+    DB_SSLMODE: require
+    AUTH_USER: <username_to_connect_to_broker>
+    AUTH_PASS: <password_to_connect_to_broker>
+```
+
 ## LICENCE
 
 Copyright (c) 2018 Crown Copyright (Office for National Statistics)
