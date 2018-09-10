@@ -113,6 +113,25 @@ or
   # it also sets BOSH_CLIENT, BOSH_CLIENT_SECRET environment variables
 ```
 
+## Deploying service brokers
+
+### RDS
+
+The security groups and subnets are generated as part of the `cf-deploy` job.
+Requires a running RDS instance to exist in the specified subnet group.
+
+```
+git clone https://github.com/cloudfoundry-community/rds-broker.git
+cd rds-broker
+# Amend manifest.yml to correct details for your instance (see below)
+# Amend catalog.yaml to remove the paid micro- and medium- options
+cf push
+cf create-service-broker rds <broker_username> <broker_password> <url_of_running_app>
+cf create-service rds shared-psql <desired_service_name>
+```
+
+There will now be a service available for binding to apps
+
 ## LICENCE
 
 Copyright (c) 2018 Crown Copyright (Office for National Statistics)
