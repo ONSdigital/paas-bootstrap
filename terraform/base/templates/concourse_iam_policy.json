@@ -12,7 +12,8 @@
                 "s3:GetObjectTagging"
             ],
             "Resource": [
-                "arn:aws:s3:::ons-paas-${environment}-states/*"
+                "arn:aws:s3:::ons-paas-${environment}-states/*",
+                "arn:aws:s3:::ons-paas-${environment}-states"
             ]
         },
         {
