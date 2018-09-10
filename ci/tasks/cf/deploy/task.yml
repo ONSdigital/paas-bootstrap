@@ -18,8 +18,10 @@ outputs:
   - name: bbl-state
 
 run:
-  path: paas-bootstrap-git/ci/tasks/cf/interpolate_variables/task.sh
+  path: paas-bootstrap-git/ci/tasks/cf/deploy/task.sh
 
 params:
   DOMAIN: 
   ENVIRONMENT:
+  BOSH_CLIENT: admin
+  BOSH_CLIENT_SECRET:

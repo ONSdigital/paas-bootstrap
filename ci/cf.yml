@@ -80,18 +80,11 @@ jobs:
     - get: states-variables-s3
     - get: base-tfstate-s3
     - get: rds-tfstate-s3
-  - task: interpolate cf deployment variables and ops files
-    file: paas-bootstrap-git/ci/tasks/cf/interpolate_variables/task.yml
+  - task: interpolate and deploy
+    file: paas-bootstrap-git/ci/tasks/cf/deploy/task.yml
     params:
       ENVIRONMENT: ((environment))
-  - task: deploy cf
-    file:  cf-deployment-concourse-tasks-git/bosh-deploy/task.yml
-    input_mapping:
-      cf-deployment-concourse-tasks: cf-deployment-concourse-tasks-git
-      cf-deployment: cf-deployment-git
-    params:
-      OPS_FILES: instance-counts.yml ops.yml
-      SYSTEM_DOMAIN: system.((domain))
+      BOSH_CLIENT_SECRET: ((bosh_admin_password))
 
 - name: cats
   serial: true
