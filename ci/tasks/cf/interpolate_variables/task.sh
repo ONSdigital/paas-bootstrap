@@ -8,12 +8,9 @@ output() {
     FILE=$1
     QUERY=$2
 
-    cd paas-bootstrap-git
-    bin/outputs.sh $FILE | jq -r "$QUERY"
-    cd -
+    FILE="${FILE}-states-s3/${ENVIRONMENT}-${FILE}.tfstate"
+    jq -r ". | with_entries(.value = .value.value) | $QUERY"
 }
-
-BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 
 DOMAIN="$(output base .domain)"
 SYSTEM_DOMAIN="system.${DOMAIN}"
@@ -24,9 +21,9 @@ CF_DB_USERNAME="$(output rds .cf_db_username)"
 CF_DB_PASSWORD="$(output rds .cf_rds_password)"
 
 profile="${ENVIRONMENT}"
-[ -d "profiles/${ENVIRONMENT}" ] || profile="engineering"
+[ -d "paas-bootstrap-git/profiles/${ENVIRONMENT}" ] || profile="engineering"
 
-instance_count_file=./profiles/${profile}/instance-count.yml
+instance_count_file=paas-bootstrap-git/profiles/${profile}/instance-count.yml
 
 echo "Constructing consolidated ops file"
 cat  \
@@ -51,7 +48,7 @@ cp "${instance_count_file}" vars-files/instance-counts.yml
 
 cat >vars-files/variables.yml <<-EOS
 environment: ${ENVIRONMENT}
-region: $(jq -r .region < data/$ENVIRONMENT.tfvars)
+region: $(jq -r .region < state-variables-s3/$ENVIRONMENT.tfvars)
 system_domain:${SYSTEM_DOMAIN}
 app_domains: [${APPS_DOMAIN}]
 smoke_test_app_domain: ${APPS_DOMAIN}

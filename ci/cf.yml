@@ -29,10 +29,40 @@ resources:
     uri: https://github.com/bosh-prometheus/prometheus-boshrelease.git
     tag_filter: v*
 
+- name: states-variables-s3
+  type: s3-iam
+  source:
+    bucket: ons-paas-((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: ((environment)).tfvars
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))
+
+- name: base-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ons-paas-((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: ((environment))-base.tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))    
+ 
+- name: rds-tfstate-s3
+  type: s3-iam
+  source:
+    bucket: ons-paas-((environment))-states
+    private: true
+    region_name: ((region))
+    versioned_file: ((environment))-rds.tfstate
+    server_side_encryption: 'aws:kms'
+    sse_kms_key_id: ((s3_kms_key_id))      
+
 jobs:
 - name: deploy cloud foundry
   serial: true
-  serial_groups: [casts]
+  serial_groups: [cats]
   plan:
   - aggregate: 
     - get: paas-bootstrap-git
@@ -41,8 +71,11 @@ jobs:
       version: { ref: ((cf_tag)) }
     - get: prometheus-boshrelease-git
       version: { ref: ((prometheus_tag)) }
+    - get: states-variables-s3
+    - get: base-tfstate-s3
+    - get: rds-tfstate-s3
   - task: interpolate cf deployment variables and ops files
-    file: paas-bootstrap-git/ci/tasks/cf/interpolate-variables/task.yml
+    file: paas-bootstrap-git/ci/tasks/cf/interpolate_variables/task.yml
   - task: deploy cf
     file:  cf-deployment-concourse-tasks-git/bosh-deploy/task.yml
     input_mapping:
@@ -58,6 +91,7 @@ jobs:
   plan:
   - aggregate:
     - get: paas-bootstrap-git
+      passed: ["deploy cloud foundry"]
     - get: cf-deployment-concourse-tasks-git
     - get: cf-acceptance-tests-git
       version: { ref: ((cats_tag)) }

@@ -243,3 +243,7 @@ output "concourse_alb_target_group_name" {
 output "concourse_fqdn" {
   value = "${aws_route53_record.concourse.name}"
 }
+
+output "concourse_iam_instance_profile" {
+  value = "${aws_iam_instance_profile.concourse.name}"
+}

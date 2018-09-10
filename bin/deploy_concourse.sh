@@ -41,6 +41,7 @@ $BOSH -d concourse deploy -n concourse-bosh-deployment/cluster/concourse.yml \
   -o ./operations/concourse/local-auth.yml \
   -o ./operations/concourse/skip-credhub-tls-validation.yml \
   -o ./operations/concourse/specific-dns.yml \
+  -o ./operations/concourse/worker.yml \
   -v environment=$ENVIRONMENT \
   -v external_url=https://$(output base .concourse_fqdn) \
   -v network_name=concourse \

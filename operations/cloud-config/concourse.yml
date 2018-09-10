@@ -33,3 +33,10 @@
     name: concourse_web
     cloud_properties:
       lb_target_groups: [((concourse_alb_target_group))]
+
+- type: replace
+  path: /vm_extensions/-
+  value:
+    name: concourse-worker
+    cloud_properties:
+      iam_instance_profile: ((concourse_worker_iam_profile))         
