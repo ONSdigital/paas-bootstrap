@@ -31,7 +31,7 @@ cat  \
   cf-deployment-git/operations/override-app-domains.yml \
   cf-deployment-git/operations/use-external-blobstore.yml \
   cf-deployment-git/operations/use-external-dbs.yml \
-  prometheus-boshrelease-it/manifests/operators/cf/add-prometheus-uaa-clients.yml \
+  prometheus-boshrelease-git/manifests/operators/cf/add-prometheus-uaa-clients.yml \
   paas-bootstrap-git/operations/bosh/tags.yml \
   paas-bootstrap-git/operations/cf/router-sec-group.yml \
   paas-bootstrap-git/operations/cf/scheduler.yml \
