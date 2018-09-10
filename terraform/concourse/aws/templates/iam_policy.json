@@ -506,7 +506,8 @@
       ],
       "Resource": [
         "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-subnet-group",
-        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-bosh-rds-subnet-group"
+        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-bosh-rds-subnet-group",
+        "arn:aws:rds:${region}:${account_id}:subgrp:${environment}-cf-rds-broker-subnet-group"
       ]
     }
   ]
