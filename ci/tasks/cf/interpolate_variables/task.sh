@@ -92,3 +92,7 @@ external_credhub_database_address: ${CF_DB_ENDPOINT}
 external_credhub_database_password: ${CF_DB_PASSWORD}
 external_credhub_database_username: ${CF_DB_USERNAME}
 EOS
+
+echo "Creating dummy bbl-state.json"
+mkdir bbl-state/bbl-state
+echo "{}" >bbl-state/bbl-state/bbl-state.json
