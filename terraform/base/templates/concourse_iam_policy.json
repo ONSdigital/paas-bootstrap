@@ -18,6 +18,7 @@
         {
             "Effect": "Allow",
             "Action": [
+                "kms:Encrypt",
                 "kms:Decrypt",
                 "kms:DescribeKey",
                 "kms:GetKeyPolicy",
@@ -25,7 +26,19 @@
                 "kms:ListResourceTags"
             ],
             "Resource": [
-                "${s3_kms_key_arn}"
+                "${s3_kms_key_arn}",
+                "arn:aws:kms:${region}:${account_id}:*",
+                "arn:aws:kms:${region}:${account_id}:key/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "kms:CreateKey",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "*"
             ]
         }
     ]

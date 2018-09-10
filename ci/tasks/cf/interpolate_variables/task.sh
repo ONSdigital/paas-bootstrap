@@ -9,7 +9,7 @@ output() {
     QUERY=$2
 
     FILE="${FILE}-states-s3/${ENVIRONMENT}-${FILE}.tfstate"
-    jq -r ". | with_entries(.value = .value.value) | $QUERY"
+    jq -r ". | with_entries(.value = .value.value) | $QUERY" <"$FILE"
 }
 
 DOMAIN="$(output base .domain)"
