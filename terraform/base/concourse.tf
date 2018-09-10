@@ -258,6 +258,8 @@ data "template_file" "concourse_iam_policy" {
   vars {
     s3_kms_key_arn = "${aws_kms_key.paas_state_key.arn}"
     environment    = "${var.environment}"
+    region         = "${var.region}"
+    account_id     = "${local.account_id}"
   }
 }
 

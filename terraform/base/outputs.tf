@@ -2,6 +2,15 @@ output "vpc_dns_nameserver" {
   value = "${cidrhost(aws_vpc.default.cidr_block, 2)}"
 }
 
+output "region" {
+  value = "${var.region}"
+}
+
+
+output "states_s3_kms_key_id" {
+  value = "${aws_kms_key.paas_state_key.id}"
+}
+
 output "domain" {
   value = "${local.domain}"
 }
