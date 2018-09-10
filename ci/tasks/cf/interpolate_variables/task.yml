@@ -8,6 +8,9 @@ inputs:
   - name: paas-bootstrap-git
   - name: cf-deployment-git
   - name: prometheus-boshrelease-git
+  - name: states-variables-s3
+  - name: base-tfstate-s3
+  - name: rds-tfstate-s3
 
 outputs:
   - name: vars-files

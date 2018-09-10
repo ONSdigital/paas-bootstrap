@@ -166,7 +166,6 @@ resource "aws_security_group_rule" "concourse_alb_to_web" {
   source_security_group_id = "${aws_security_group.concourse.id}"
 }
 
-
 # IP
 resource "aws_eip" "concourse" {
   vpc = true
@@ -251,4 +250,46 @@ resource "aws_route53_record" "concourse" {
   ttl     = "30"
 
   records = ["${aws_lb.concourse.dns_name}"]
+}
+
+data "template_file" "concourse_iam_policy" {
+  template = "${file("${path.module}/templates/concourse_iam_policy.json")}"
+
+  vars {
+    s3_kms_key_arn = "${aws_kms_key.paas_state_key.arn}"
+    environment    = "${var.environment}"
+  }
+}
+
+resource "aws_iam_instance_profile" "concourse" {
+  name = "${var.environment}_concourse_profile"
+  role = "${aws_iam_role.concourse.name}"
+}
+
+resource "aws_iam_role" "concourse" {
+  name = "${var.environment}_concourse_role"
+  path = "/"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "concourse" {
+  name = "${var.environment}_concourse_policy"
+  role = "${aws_iam_role.concourse.id}"
+
+  policy = "${data.template_file.concourse_iam_policy.rendered}"
 }

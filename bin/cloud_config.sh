@@ -60,4 +60,5 @@ $BOSH update-cloud-config -n \
   -v reserved_concourse_az1_cidr="$(output base .concourse_subnet_reserved_cidr_blocks[0])" \
   -v concourse_subnet_az1_id="$(output base .concourse_subnet_ids[0])" \
   -v concourse_security_group="$(output base .concourse_security_group_id)" \
-  -v concourse_alb_target_group="$(output base .concourse_alb_target_group_name)"
+  -v concourse_alb_target_group="$(output base .concourse_alb_target_group_name)" \
+  -v concourse_worker_iam_profile="$(output base .concourse_iam_instance_profile)"
