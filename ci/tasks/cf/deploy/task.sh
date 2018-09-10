@@ -93,6 +93,11 @@ external_credhub_database_password: ${CF_DB_PASSWORD}
 external_credhub_database_username: ${CF_DB_USERNAME}
 EOS
 
-echo "Creating dummy bbl-state.json"
-mkdir bbl-state/bbl-state
-echo "{}" >bbl-state/bbl-state/bbl-state.json
+echo "Deploying"
+
+export BOSH_ENVIRONMENT=$(output base .bosh_private_ip)
+
+bosh deploy -d cf \
+  -o ops-files/ops.yml \
+  -l vars-files/instance-counts.yml \
+  -l vars-files/variables.yml
