@@ -25,24 +25,6 @@ profile="${ENVIRONMENT}"
 
 instance_count_file=paas-bootstrap-git/profiles/${profile}/instance-count.yml
 
-echo "Constructing consolidated ops file"
-cat  \
-  cf-deployment-git/operations/aws.yml \
-  cf-deployment-git/operations/override-app-domains.yml \
-  cf-deployment-git/operations/use-external-blobstore.yml \
-  cf-deployment-git/operations/use-external-dbs.yml \
-  prometheus-boshrelease-git/manifests/operators/cf/add-prometheus-uaa-clients.yml \
-  paas-bootstrap-git/operations/bosh/tags.yml \
-  paas-bootstrap-git/operations/cf/router-sec-group.yml \
-  paas-bootstrap-git/operations/cf/scheduler.yml \
-  paas-bootstrap-git/operations/cf/s3_blobstore_with_kms_and_iam.yml \
-  paas-bootstrap-git/operations/cf/azs.yml \
-  paas-bootstrap-git/operations/cf/instance-counts.yml \
-  paas-bootstrap-git/operations/cf/rds-access.yml \
-  paas-bootstrap-git/operations/cf/uaa-clients.yml \
-  paas-bootstrap-git/operations/cf/test-user.yml \
-  > ops-files/ops.yml
-
 echo "Constructing variables"
 cp "${instance_count_file}" vars-files/instance-counts.yml
 
@@ -98,6 +80,20 @@ echo "Deploying"
 export BOSH_ENVIRONMENT=$(output base .bosh_private_ip)
 
 bosh deploy -d cf \
-  -o ops-files/ops.yml \
+  -o cf-deployment-git/operations/aws.yml \
+  -o cf-deployment-git/operations/override-app-domains.yml \
+  -o cf-deployment-git/operations/use-external-blobstore.yml \
+  -o cf-deployment-git/operations/use-external-dbs.yml \
+  -o prometheus-boshrelease-git/manifests/operators/cf/add-prometheus-uaa-clients.yml \
+  -o paas-bootstrap-git/operations/bosh/tags.yml \
+  -o paas-bootstrap-git/operations/cf/router-sec-group.yml \
+  -o paas-bootstrap-git/operations/cf/scheduler.yml \
+  -o paas-bootstrap-git/operations/cf/s3_blobstore_with_kms_and_iam.yml \
+  -o paas-bootstrap-git/operations/cf/azs.yml \
+  -o paas-bootstrap-git/operations/cf/instance-counts.yml \
+  -o paas-bootstrap-git/operations/cf/rds-access.yml \
+  -o paas-bootstrap-git/operations/cf/uaa-clients.yml \
+  -o paas-bootstrap-git/operations/cf/test-user.yml \
+  -o paas-bootstrap-git/operations/cf/api-workers.yml \
   -l vars-files/instance-counts.yml \
   -l vars-files/variables.yml
