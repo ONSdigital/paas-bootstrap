@@ -138,6 +138,4 @@ jobs:
       cf-acceptance-tests: cf-acceptance-tests-git
     params:
       CAPTURE_CONFIG: true
-      NODES: 4
-
-
+      NODES: 8
