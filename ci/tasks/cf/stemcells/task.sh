@@ -16,6 +16,6 @@ output() {
 export BOSH_ENVIRONMENT=$(output base .bosh_private_ip)
 
 IAAS_INFO=aws-xen-hvm
-CF_STEMCELL_VERSION=$(bosh interpolate cf-deployment/cf-deployment.yml --path=/stemcells/alias=default/version)
+CF_STEMCELL_VERSION=$(bosh interpolate cf-deployment-git/cf-deployment.yml --path=/stemcells/alias=default/version)
 
 bosh upload-stemcell https://bosh.io/d/stemcells/bosh-${IAAS_INFO}-ubuntu-trusty-go_agent?v=${CF_STEMCELL_VERSION}
