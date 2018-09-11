@@ -66,12 +66,38 @@ resources:
     sse_kms_key_id: ((s3_kms_key_id))      
 
 jobs:
+- name: initialise
+  serial: true
+  serial_groups: [cats]
+  plan:
+  - get: paas-bootstrap-git
+    trigger: true
+
+- name: upload stemcells
+  serial: true
+  serial_groups: [cats]
+  plan:
+  - aggregate: 
+    - get: paas-bootstrap-git
+      passed: [initialise]
+    - get: cf-deployment-git
+      version: { ref: ((cf_tag)) }
+    - get: base-tfstate-s3  
+  - task: upload stemcells
+    file: paas-bootstrap-git/ci/tasks/cf/stemcells/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      BOSH_CLIENT_SECRET: ((bosh_admin_password))
+      BOSH_CA_CERT: ((bosh_ca_cert))
+
 - name: deploy cloud foundry
   serial: true
   serial_groups: [cats]
   plan:
   - aggregate: 
     - get: paas-bootstrap-git
+      passed: ["upload stemcells"]
+      trigger: true
     - get: cf-deployment-concourse-tasks-git
     - get: cf-deployment-git
       version: { ref: ((cf_tag)) }
@@ -94,6 +120,7 @@ jobs:
   - aggregate:
     - get: paas-bootstrap-git
       passed: ["deploy cloud foundry"]
+      trigger: true
     - get: cf-deployment-concourse-tasks-git
     - get: cf-acceptance-tests-git
       version: { ref: ((cats_tag)) }
