@@ -14,7 +14,7 @@
   value:
     name: n1-highmem-2
     cloud_properties:
-      instance_type: r5.large
+      instance_type: m4.large
       security_groups:
       - ((rabbitmq-server-security-group-id))
       - ((bosh-managed-security-group-id))

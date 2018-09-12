@@ -57,6 +57,15 @@
   value: [z1, z2, z3]
 
 
+# FIXME: the pivotal RMQ release gives bogus examples
+# - type: replace
+#   path: /instance_groups/name=rmq/jobs/name=rabbitmq-server/properties/rabbitmq-server/disk_alarm_threshold?
+#   value:
+#     mem_relative: 0.4
+- type: remove
+  path: /instance_groups/name=rmq/jobs/name=rabbitmq-server/properties/rabbitmq-server/disk_alarm_threshold
+
+
 # The BOSH release appears not to be cf-rabbitmq-smoke-tests, so change to suit
 - type: replace
   path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/release
@@ -65,9 +74,36 @@
 - type: remove
   path: /instance_groups/name=rmq-broker/jobs/name=rabbitmq-broker/properties/rabbitmq-broker/rabbitmq/hosts
 
-# - type: replace
-#   path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/properties/cf/apps_domain?
-#   value: ((apps_domain))
+- type: replace
+  path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/properties/cf/apps_domain?
+  value: ((apps_domain))
 
-- type: remove
-  path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests
+- type: replace
+  path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/properties/rabbitmq?/plan_names?
+  value: [standard]
+
+- type: replace
+  path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/properties/rabbitmq?/service_name?
+  value: ((product-name))
+
+# - type: remove
+#   path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: rabbitmq-management-password
+    type: password
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: multitenant-rabbitmq-broker-password
+    type: password
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: haproxy-stats-password
+    type: password
+
