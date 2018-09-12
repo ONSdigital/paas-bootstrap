@@ -75,5 +75,8 @@ destroy_bosh: ## Kill off bosh
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .
 
+set_redis_secrets: ## Set the secrets for Redis broker
+	@bin/set_redis_secrets.sh
+
 redis: ## Deploy Redis (Elasticache)
 	@bin/deploy_redis.sh
