@@ -20,8 +20,8 @@ REDIS_SUBMODULE="./elasticache-broker"
 # TODO provide credentials from credhub
 bosh int $REDIS_SUBMODULE/manifest.yml \
    -o ./operations/redis/credentials.yml \
-   -v aws_access_key_id="$REDIS_AWS_ACCESS_KEY_ID" \
-   -v aws_secret_access_key="$REDIS_AWS_SECRET_ACCESS_KEY" \
+   -v aws_access_key_id="$(bin/credhub_credentials.sh -e $ENVIRONMENT credhub get -n /cf/redis/aws_access_key_id -j | jq -r .value)" \
+   -v aws_secret_access_key="$(bin/credhub_credentials.sh -e $ENVIRONMENT credhub get -n /cf/redis/aws_secret_access_key_id -j | jq -r .value)" \
   > foo.yml
 
 cat foo.yml
@@ -41,9 +41,9 @@ REDIS_SERVICE_UUID="test_uuid"
 REDIS_SERVICE_NAME="test_redis_service_name"
 REDIS_SERVICE_TAG="test_tag"
 # Create redis subnet group
-REDIS_CACHE_SUBNET_GROUP_NAME="test_cache_subnet_in_rds_subnets"
-REDIS_CACHE_SECURITY_GROUP="test_redis_security_groups"
-REGION='test_region'
+REDIS_CACHE_SUBNET_GROUP_NAME="$(output base .redis_cache_subnet_group_name)" 
+REDIS_CACHE_SECURITY_GROUP="$(output base .redis_security_group_name)"
+REGION="$(jq -r .region < data/$ENVIRONMENT.tfvars)"
 jq '.username = "'${REDIS_BROKER_USER}'" |
  .password = "'${REDIS_BROKER_PASSWORD}'" |
  .elasticache_config.region = "'${REGION}'" |
