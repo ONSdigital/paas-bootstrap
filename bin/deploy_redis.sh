@@ -20,8 +20,8 @@ REDIS_SUBMODULE="./elasticache-broker"
 # TODO provide credentials from credhub
 bosh int $REDIS_SUBMODULE/manifest.yml \
    -o ./operations/redis/credentials.yml \
-   -v aws_access_key_id="***REMOVED***" \
-   -v aws_secret_access_key="***REMOVED***" \
+   -v aws_access_key_id="$REDIS_AWS_ACCESS_KEY_ID" \
+   -v aws_secret_access_key="$REDIS_AWS_SECRET_ACCESS_KEY" \
   > foo.yml
 
 cat foo.yml
