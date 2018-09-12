@@ -299,6 +299,9 @@ output "redis_cache_subnet_group_name" {
 }
 
 output "redis_security_group_name" {
-  value = "${aws_elasticache_security_group.redis.name}"
+  value = "${aws_security_group.redis.name}"
 }
 
+output "redis_user_name" {
+  value = "${aws_iam_user.redis.name}"
+}

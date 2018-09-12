@@ -21,13 +21,63 @@ resource "aws_security_group" "redis" {
 
 # CREATE USER
 
-
 resource "aws_elasticache_subnet_group" "redis" {
   name       = "${var.environment}-redis-subnet-group"
   subnet_ids = ["${aws_subnet.rds.*.id}"]
 }
 
-resource "aws_elasticache_security_group" "redis" {
-  name                 = "${var.environment}-redis-security-group"
-  security_group_names = ["${aws_security_group.redis.name}"]
+# User and permissions
+resource "aws_iam_user" "redis" {
+  name = "${var.environment}-redis-user"
+  path = "/services/"
+}
+
+resource "aws_iam_user_policy" "redis" {
+  name = "${var.environment}-redis-policy"
+  user = "${aws_iam_user.redis.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "elasticache:DescribeCacheClusters",
+        "elasticache:ModifyCacheCluster",
+        "elasticache:DeleteCacheCluster",
+        "elasticache:AddTagsToResource"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowElasticacheSizes",
+      "Effect": "Allow",
+      "Action": "elasticache:CreateCacheCluster",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "elasticache:CacheNodeType": [
+            "cache.t2.micro",
+            "cache.t2.small",
+            "cache.t2.medium",
+            "cache.m3.large",
+            "cache.m3.large",
+            "cache.m4.large",
+            "cache.r4.large",
+            "cache.r3.large"
+          ]
+        }
+      }
+    },
+    {
+      "Action": [
+        "iam:GetUser"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
 }
