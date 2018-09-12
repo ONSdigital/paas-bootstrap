@@ -29,6 +29,36 @@ resource "aws_security_group_rule" "rmq_broker_outbound" {
   description              = "RabbitMQ broker outbound access"
 }
 
+resource "aws_security_group_rule" "rmq_broker_self_tcp" {
+  security_group_id        = "${aws_security_group.rabbitmq_broker.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  self                     = true
+  description              = "RabbitMQ broker self TCP"
+}
+
+resource "aws_security_group_rule" "rmq_broker_self_udp" {
+  security_group_id        = "${aws_security_group.rabbitmq_broker.id}"
+  type                     = "ingress"
+  protocol                 = "udp"
+  from_port                = 0
+  to_port                  = 65535
+  self                     = true
+  description              = "RabbitMQ broker self UDP"
+}
+
+resource "aws_security_group_rule" "rmq_broker_self_icmp" {
+  security_group_id        = "${aws_security_group.rabbitmq_broker.id}"
+  type                     = "ingress"
+  protocol                 = "icmp"
+  from_port                = -1
+  to_port                  = -1
+  self                     = true
+  description              = "RabbitMQ broker self ICMP"
+}
+
 resource "aws_security_group" "rabbitmq_server" {
   name        = "${var.environment}_rabbitmq_server_security_group"
   description = "RabbitMQ server access"
@@ -38,6 +68,36 @@ resource "aws_security_group" "rabbitmq_server" {
     Name        = "${var.environment}-rabbitmq-server-security-group"
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_security_group_rule" "rmq_server_self_tcp" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  self                     = true
+  description              = "RabbitMQ broker self TCP"
+}
+
+resource "aws_security_group_rule" "rmq_server_self_udo" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "udp"
+  from_port                = 0
+  to_port                  = 65535
+  self                     = true
+  description              = "RabbitMQ broker self UDP"
+}
+
+resource "aws_security_group_rule" "rmq_server_self_icmp" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "icmp"
+  from_port                = -1
+  to_port                  = -1
+  self                     = true
+  description              = "RabbitMQ server self ICMP"
 }
 
 resource "aws_security_group_rule" "rmq_broker_to_rmq_server" {

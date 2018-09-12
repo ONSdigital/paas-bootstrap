@@ -25,13 +25,13 @@ APPS_DOMAIN="apps.$(output base .domain)"
 
 export BOSH_CA_CERT=$(bosh int --path /default_ca/ca "data/$ENVIRONMENT-bosh-variables.yml")
 
-RABBITMQ_STEMCELL_VERSION=3586.36
+RABBITMQ_STEMCELL_VERSION=3586.40
 
 $BOSH -d rabbitmq deploy -n cf-rabbitmq-multitenant-broker-release/manifests/cf-rabbitmq-broker-template.yml \
   -o cf-rabbitmq-multitenant-broker-release/manifests/add-cf-rabbitmq.yml \
   -o ./operations/rabbitmq/release.yml \
   -v deployment-name=rabbitmq \
-  -v stemcell-version=3586.16 \
+  -v stemcell-version="'$RABBITMQ_STEMCELL_VERSION'" \
   -v system-domain="$SYSTEM_DOMAIN" \
   -v apps_domain="$APPS_DOMAIN" \
   -v multitenant-rabbitmq-broker-password=broker \
