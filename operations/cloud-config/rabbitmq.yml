@@ -5,7 +5,9 @@
     name: n1-standard-1
     cloud_properties:
       instance_type: t2.micro
-      security_groups: [ ((rabbitmq-broker-security-group-id))]
+      security_groups:
+      - ((rabbitmq-broker-security-group-id))
+      - ((bosh-managed-security-group-id))
 
 - type: replace
   path: /vm_types/-
@@ -13,4 +15,6 @@
     name: n1-himem-2
     cloud_properties:
       instance_type: r5.large
-      security_groups: [ ((rabbitmq-server-security-group-id))]
+      security_groups:
+      - ((rabbitmq-server-security-group-id))
+      - ((bosh-managed-security-group-id))

@@ -9,6 +9,25 @@ resource "aws_security_group" "rabbitmq_broker" {
   }
 }
 
+resource "aws_security_group_rule" "cf_to_rmq_broker" {
+  security_group_id        = "${aws_security_group.rabbitmq_broker.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 4567
+  to_port                  = 4567
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ broker API"
+}
+
+resource "aws_security_group_rule" "rmq_broker_outbound" {
+  security_group_id        = "${aws_security_group.rabbitmq_broker.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  cidr_blocks              = ["0.0.0.0/0"] # FIXME: restrict to the CF ALB security group - 443, 8443
+  description              = "RabbitMQ broker outbound access"
+}
 
 resource "aws_security_group" "rabbitmq_server" {
   name        = "${var.environment}_rabbitmq_server_security_group"
@@ -19,4 +38,74 @@ resource "aws_security_group" "rabbitmq_server" {
     Name        = "${var.environment}-rabbitmq-server-security-group"
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_security_group_rule" "rmq_broker_to_rmq_server" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.rabbitmq_broker.id}"
+  description              = "RabbitMQ broker can do everything to the servers"
+}
+
+resource "aws_security_group_rule" "cf_to_rmq_5671_2" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 5671
+  to_port                  = 5672
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ on ports 5671,2"
+}
+
+resource "aws_security_group_rule" "cf_to_rmq_1883" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 1883
+  to_port                  = 1883
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ on ports 5671,2"
+}
+
+resource "aws_security_group_rule" "cf_to_rmq_8883" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8883
+  to_port                  = 8883
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ on ports 8883"
+}
+
+resource "aws_security_group_rule" "cf_to_rmq_61613_4" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 61613
+  to_port                  = 61614
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ on ports 61613,4"
+}
+
+resource "aws_security_group_rule" "cf_to_rmq_15672" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 15672
+  to_port                  = 15672
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ on ports 15672"
+}
+
+resource "aws_security_group_rule" "cf_to_rmq_15674" {
+  security_group_id        = "${aws_security_group.rabbitmq_server.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 15674
+  to_port                  = 15674
+  source_security_group_id = "${aws_security_group.internal.id}"
+  description              = "CF may talk to RabbitMQ on ports 15674"
 }
