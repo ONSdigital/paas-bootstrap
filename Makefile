@@ -53,6 +53,9 @@ cf: ## Deploy CF
 prometheus: ## Deploy Prometheus
 	@bin/deploy_prometheus.sh
 
+rabbitmq: ## Deploy RabbitMQ service broker
+	@bin/deploy_rabbitmq.sh
+
 concourse: ## Deploy concourse
 	@bin/deploy_concourse.sh	
 
@@ -64,6 +67,7 @@ set_concourse_secrets: ## Set the secrets that Concourse needs to run its pipeli
 
 pipelines: login_fly ## Deploy pipelines
 	@ci/cf_pipeline.sh
+
 
 destroy_bosh: ## Kill off bosh
 	@bin/destroy_bosh.sh

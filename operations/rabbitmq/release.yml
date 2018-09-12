@@ -1,0 +1,33 @@
+---
+
+# https://bosh.io/releases/github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release?all=1
+- type: replace
+  path: /releases/name=cf-rabbitmq-multitenant-broker?
+  value:
+    name: "cf-rabbitmq-multitenant-broker"
+    version: "37.0.0"
+    url: "https://bosh.io/d/github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release?v=37.0.0"
+    sha1: "146049116e60593af959d1c738a139b59e8480a7"
+
+- type: remove
+  path: /releases/name=cf-rabbitmq-smoke-tests
+
+- type: replace
+  path: /releases/name=rabbitmq-smoke-tests?
+  value:
+    name: "rabbitmq-smoke-tests"
+    version: "4"
+    url: "https://bosh.io/d/github.com/cloudfoundry-community/rabbitmq-smoke-tests-boshrelease?v=4"
+    sha1: "06004fa77387f4443236117604870d9eeb93acb1"
+
+- type: replace
+  path: /releases/name=cf-rabbitmq?
+  value:
+    name: "cf-rabbitmq"
+    version: "251.0.0"
+    url: "https://bosh.io/d/github.com/pivotal-cf/cf-rabbitmq-release?v=251.0.0"
+    sha1: "6b26a898eb7d908b4325f6010917a228986c7ec0"
+
+- type: replace
+  path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/release
+  value: rabbitmq-smoke-tests
