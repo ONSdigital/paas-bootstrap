@@ -81,3 +81,9 @@ resource "aws_iam_user_policy" "redis" {
 }
 EOF
 }
+
+resource "random_string" "redis_broker_password" {
+  length  = 26
+  special = false
+}
+
