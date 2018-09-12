@@ -294,3 +294,11 @@ output "rabbitmq_broker_security_group_id" {
 output "rabbitmq_server_security_group_id" {
   value = "${aws_security_group.rabbitmq_server.id}"
 }
+output "redis_cache_subnet_group_name" {
+  value = "${aws_elasticache_subnet_group.redis.name}"
+}
+
+output "redis_security_group_name" {
+  value = "${aws_elasticache_security_group.redis.name}"
+}
+

@@ -13,3 +13,6 @@
 [submodule "cf-rabbitmq-multitenant-broker-release"]
 	path = cf-rabbitmq-multitenant-broker-release
 	url = https://github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release
+[submodule "elasticache-broker"]
+	path = elasticache-broker
+	url = https://github.com/cloudfoundry-community/elasticache-broker.git
