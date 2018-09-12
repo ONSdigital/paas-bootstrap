@@ -26,7 +26,7 @@ export BOSH_CA_CERT=$(bosh int --path /default_ca/ca "data/$ENVIRONMENT-bosh-var
 
 RABBITMQ_STEMCELL_VERSION=3586.36
 
-$BOSH -d rabbitmq interpolate -n cf-rabbitmq-multitenant-broker-release/manifests/cf-rabbitmq-broker-template.yml \
+$BOSH -d rabbitmq deploy -n cf-rabbitmq-multitenant-broker-release/manifests/cf-rabbitmq-broker-template.yml \
   -o cf-rabbitmq-multitenant-broker-release/manifests/add-cf-rabbitmq.yml \
   -o ./operations/rabbitmq/release.yml \
   -v deployment-name=rabbitmq \

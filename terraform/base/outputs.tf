@@ -64,6 +64,10 @@ output "bosh_security_group_ids" {
     value = [ "${aws_security_group.bosh.id}"]
 }
 
+output "bosh_managed_security_group_id" {
+  value = "${aws_security_group.bosh_managed.id}"
+}
+
 output "bosh_private_key" {
     value = "${tls_private_key.bosh.private_key_pem}"
 }

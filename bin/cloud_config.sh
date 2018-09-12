@@ -34,6 +34,7 @@ $BOSH update-cloud-config -n \
   -v reserved_az2_cidr="$(output base .internal_subnet_reserved_cidr_blocks[1])" \
   -v reserved_az3_cidr="$(output base .internal_subnet_reserved_cidr_blocks[2])" \
   -v private_dns_nameserver="$(output base .vpc_dns_nameserver)" \
+  -v bosh-managed-security-group-id="$(output base .bosh_managed_security_group_id)" \
   -v internal_security_group="$(output base .cf_internal_security_group_id)" \
   -v private_subnet_az1_id="$(output base .internal_subnet_ids[0])" \
   -v private_subnet_az2_id="$(output base .internal_subnet_ids[1])" \

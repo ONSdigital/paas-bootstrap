@@ -85,7 +85,6 @@ resource "aws_security_group" "bosh" {
   }
 }
 
-
 resource "aws_security_group_rule" "bosh_uaa_concourse" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
@@ -156,7 +155,7 @@ resource "aws_security_group_rule" "bosh_management_tcp" {
   protocol                 = "tcp"
   from_port                = 0
   to_port                  = 65535
-  source_security_group_id = "${aws_security_group.bosh.id}"
+  self                     = true
 }
 
 resource "aws_security_group_rule" "bosh_management_udp" {
@@ -165,7 +164,7 @@ resource "aws_security_group_rule" "bosh_management_udp" {
   protocol                 = "udp"
   from_port                = 0
   to_port                  = 65535
-  source_security_group_id = "${aws_security_group.bosh.id}"
+  self                     = true
 }
 
 resource "aws_security_group_rule" "jumpbox_uaa_bosh" {
@@ -244,4 +243,55 @@ resource "tls_private_key" "bosh" {
 resource "aws_key_pair" "bosh" {
   key_name = "${var.environment}-bosh"
   public_key = "${tls_private_key.bosh.public_key_openssh}"
+}
+
+resource "aws_security_group" "bosh_managed" {
+  name        = "${var.environment}_bosh_managed_security_group"
+  description = "Allow BOSH to manage this EC2 instance"
+  vpc_id      = "${aws_vpc.default.id}"
+
+  tags {
+    Name        = "${var.environment}-bosh-managed-security-group"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "bosh_to_managed_ssh" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 22
+  to_port                  = 22
+  source_security_group_id = "${aws_security_group.bosh.id}"
+  description              = "Allow BOSH to SSH to instance"
+}
+
+resource "aws_security_group_rule" "bosh_to_managed_mbus" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 6868
+  to_port                  = 6868
+  source_security_group_id = "${aws_security_group.bosh.id}"
+  description              = "Allow BOSH to access the BOSH agent on instance"
+}
+
+resource "aws_security_group_rule" "managed_to_bosh_tcp" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.bosh.id}"
+  description              = "Allow managed instance to respond to BOSH"
+}
+
+resource "aws_security_group_rule" "managed_to_bosh_udp" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "egress"
+  protocol                 = "udp"
+  from_port                = 0
+  to_port                  = 65535
+  source_security_group_id = "${aws_security_group.bosh.id}"
+  description              = "Allow managed instance to respond to BOSH"
 }
