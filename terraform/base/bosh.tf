@@ -306,6 +306,16 @@ resource "aws_security_group_rule" "bosh_from_managed_tcp" {
   description              = "Allow managed instance to respond to BOSH"
 }
 
+resource "aws_security_group_rule" "s3_and_stuff_from_managed" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 0
+  to_port                  = 65535
+  cidr_blocks              = ["0.0.0.0/0"]
+  description              = "Allow managed instance to hit S3 for blobs and stuff (FIXME: narrow scope)"
+}
+
 resource "aws_security_group_rule" "bosh_from_managed" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
@@ -315,3 +325,4 @@ resource "aws_security_group_rule" "bosh_from_managed" {
   source_security_group_id = "${aws_security_group.bosh_managed.id}"
   description              = "Allow managed instance to respond to BOSH"
 }
+
