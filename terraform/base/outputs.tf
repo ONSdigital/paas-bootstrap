@@ -273,9 +273,9 @@ output "services_subnet_gateway_ips" {
 #                    so you will have to change this if you add more AZs
 output "services_subnet_reserved_cidr_blocks" {
   value = [
-      "${cidrsubnet(aws_subnet.services.*.cidr_block[0],8,0)}",
-      "${cidrsubnet(aws_subnet.services.*.cidr_block[1],8,0)}",
-      "${cidrsubnet(aws_subnet.services.*.cidr_block[2],8,0)}"
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[0],7,0)}",
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[1],7,0)}",
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[2],7,0)}"
   ]
 }
 

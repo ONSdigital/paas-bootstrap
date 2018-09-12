@@ -21,6 +21,7 @@ bin/get_states.sh -e $ENVIRONMENT
 BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 
 SYSTEM_DOMAIN="system.$(output base .domain)"
+APPS_DOMAIN="apps.$(output base .domain)"
 
 export BOSH_CA_CERT=$(bosh int --path /default_ca/ca "data/$ENVIRONMENT-bosh-variables.yml")
 
@@ -32,6 +33,7 @@ $BOSH -d rabbitmq deploy -n cf-rabbitmq-multitenant-broker-release/manifests/cf-
   -v deployment-name=rabbitmq \
   -v stemcell-version=3586.16 \
   -v system-domain="$SYSTEM_DOMAIN" \
+  -v apps_domain="$APPS_DOMAIN" \
   -v multitenant-rabbitmq-broker-password=broker \
   -v multitenant-rabbitmq-broker-username=broker \
   -v product-name=p-rabbitmq \
@@ -47,7 +49,7 @@ $BOSH -d rabbitmq deploy -n cf-rabbitmq-multitenant-broker-release/manifests/cf-
   -v cf-admin-password=admin \
   -v cf-admin-username=admin \
   -v cluster-partition-handling-strategy=autoheal \
-  -v disk_alarm_threshold="{mem_relative,0.4}" \
+  -v disk_alarm_threshold="{mem_relative,'0.4'}" \
   -v haproxy-instances=1 \
   -v haproxy-stats-password=admin \
   -v haproxy-stats-username=admin \

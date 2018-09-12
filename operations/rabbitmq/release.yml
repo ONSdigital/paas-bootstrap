@@ -29,5 +29,45 @@
     sha1: "6b26a898eb7d908b4325f6010917a228986c7ec0"
 
 - type: replace
+  path: /instance_groups/name=rmq-broker/networks
+  value:
+  - name: services
+
+- type: replace
+  path: /instance_groups/name=rmq/networks
+  value:
+  - name: services
+
+- type: replace
+  path: /instance_groups/name=haproxy/networks
+  value:
+  - name: services
+
+- type: replace
+  path: /instance_groups/name=rmq-broker/azs
+  value: [z1, z2, z3]
+
+- type: replace
+  path: /instance_groups/name=rmq/azs
+  value: [z1, z2, z3]
+
+
+- type: replace
+  path: /instance_groups/name=haproxy/azs
+  value: [z1, z2, z3]
+
+
+# The BOSH release appears not to be cf-rabbitmq-smoke-tests, so change to suit
+- type: replace
   path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/release
   value: rabbitmq-smoke-tests
+
+- type: remove
+  path: /instance_groups/name=rmq-broker/jobs/name=rabbitmq-broker/properties/rabbitmq-broker/rabbitmq/hosts
+
+# - type: replace
+#   path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests/properties/cf/apps_domain?
+#   value: ((apps_domain))
+
+- type: remove
+  path: /instance_groups/name=rmq-broker/jobs/name=smoke-tests
