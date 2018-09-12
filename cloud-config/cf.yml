@@ -43,6 +43,9 @@ disk_types:
 - name: 10GB
   disk_size: 10_000
   cloud_properties: {encrypted: true, type: gp2}
+- name: 50GB
+  disk_size: 50_000
+  cloud_properties: {encrypted: true, type: gp2}
 - name: 100GB
   disk_size: 100_000
   cloud_properties: {encrypted: true, type: gp2}
@@ -111,7 +114,7 @@ networks:
     dns:
     - ((private_dns_nameserver))
     - 1.1.1.1
-    reserved: [((services_subnet_az2_cidr))]
+    reserved: [((reserved_services_az2_cidr))]
     cloud_properties:
       subnet: ((services_subnet_az2_id))
   - range: ((services_subnet_az3_cidr))

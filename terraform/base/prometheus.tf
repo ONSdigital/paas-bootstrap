@@ -228,6 +228,17 @@ resource "aws_security_group_rule" "prometheus_bosh_node_exporters" {
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
+
+resource "aws_security_group_rule" "managed_node_exporters" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 9100
+  to_port                  = 9100
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+  description              = "Allow BOSH to access the BOSH agent on instance"
+}
+
 resource "aws_security_group_rule" "prometheus_cf_node_exporters" {
   security_group_id        = "${aws_security_group.internal.id}"
   type                     = "ingress"

@@ -12,7 +12,7 @@
 - type: replace
   path: /vm_types/-
   value:
-    name: n1-himem-2
+    name: n1-highmem-2
     cloud_properties:
       instance_type: r5.large
       security_groups:
