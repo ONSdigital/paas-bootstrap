@@ -48,6 +48,16 @@ resource "aws_security_group_rule" "allow_jumpbox_to_the_world" {
   description              = "Sod it, let jumpbox see the world"
 }
 
+resource "aws_security_group_rule" "jumpbox_to_managed_ssh" {
+  security_group_id        = "${aws_security_group.bosh_managed.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 22
+  to_port                  = 22
+  source_security_group_id = "${aws_security_group.jumpbox.id}"
+  description              = "Allow Jumpbox to SSH to instance"
+}
+
 # SSH
 resource "tls_private_key" "jumpbox" {
   algorithm   = "RSA"

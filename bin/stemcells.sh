@@ -14,7 +14,7 @@ output() {
 IAAS_INFO=aws-xen-hvm
 CF_STEMCELL_VERSION=$(bosh interpolate cf-deployment/cf-deployment.yml --path=/stemcells/alias=default/version)
 CONCOURSE_STEMCELL_VERSION=97.15 # FIXME: interpolate from somewhere
-RABBITMQ_STEMCELL_VERSION=3586.16
+RABBITMQ_STEMCELL_VERSION=3586.40
 
 BOSH="bin/bosh_credentials.sh -e $ENVIRONMENT bosh"
 if ! $BOSH -n stemcells | grep -q "ubuntu-trusty.*$CF_STEMCELL_VERSION"; then
