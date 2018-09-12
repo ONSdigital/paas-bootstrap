@@ -256,3 +256,37 @@ output "concourse_fqdn" {
 output "concourse_iam_instance_profile" {
   value = "${aws_iam_instance_profile.concourse.name}"
 }
+
+output "services_subnet_gateway_ips" {
+  value = [
+      "${cidrhost(aws_subnet.services.*.cidr_block[0],1)}",
+      "${cidrhost(aws_subnet.services.*.cidr_block[1],1)}",
+      "${cidrhost(aws_subnet.services.*.cidr_block[2],1)}"
+  ]
+}
+
+# NASTY HACK ALERT - we cannot find a way in terraform to perform an action on all elements of a list
+#                    so you will have to change this if you add more AZs
+output "services_subnet_reserved_cidr_blocks" {
+  value = [
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[0],8,0)}",
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[1],8,0)}",
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[2],8,0)}"
+  ]
+}
+
+output "services_subnet_ids" {
+    value = ["${aws_subnet.services.*.id}"]
+}
+
+output "services_subnet_cidr_blocks" {
+    value = ["${aws_subnet.services.*.cidr_block}"]
+}
+
+output "rabbitmq_broker_security_group_id" {
+  value = "${aws_security_group.rabbitmq_broker.id}"
+}
+
+output "rabbitmq_server_security_group_id" {
+  value = "${aws_security_group.rabbitmq_server.id}"
+}

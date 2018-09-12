@@ -153,8 +153,8 @@ And use the displayed output to point the browser at the desired Prometheus comp
 | Component   | Version |
 | ----------- | ------- |
 | concourse   | v4.1.0  |
-| cf          | v4.0.0  |
-| bosh        | v1.1.0  |
+| cf          | v4.2.0  |
+| bosh        | v1.2.0  |
 | prometheus  | v23.2.0 |
 
 ## LICENCE

@@ -10,3 +10,6 @@
 [submodule "prometheus-boshrelease"]
 	path = prometheus-boshrelease
 	url = https://github.com/bosh-prometheus/prometheus-boshrelease.git
+[submodule "cf-rabbitmq-multitenant-broker-release"]
+	path = cf-rabbitmq-multitenant-broker-release
+	url = https://github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release

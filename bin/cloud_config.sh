@@ -23,6 +23,7 @@ $BOSH update-cloud-config -n \
   -o ./operations/cloud-config/cf-rds-sec-group.yml \
   -o ./operations/cloud-config/prometheus.yml \
   -o ./operations/cloud-config/concourse.yml \
+  -o ./operations/cloud-config/rabbitmq.yml \
   -v az1="$(jq -r .availability_zones[0] < data/$ENVIRONMENT.tfvars)" \
   -v az2="$(jq -r .availability_zones[1] < data/$ENVIRONMENT.tfvars)" \
   -v az3="$(jq -r .availability_zones[2] < data/$ENVIRONMENT.tfvars)" \
@@ -61,4 +62,21 @@ $BOSH update-cloud-config -n \
   -v concourse_subnet_az1_id="$(output base .concourse_subnet_ids[0])" \
   -v concourse_security_group="$(output base .concourse_security_group_id)" \
   -v concourse_alb_target_group="$(output base .concourse_alb_target_group_name)" \
-  -v concourse_worker_iam_profile="$(output base .concourse_iam_instance_profile)"
+  -v concourse_worker_iam_profile="$(output base .concourse_iam_instance_profile)" \
+  -v services_subnet_az1_cidr="$(output base .services_subnet_cidr_blocks[0])" \
+  -v services_subnet_az1_gateway="$(output base .services_subnet_gateway_ips[0])" \
+  -v reserved_services_az1_cidr="$(output base .services_subnet_reserved_cidr_blocks[0])" \
+  -v services_subnet_az1_id="$(output base .services_subnet_ids[0])" \
+  -v services_subnet_az2_cidr="$(output base .services_subnet_cidr_blocks[1])" \
+  -v services_subnet_az2_gateway="$(output base .services_subnet_gateway_ips[1])" \
+  -v reserved_services_az2_cidr="$(output base .services_subnet_reserved_cidr_blocks[1])" \
+  -v services_subnet_az2_id="$(output base .services_subnet_ids[1])" \
+  -v services_subnet_az3_cidr="$(output base .services_subnet_cidr_blocks[2])" \
+  -v services_subnet_az3_gateway="$(output base .services_subnet_gateway_ips[2])" \
+  -v reserved_services_az3_cidr="$(output base .services_subnet_reserved_cidr_blocks[2])" \
+  -v services_subnet_az3_id="$(output base .services_subnet_ids[2])" \
+  -v rabbitmq-broker-security-group-id="$(output base .rabbitmq_broker_security_group_id)" \
+  -v rabbitmq-server-security-group-id="$(output base .rabbitmq_server_security_group_id)"
+
+
+
