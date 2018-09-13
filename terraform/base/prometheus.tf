@@ -270,6 +270,16 @@ resource "aws_security_group_rule" "prometheus_bosh_director" {
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
+resource "aws_security_group_rule" "prometheus_bosh_uaa" {
+  security_group_id        = "${aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8443
+  to_port                  = 8443
+  description              = "Allow prometheus to access bosh UAA"
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
 resource "aws_security_group_rule" "prometheus_outbound" {
   security_group_id = "${aws_security_group.prometheus.id}"
   type              = "egress"
