@@ -10,7 +10,7 @@ git checkout v4.1.0
 cd ..
 
 cd bosh-deployment
-git checkout 7375c31d59018203911da3881334f09d8e70deb5
+git checkout ff0bc984c72d5053656c666ae7d7788a78f6b7a8
 cd ..
 
 cd cf-deployment
