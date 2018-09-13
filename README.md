@@ -16,6 +16,8 @@ We use the code in this repository to bootstrap our AWS PaaS environment. The no
 - CF Management CLIs
 - Credhub CLI
 - UAA CLI
+- PSQL client
+- MySQL client
 - Fly [CLI](https://concourse-ci.org/download.html)
 - [yq](https://github.com/mikefarah/yq) (or, `brew install yq`)
 - [jq](https://stedolan.github.io/jq/) (or, `brew install jq`)

@@ -8,7 +8,7 @@ COMMAND=${1:-plan}
 OPTS=
 [ "$COMMAND" = plan ] || OPTS=-auto-approve
 
-bin/get_states -e $ENVIRONMENT -f $ENVIRONMENT.tfvars -f $ENVIRONMENT-rds.tfstate
+bin/get_states.sh -e $ENVIRONMENT -o -f $ENVIRONMENT.tfvars -f $ENVIRONMENT-rds.tfstate
 
 terraform init terraform/rds
 
@@ -18,4 +18,4 @@ terraform $COMMAND \
   -var-file=<(bin/outputs.sh base) \
   -state="data/$ENVIRONMENT-rds.tfstate" terraform/rds/
 
-  bin/persist_states -e $ENVIRONMENT -f $ENVIRONMENT-rds.tfstate
+bin/persist_states.sh -e $ENVIRONMENT -f $ENVIRONMENT-rds.tfstate
