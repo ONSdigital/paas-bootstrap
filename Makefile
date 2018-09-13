@@ -14,6 +14,9 @@ VAR_FILE = ${ENVIRONMENT}_vpc.tfvars
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+submodules: ## checkout the right version of git submodules
+	@bin/update_submodules.sh 
+
 terraform: ## create main terraform environment
 	@bin/terraform.sh apply
 
