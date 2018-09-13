@@ -26,9 +26,6 @@ terraform_init: ## initialize terraform provider
 terraform_plan: ## plan what would be applied if we ran make terraform
 	@bin/terraform.sh plan
 
-destroy_terraform: ## destroy main terraform environment
-	@bin/terraform.sh destroy
-
 outputs: ## base terraform outputs
 	@bin/outputs.sh
 
@@ -71,9 +68,26 @@ set_concourse_secrets: ## Set the secrets that Concourse needs to run its pipeli
 pipelines: login_fly ## Deploy pipelines
 	@ci/cf_pipeline.sh
 
+destroy_concourse: ## Delete the concourse deployment
+	@bin/destroy_deployment.sh concourse
+
+destroy_rabbitmq: ## Delete the rabbitmq deployment
+	@bin/destroy_deployment.sh rabbitmq
+
+destroy_prometheus: ## Delete the prometheus deployment
+	@bin/destroy_deployment.sh prometheus
+
+destroy_cf: ## Delete the CF deployment
+	@bin/destroy_deployment.sh cf
 
 destroy_bosh: ## Kill off bosh
 	@bin/destroy_bosh.sh
+
+destroy_rds: ## destroy the RDS instances
+	@bin/rds.sh destroy
+
+destroy_terraform: ## destroy main terraform environment
+	@bin/terraform.sh destroy
 
 decode_aws_error: ## Decode AWS message
 	@aws sts decode-authorization-message --encoded-message ${DECODE_MESSAGE} | jq -r .DecodedMessage | jq .

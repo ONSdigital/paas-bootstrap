@@ -12,5 +12,6 @@
     name: cf-router-sec-group
     cloud_properties:
       security_groups:
-        - ((cf-router-lb-internal-security-group-id))
-        - ((cf-internal-security-group-id))
+      - ((cf-router-lb-internal-security-group-id))
+      - ((cf-internal-security-group-id))
+      - ((bosh-managed-security-group-id))

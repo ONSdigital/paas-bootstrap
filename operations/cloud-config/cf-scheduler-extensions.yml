@@ -5,7 +5,7 @@
     name: diego-ssh-proxy-network-properties
     cloud_properties:
       elbs: 
-        - ((cf-ssh-lb))
+      - ((cf-ssh-lb))
 
 - type: replace
   path: /vm_extensions/-
@@ -15,3 +15,5 @@
       security_groups:
       - ((internal_security_group))
       - ((cf-ssh-internal))
+      - ((bosh-managed-security-group-id))
+

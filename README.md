@@ -158,6 +158,7 @@ And use the displayed output to point the browser at the desired Prometheus comp
 | cf          | v4.2.0  |
 | bosh        | 7375c31d59018203911da3881334f09d8e70deb5 |
 | prometheus  | v23.2.0 |
+| rabbitmq    | v37.0.0 |
 
 ## LICENCE
 

@@ -218,16 +218,25 @@ resource "aws_security_group" "prometheus" {
   }
 }
 
-resource "aws_security_group_rule" "prometheus_bosh_node_exporters" {
+resource "aws_security_group_rule" "prometheus_bosh_data_exporters" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 9190
   to_port                  = 9190
-  description              = "Allow prometheus to access bosh node exporter"
+  description              = "Allow prometheus to access bosh data exporter"
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
+resource "aws_security_group_rule" "prometheus_bosh_node_exporters" {
+  security_group_id        = "${aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 9100
+  to_port                  = 9100
+  description              = "Allow prometheus to access bosh node exporter"
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
 
 resource "aws_security_group_rule" "managed_node_exporters" {
   security_group_id        = "${aws_security_group.bosh_managed.id}"
@@ -239,25 +248,7 @@ resource "aws_security_group_rule" "managed_node_exporters" {
   description              = "Allow BOSH to access the BOSH agent on instance"
 }
 
-resource "aws_security_group_rule" "prometheus_cf_node_exporters" {
-  security_group_id        = "${aws_security_group.internal.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 9100
-  to_port                  = 9100
-  description              = "Allow prometheus to access cf node exporter"
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
 
-resource "aws_security_group_rule" "prometheus_concourse_node_exporters" {
-  security_group_id        = "${aws_security_group.concourse.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 9100
-  to_port                  = 9100
-  description              = "Allow prometheus to access concourse node exporter"
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
 
 resource "aws_security_group_rule" "prometheus_cf_nats" {
   security_group_id        = "${aws_security_group.internal.id}"
@@ -276,6 +267,16 @@ resource "aws_security_group_rule" "prometheus_bosh_director" {
   from_port                = 25555
   to_port                  = 25555
   description              = "Allow prometheus to access bosh director"
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
+
+resource "aws_security_group_rule" "prometheus_bosh_uaa" {
+  security_group_id        = "${aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 8443
+  to_port                  = 8443
+  description              = "Allow prometheus to access bosh UAA"
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
@@ -314,78 +315,6 @@ resource "aws_security_group_rule" "prometheus_rule_icmp" {
   from_port         = -1
   to_port           = -1
   self              = true
-}
-
-resource "aws_security_group_rule" "prometheus_from_bosh_rule_tcp_ssh" {
-  security_group_id        = "${aws_security_group.prometheus.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 22
-  to_port                  = 22
-  source_security_group_id = "${aws_security_group.bosh.id}"
-}
-
-resource "aws_security_group_rule" "prometheus_from_bosh_rule_tcp_bosh_agent" {
-  security_group_id        = "${aws_security_group.prometheus.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 6868
-  to_port                  = 6868
-  source_security_group_id = "${aws_security_group.bosh.id}"
-}
-
-resource "aws_security_group_rule" "prometheus_from_jumpbox_rule_tcp_ssh" {
-  security_group_id        = "${aws_security_group.prometheus.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 22
-  to_port                  = 22
-  source_security_group_id = "${aws_security_group.jumpbox.id}"
-}
-
-resource "aws_security_group_rule" "bosh_ssh_prometheus" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 22
-  to_port                  = 22
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
-
-resource "aws_security_group_rule" "bosh_mbus_prometheus" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 6868
-  to_port                  = 6868
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
-
-resource "aws_security_group_rule" "bosh_tcp_from_prometheus" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 0
-  to_port                  = 65535
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
-
-resource "aws_security_group_rule" "bosh_udp_from_prometheus" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "udp"
-  from_port                = 0
-  to_port                  = 65535
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
-
-resource "aws_security_group_rule" "jumpbox_ssh_prometheus" {
-  security_group_id        = "${aws_security_group.jumpbox.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 22
-  to_port                  = 22
-  source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
 resource "aws_security_group" "prometheus_alb" {
