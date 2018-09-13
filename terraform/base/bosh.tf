@@ -40,8 +40,9 @@ data "template_file" "iam_policy" {
   template = "${file("${path.module}/templates/bosh_iam_policy.json")}"
 
   vars {
-    region     = "${var.region}"
-    account_id = "${local.account_id}"
+    environment = "${var.environment}"
+    region      = "${var.region}"
+    account_id  = "${local.account_id}"
   }
 }
 
@@ -112,7 +113,6 @@ resource "aws_security_group_rule" "bosh_uaa_jumpbox" {
   source_security_group_id = "${aws_security_group.jumpbox.id}"
 }
 
-
 resource "aws_security_group_rule" "bosh_ssh_jumpbox" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
@@ -150,21 +150,21 @@ resource "aws_security_group_rule" "bosh_director_jumpbox" {
 }
 
 resource "aws_security_group_rule" "bosh_management_tcp" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 0
-  to_port                  = 65535
-  self                     = true
+  security_group_id = "${aws_security_group.bosh.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 0
+  to_port           = 65535
+  self              = true
 }
 
 resource "aws_security_group_rule" "bosh_management_udp" {
-  security_group_id        = "${aws_security_group.bosh.id}"
-  type                     = "ingress"
-  protocol                 = "udp"
-  from_port                = 0
-  to_port                  = 65535
-  self                     = true
+  security_group_id = "${aws_security_group.bosh.id}"
+  type              = "ingress"
+  protocol          = "udp"
+  from_port         = 0
+  to_port           = 65535
+  self              = true
 }
 
 resource "aws_security_group_rule" "jumpbox_uaa_bosh" {
@@ -204,6 +204,7 @@ resource "aws_security_group" "bosh_rds" {
     Environment = "${var.environment}"
   }
 }
+
 resource "aws_security_group_rule" "allow_postgres_from_concourse" {
   security_group_id        = "${aws_security_group.bosh_rds.id}"
   type                     = "ingress"
@@ -236,12 +237,12 @@ resource "aws_security_group_rule" "allow_postgres_from_jumpbox" {
 
 # BOSH default key pair
 resource "tls_private_key" "bosh" {
-  algorithm   = "RSA"
-  rsa_bits = "2048"
+  algorithm = "RSA"
+  rsa_bits  = "2048"
 }
 
 resource "aws_key_pair" "bosh" {
-  key_name = "${var.environment}-bosh"
+  key_name   = "${var.environment}-bosh"
   public_key = "${tls_private_key.bosh.public_key_openssh}"
 }
 
@@ -307,13 +308,13 @@ resource "aws_security_group_rule" "bosh_from_managed_tcp" {
 }
 
 resource "aws_security_group_rule" "s3_and_stuff_from_managed" {
-  security_group_id        = "${aws_security_group.bosh_managed.id}"
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 0
-  to_port                  = 65535
-  cidr_blocks              = ["0.0.0.0/0"]
-  description              = "Allow managed instance to hit S3 for blobs and stuff (FIXME: narrow scope)"
+  security_group_id = "${aws_security_group.bosh_managed.id}"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 0
+  to_port           = 65535
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow managed instance to hit S3 for blobs and stuff (FIXME: narrow scope)"
 }
 
 resource "aws_security_group_rule" "bosh_from_managed" {
@@ -325,4 +326,3 @@ resource "aws_security_group_rule" "bosh_from_managed" {
   source_security_group_id = "${aws_security_group.bosh_managed.id}"
   description              = "Allow managed instance to respond to BOSH"
 }
-

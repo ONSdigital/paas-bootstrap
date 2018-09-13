@@ -61,6 +61,16 @@
       "Resource": [
         "*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::ons-paas-${environment}-*",
+        "arn:aws:s3:::ons-paas-${environment}-*/*"
+      ]
     }
   ]
 }

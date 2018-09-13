@@ -3,8 +3,6 @@
 set -euo pipefail
 
 : $ENVIRONMENT
-: $AWS_ACCESS_KEY_ID
-: $AWS_SECRET_ACCESS_KEY
 
 output() {
     FILE=$1
@@ -48,11 +46,11 @@ bosh int \
   -v external_db_adapter="$(output rds .bosh_db_type)" \
   -v external_db_name='bosh' \
   -v s3-bucket-name="$(output base .bosh_blobstore_bucket_name)" \
-  -v s3-access-key-id="$AWS_ACCESS_KEY_ID" \
-  -v s3-secret-access-key="$AWS_SECRET_ACCESS_KEY" \
+  -v s3-access-key-id="$(output base .service_user_access_key_id)" \
+  -v s3-secret-access-key="$(output base .service_user_secret_access_key)" \
   -v s3-region="$(jq -r .region < data/$ENVIRONMENT.tfvars)" \
-  -v access_key_id="$AWS_ACCESS_KEY_ID" \
-  -v secret_access_key="$AWS_SECRET_ACCESS_KEY" \
+  -v access_key_id="$(output base .service_user_access_key_id)" \
+  -v secret_access_key="$(output base .service_user_secret_access_key)" \
   > data/$ENVIRONMENT-bosh-manifest.yml
 
 JUMPBOX_IP=$(output base .jumpbox_public_ip)
