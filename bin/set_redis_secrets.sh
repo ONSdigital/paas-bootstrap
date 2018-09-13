@@ -33,7 +33,5 @@ else
  secrets=$(aws iam create-access-key --user-name $REDIS_USER)
  bin/credhub_credentials.sh -e $ENVIRONMENT credhub set -n /cf/redis/aws_access_key_id --type value --value $(echo $secrets | jq -r .AccessKey.AccessKeyId)
  bin/credhub_credentials.sh -e $ENVIRONMENT credhub set -n /cf/redis/aws_secret_access_key_id --type value --value $(echo $secrets | jq -r .AccessKey.SecretAccessKey)
- bin/credhub_credentials.sh -e $ENVIRONMENT credhub set -n /cf/redis/broker_user --type value --value "redis_admin"
- bin/credhub_credentials.sh -e $ENVIRONMENT credhub set -n /cf/redis/broker_password --type value --value "$(output base .redis_broker_password)"
- bin/credhub_credentials.sh -e $ENVIRONMENT credhub set -n /cf/redis/service_uuid --type value --value "$(uuidgen)"
+ bin/credhub_credentials.sh -e $ENVIRONMENT credhub generate -n /cf/redis/broker_password --type password
 fi
