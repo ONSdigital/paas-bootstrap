@@ -31,9 +31,16 @@ cleanup() {
 }
 trap cleanup EXIT
 
+
+bin/credhub_credentials.sh -e $ENVIRONMENT \
+  credhub set -n /bosh/prometheus/uaa_bosh_exporter_client_secret \
+    --type value \
+    --value "$(bosh int --path=/uaa_bosh_exporter_client_secret data/$ENVIRONMENT-bosh-variables.yml)"
+  
 $BOSH -d prometheus deploy -n prometheus-boshrelease/manifests/prometheus.yml \
   -o prometheus-boshrelease/manifests/operators/monitor-bosh.yml \
   -o prometheus-boshrelease/manifests/operators/monitor-cf.yml \
+  -o prometheus-boshrelease/manifests/operators/enable-bosh-uaa.yml \
   -o ./operations/prometheus/networks.yml \
   -v bosh_url="$(output base .bosh_director_fqdn)" \
   -v bosh_username="admin" \

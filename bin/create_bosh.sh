@@ -25,6 +25,7 @@ bosh int \
   -o operations/bosh/certificate.yml \
   -o operations/bosh/external-uaa-db.yml \
   -o operations/bosh/external-credhub-db.yml \
+  -o prometheus-boshrelease/manifests/operators/bosh/add-bosh-exporter-uaa-clients.yml \
   -v director_name=bosh \
   -v internal_cidr="$(output base .bosh_subnet_cidr_block)" \
   -v internal_gw="$(output base .bosh_gateway_ip)" \
