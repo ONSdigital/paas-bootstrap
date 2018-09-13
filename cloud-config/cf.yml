@@ -31,8 +31,9 @@ vm_types:
   cloud_properties:
     instance_type: c4.xlarge
     ephemeral_disk: {size: 50_000, type: gp2}
-    security_groups: [ ((internal_security_group))]
-
+    security_groups:
+    - ((internal_security_group))
+    - ((bosh-managed-security-group-id))
 disk_types:
 - name: default
   disk_size: 3000
@@ -75,7 +76,9 @@ networks:
     reserved: [((reserved_az1_cidr))]
     cloud_properties:
       subnet: ((private_subnet_az1_id))
-      security_groups: [ ((internal_security_group))]
+      security_groups:
+      - ((internal_security_group))
+      - ((bosh-managed-security-group-id))
   - range: ((private_subnet_az2_cidr))
     gateway: ((private_subnet_az2_gateway))
     az: z2
@@ -85,7 +88,9 @@ networks:
     reserved: [((reserved_az2_cidr))]
     cloud_properties:
       subnet: ((private_subnet_az2_id))
-      security_groups: [ ((internal_security_group))]
+      security_groups:
+      - ((internal_security_group))
+      - ((bosh-managed-security-group-id))
   - range: ((private_subnet_az3_cidr))
     gateway: ((private_subnet_az3_gateway))
     az: z3
@@ -95,7 +100,9 @@ networks:
     reserved: [((reserved_az3_cidr))]
     cloud_properties:
       subnet: ((private_subnet_az3_id))
-      security_groups: [ ((internal_security_group))]
+      security_groups:
+      - ((internal_security_group))
+      - ((bosh-managed-security-group-id))
 - name: services  
   type: manual
   subnets:
