@@ -83,6 +83,7 @@ You will need to create (manually) an AWS user and generate access and secret ke
   make concourse
   make cf
   make prometheus
+  make rabbitmq
 ```
 
 You can specify AWS_PROFILE, rather than the two AWS secrets, for every step except `make bosh`.
