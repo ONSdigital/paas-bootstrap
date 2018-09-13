@@ -15,6 +15,14 @@ output "domain" {
   value = "${local.domain}"
 }
 
+output "service_user_access_key_id" {
+  value = "${aws_iam_access_key.service_user.id}"
+}
+
+output "service_user_secret_access_key" {
+  value = "${aws_iam_access_key.service_user.secret}"
+}
+
 output "bosh_rds_security_group_id" {
     value = "${aws_security_group.bosh_rds.id}"
 }
