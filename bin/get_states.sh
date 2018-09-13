@@ -27,3 +27,5 @@ else
     aws s3 cp "s3://ons-paas-${ENVIRONMENT}-states/$FILE" "data/" --acl=private
   done
 fi
+
+exit 0
