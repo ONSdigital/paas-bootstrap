@@ -218,16 +218,25 @@ resource "aws_security_group" "prometheus" {
   }
 }
 
-resource "aws_security_group_rule" "prometheus_bosh_node_exporters" {
+resource "aws_security_group_rule" "prometheus_bosh_data_exporters" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 9190
   to_port                  = 9190
-  description              = "Allow prometheus to access bosh node exporter"
+  description              = "Allow prometheus to access bosh data exporter"
   source_security_group_id = "${aws_security_group.prometheus.id}"
 }
 
+resource "aws_security_group_rule" "prometheus_bosh_node_exporters" {
+  security_group_id        = "${aws_security_group.bosh.id}"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 9100
+  to_port                  = 9100
+  description              = "Allow prometheus to access bosh node exporter"
+  source_security_group_id = "${aws_security_group.prometheus.id}"
+}
 
 resource "aws_security_group_rule" "managed_node_exporters" {
   security_group_id        = "${aws_security_group.bosh_managed.id}"
@@ -239,25 +248,7 @@ resource "aws_security_group_rule" "managed_node_exporters" {
   description              = "Allow BOSH to access the BOSH agent on instance"
 }
 
-resource "aws_security_group_rule" "prometheus_cf_node_exporters" {
-  security_group_id        = "${aws_security_group.internal.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 9100
-  to_port                  = 9100
-  description              = "Allow prometheus to access cf node exporter"
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
 
-resource "aws_security_group_rule" "prometheus_concourse_node_exporters" {
-  security_group_id        = "${aws_security_group.concourse.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 9100
-  to_port                  = 9100
-  description              = "Allow prometheus to access concourse node exporter"
-  source_security_group_id = "${aws_security_group.prometheus.id}"
-}
 
 resource "aws_security_group_rule" "prometheus_cf_nats" {
   security_group_id        = "${aws_security_group.internal.id}"
