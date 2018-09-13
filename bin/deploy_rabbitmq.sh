@@ -61,6 +61,6 @@ $BOSH -d rabbitmq run-errand smoke-tests
 
 echo
 echo
-echo *****************************************************
-echo The RabbitMQ service broker is installed and tested
-echo *****************************************************
+echo '*****************************************************'
+echo 'The RabbitMQ service broker is installed and tested'
+echo '*****************************************************'

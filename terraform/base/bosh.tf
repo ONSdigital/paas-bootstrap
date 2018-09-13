@@ -267,42 +267,22 @@ resource "aws_security_group_rule" "bosh_to_managed_ssh" {
   description              = "Allow BOSH to SSH to instance"
 }
 
-resource "aws_security_group_rule" "bosh_to_managed_mbus" {
-  security_group_id        = "${aws_security_group.bosh_managed.id}"
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 6868
-  to_port                  = 6868
-  source_security_group_id = "${aws_security_group.bosh.id}"
-  description              = "Allow BOSH to access the BOSH agent on instance"
-}
-
-resource "aws_security_group_rule" "managed_to_bosh_tcp" {
+resource "aws_security_group_rule" "managed_to_bosh_4222" {
   security_group_id        = "${aws_security_group.bosh_managed.id}"
   type                     = "egress"
   protocol                 = "tcp"
-  from_port                = 0
-  to_port                  = 65535
+  from_port                = 4222
+  to_port                  = 4222
   source_security_group_id = "${aws_security_group.bosh.id}"
   description              = "Allow managed instance to respond to BOSH"
 }
 
-resource "aws_security_group_rule" "managed_to_bosh_udp" {
-  security_group_id        = "${aws_security_group.bosh_managed.id}"
-  type                     = "egress"
-  protocol                 = "udp"
-  from_port                = 0
-  to_port                  = 65535
-  source_security_group_id = "${aws_security_group.bosh.id}"
-  description              = "Allow managed instance to respond to BOSH"
-}
-
-resource "aws_security_group_rule" "bosh_from_managed_tcp" {
+resource "aws_security_group_rule" "bosh_from_managed_4222" {
   security_group_id        = "${aws_security_group.bosh.id}"
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = 0
-  to_port                  = 65535
+  from_port                = 4222
+  to_port                  = 4222
   source_security_group_id = "${aws_security_group.bosh_managed.id}"
   description              = "Allow managed instance to respond to BOSH"
 }
