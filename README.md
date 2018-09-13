@@ -27,7 +27,7 @@ We use the code in this repository to bootstrap our AWS PaaS environment. The no
 1. Update submodules
 
 ```sh
-  git submodule update --init
+  make submodules
 ```
 
 2. Create your environment directory and vars file
@@ -156,7 +156,7 @@ And use the displayed output to point the browser at the desired Prometheus comp
 | ----------- | ------- |
 | concourse   | v4.1.0  |
 | cf          | v4.2.0  |
-| bosh        | v1.2.0  |
+| bosh        | 7375c31d59018203911da3881334f09d8e70deb5 |
 | prometheus  | v23.2.0 |
 
 ## LICENCE
