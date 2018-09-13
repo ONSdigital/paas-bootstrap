@@ -305,7 +305,3 @@ output "redis_security_group_name" {
 output "redis_user_name" {
   value = "${aws_iam_user.redis.name}"
 }
-
-output "redis_broker_password" {
-  value = "${random_string.redis_broker_password.result}}"
-}

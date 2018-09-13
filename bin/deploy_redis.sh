@@ -35,9 +35,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-REDIS_BROKER_USER="$(bin/credhub_credentials.sh -e $ENVIRONMENT credhub get -n /cf/redis/broker_user -j | jq -r .value)"
+REDIS_BROKER_USER="admin"
 REDIS_BROKER_PASSWORD="$(bin/credhub_credentials.sh -e $ENVIRONMENT credhub get -n /cf/redis/broker_password -j | jq -r .value)"
-REDIS_SERVICE_UUID="$(bin/credhub_credentials.sh -e $ENVIRONMENT credhub get -n /cf/redis/service_uuid -j | jq -r .value)"
+REDIS_SERVICE_UUID="546C4866-99AB-4403-9121-C8D9E95EF10B"
 REDIS_SERVICE_NAME="$ENVIRONMENT-redis-elasticcashe"
 REDIS_SERVICE_TAG="$ENVIRONMENT"
 # Create redis subnet group
