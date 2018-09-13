@@ -4,8 +4,10 @@
     name: cf-rds-sec-group
     cloud_properties:
       security_groups:
-        - ((cf-rds-client-security-group))
-        - ((internal_security_group))
+      - ((cf-rds-client-security-group))
+      - ((internal_security_group))
+      - ((bosh-managed-security-group-id))
+
 
 # Note: requires cf-scheduler-sec-groiup to exist, which implies ordering
 - type: replace
