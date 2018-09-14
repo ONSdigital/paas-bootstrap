@@ -854,7 +854,7 @@ jobs:
       cf-acceptance-tests: cf-acceptance-tests-git
     params:
       CAPTURE_CONFIG: true
-      NODES: 6
+      NODES: 4
     on_failure:
       put: slack-alert
       params:
