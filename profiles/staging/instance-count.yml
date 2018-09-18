@@ -1,14 +1,14 @@
 ---
 diego-cell-instance-count: 6
-consul-instance-count: 3
-nats-instance-count: 3
-diego-api-instance-count: 3
-uaa-instance-count: 3
-scheduler-instance-count: 3
-router-instance-count: 3
-api-instance-count: 3
-cc-worker-instance-count: 3
-adapter-instance-count: 3
-doppler-instance-count: 3
-log-api-instance-count: 3
-tcp-router-instance-count: 3
+consul-instance-count: 1
+nats-instance-count: 1
+diego-api-instance-count: 1
+uaa-instance-count: 1
+scheduler-instance-count: 1
+router-instance-count: 1
+api-instance-count: 1
+cc-worker-instance-count: 1
+adapter-instance-count: 1
+doppler-instance-count: 1
+log-api-instance-count: 1
+tcp-router-instance-count: 1
