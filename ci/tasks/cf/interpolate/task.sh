@@ -41,6 +41,7 @@ bosh int \
   -o paas-bootstrap-git/operations/cf/rds-access.yml \
   -o paas-bootstrap-git/operations/cf/uaa-clients.yml \
   -o paas-bootstrap-git/operations/cf/test-user.yml \
+  -o paas-bootstrap-git/operations/cf/api-workers.yml \
   -v environment="${ENVIRONMENT}" \
   -v region="$(jq -r .region < vpc-vars.json)" \
   -v system_domain="${SYSTEM_DOMAIN}" \
