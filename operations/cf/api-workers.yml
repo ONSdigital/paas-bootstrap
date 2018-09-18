@@ -1,8 +1,0 @@
----
-# Tweak number of API workers. This shonky hack allows us to run CATS on a single API VM. If
-# all workers are in play, the route registrar will time out and deregister the API from the
-# gorouter routes. This will result in errors like:
-#    API endpoint not found at 'https://api.<system-domain>'
-- type: replace
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/jobs?/local?/number_of_workers?
-  value: 5
