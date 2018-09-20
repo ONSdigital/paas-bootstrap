@@ -6,6 +6,7 @@ resource "aws_kms_key" "paas_state_key" {
 resource "aws_s3_bucket" "paas_states" {
   bucket = "ons-paas-${var.environment}-states"
   acl    = "private"
+  force_destroy = true
 
   versioning {
     enabled = true
