@@ -30,6 +30,7 @@ resource "aws_elasticache_subnet_group" "redis" {
 resource "aws_iam_user" "redis" {
   name = "${var.environment}-redis-user"
   path = "/services/"
+  force_destroy = true
 }
 
 resource "aws_iam_user_policy" "redis" {

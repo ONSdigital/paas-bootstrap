@@ -58,6 +58,7 @@ resource "aws_iam_role_policy" "bosh" {
 resource "aws_s3_bucket" "bosh_blobstore" {
   bucket = "${var.s3_prefix}-${var.environment}-bosh-blobstore"
   acl    = "private"
+  force_destroy = true
 
   tags {
     Name        = "${var.s3_prefix}-${var.environment}-bosh-blobstore"

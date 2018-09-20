@@ -451,6 +451,7 @@ resource "aws_kms_key" "cf_blobstore_key" {
 resource "aws_s3_bucket" "cf_buildpacks" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-buildpacks"
   acl    = "private"
+  force_destroy = true
 
   versioning {
     enabled = false
@@ -474,6 +475,7 @@ resource "aws_s3_bucket" "cf_buildpacks" {
 resource "aws_s3_bucket" "cf_droplets" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-droplets"
   acl    = "private"
+  force_destroy = true
 
   versioning {
     enabled = false
@@ -497,6 +499,7 @@ resource "aws_s3_bucket" "cf_droplets" {
 resource "aws_s3_bucket" "cf_packages" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-packages"
   acl    = "private"
+  force_destroy = true
 
   versioning {
     enabled = false
@@ -520,6 +523,7 @@ resource "aws_s3_bucket" "cf_packages" {
 resource "aws_s3_bucket" "cf_resource_pool" {
   bucket = "${var.s3_prefix}-${var.environment}-cf-resource-pool"
   acl    = "private"
+  force_destroy = true
 
   versioning {
     enabled = false
