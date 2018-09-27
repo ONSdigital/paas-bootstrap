@@ -20,3 +20,6 @@ foo.yml
 *.lock.info
 **/.DS_Store
 data/**
+
+.vagrant
+*-cloudimg-console.log
