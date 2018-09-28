@@ -94,5 +94,5 @@ cinstall fly ${FLY_URL}                                       # fly
 # things don't have permission to create folders etc) - there may be a more official
 # vagrant-y solution as this seems hacky
 # This specifically is to be able to install the awscli (in provision_nosudo)
-chown ubuntu /home/ubuntu
-chgrp ubuntu /home/ubuntu
+chown vagrant /home/vagrant -R
+chgrp vagrant /home/vagrant -R
