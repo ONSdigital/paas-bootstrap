@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.provision :shell, path: "build/provision.sh"
+  config.vm.provision :shell, privileged: false, path: "build/provision_nosudo.sh"
+  config.vm.provision :shell, inline: "printf '\nDone provisioning\nConnect to vm with vagrant ssh\n\n'"
+  config.vm.synced_folder "../..", "/src"
+
+end
