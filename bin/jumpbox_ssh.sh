@@ -33,4 +33,4 @@ trap cleanup EXIT
 
 set +e
 
-ssh ubuntu@${JUMPBOX_IP} -i $JUMPBOX_KEY $*
+ssh -o "IdentitiesOnly=yes" ubuntu@${JUMPBOX_IP} -i $JUMPBOX_KEY $*
