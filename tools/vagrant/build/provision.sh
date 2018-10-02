@@ -36,6 +36,16 @@ ainstall() {
   fi
 }
 
+# sinstall(snap-name,cmd) - install with snap
+sinstall() {
+  printf "${NC}> %-20s -> " "$1"
+  if snap install $1 &>/dev/null; then
+    printf "${GREEN}%s\\n" "$($2 --version)"
+  else
+    printf "${RED}failed to install !!\n"
+  fi
+}
+
 # cinstall(binary,url) - install with curl
 cinstall() {
   printf "${NC}> %-20s -> " "$1"
@@ -84,7 +94,8 @@ ainstall cf-cli cf                                            # cf cli
 ainstall mysql-client  mysql                                  # mysql
 ainstall postgresql-client psql                               # postgres
 ainstall jq jq                                                # jq
-ainstall yq yq                                                # yq
+#ainstall yq yq                                                # yq
+sinstall yq yq
 cinstall bosh ${BOSH_RELEASE}                                 # bosh
 winstall terraform ${TERRAFORM_URL} ${TERRAFORM_RELEASE} zip  # terraform
 winstall credhub ${CREDHUB_URL} ${CREDHUB_RELEASE} tar        # credhub
@@ -94,5 +105,5 @@ cinstall fly ${FLY_URL}                                       # fly
 # things don't have permission to create folders etc) - there may be a more official
 # vagrant-y solution as this seems hacky
 # This specifically is to be able to install the awscli (in provision_nosudo)
-chown ubuntu /home/ubuntu
-chgrp ubuntu /home/ubuntu
+chown vagrant /home/vagrant
+chgrp vagrant /home/vagrant
