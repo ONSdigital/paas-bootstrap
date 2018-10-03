@@ -22,17 +22,37 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
 
+# Some useful shorthand
+VCMD="--version"
+
+
 echo ""
 echo "== Provisioning tools =="
 echo ""
 
-# ainstall(apt-name,cmd) - install with apt
-ainstall() {
+installing() {
   printf "${NC}> %-20s -> " "$1"
+}
+
+version() {
+  $1 $2 | head -n 1
+}
+
+fail() {
+  printf "${RED}failed to install !!\n"
+}
+
+# ainstall(apt-name,cmd [,versioncmd]) - install with apt
+ainstall() {
+  # Allow specifying of command line arg for version other than the default
+  local CMD=${VCMD}
+  if [ ! -z "$3" ]; then CMD="$3"; fi
+
+  installing $1
   if apt -y install $1 &>/dev/null; then
-    printf "${GREEN}%s\\n" "$($2 --version)"
+    printf "${GREEN}$(version $2 $CMD)\\n"
   else
-    printf "${RED}failed to install !!\n"
+    fail
   fi
 }
 
@@ -48,11 +68,11 @@ sinstall() {
 
 # cinstall(binary,url) - install with curl
 cinstall() {
-  printf "${NC}> %-20s -> " "$1"
+  installing $1
   if curl -s -Lo $1 $2 && chmod +x $1 && mv -f $1 /usr/local/bin/$1 &>/dev/null; then
-    printf "${GREEN}$($1 --version)\n"
+    printf "${GREEN}$(${1} ${VCMD} | head -n 1)\n"
   else
-    printf "${RED}failed to install !!\n"
+    fail
   fi
 }
 
@@ -62,16 +82,14 @@ winstall() {
   if [ ${4} = "zip" ]; then CMD="unzip -qo ${3}"; fi
   if [ ${4} = "tar" ]; then CMD="tar zxf ${3}"; fi
 
-  printf "${NC}> %-20s -> " "${1}"
+  installing $1
   if wget -q ${2} && ${CMD} && chmod +x ${1} && mv -f ${1} /usr/local/bin/${1} ; then
-    printf "${GREEN}$(${1} --version)\n"
+    rm ${3}
+    printf "${GREEN}$(version ${1} ${VCMD})\n"
   else
-    printf "${RED}failed to install !!\n"
+    fail
   fi
 }
-
-echo "Installing tools (non-sudo)..."
-
 
 echo "Installing prereqs ..."
 {
@@ -101,9 +119,8 @@ winstall terraform ${TERRAFORM_URL} ${TERRAFORM_RELEASE} zip  # terraform
 winstall credhub ${CREDHUB_URL} ${CREDHUB_RELEASE} tar        # credhub
 cinstall fly ${FLY_URL}                                       # fly
 
-# Oddly the ubuntu user doesn't own it's own home folder (which causes issues when
-# things don't have permission to create folders etc) - there may be a more official
-# vagrant-y solution as this seems hacky
-# This specifically is to be able to install the awscli (in provision_nosudo)
-chown vagrant /home/vagrant
-chgrp vagrant /home/vagrant
+# echo "Installing supporting tools ..."
+ainstall silversearcher-ag ag                                 # ag
+ainstall golang-go go version                                 # go
+
+
