@@ -77,7 +77,3 @@ output "bosh_rds_password" {
 output "bosh_director_fqdn" {
   value = "${aws_route53_record.bosh_director.fqdn}"
 }
-
-output "domain" {
-  value = "${local.domain}"
-}
