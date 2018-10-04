@@ -1,14 +1,11 @@
 ---
-- type: remove
-  path: /instance_groups/name=concourse/jobs/name=atc/properties/no_really_i_dont_want_any_auth
+- type: replace
+  path: /instance_groups/name=concourse/jobs/name=atc/properties/main_team?/auth/local/users
+  value: ['admin']
 
 - type: replace
-  path: /instance_groups/name=concourse/jobs/name=atc/properties/basic_auth_username?
-  value: admin
-
-- type: replace
-  path: /instance_groups/name=concourse/jobs/name=atc/properties/basic_auth_password?
-  value: ((admin_password))
+  path: /instance_groups/name=concourse/jobs/name=atc/properties/add_local_users?
+  value: ['admin:((admin_password))']
 
 - type: replace
   path: /variables/-
