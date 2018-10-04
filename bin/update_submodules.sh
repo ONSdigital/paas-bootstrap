@@ -6,7 +6,7 @@ set -euo pipefail
 git submodule update --init
 
 cd concourse-bosh-deployment
-git checkout v4.1.0
+git checkout v4.2.1
 cd ..
 
 cd bosh-deployment
@@ -21,7 +21,7 @@ cd prometheus-boshrelease
 git checkout v23.2.0
 cd ..
 
-cd cf-rabbitmq-multitenant-broker-release 
+cd cf-rabbitmq-multitenant-broker-release
 git checkout v37.0.0
 cd ..
 
