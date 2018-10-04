@@ -56,11 +56,16 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
-    
+
 - name: prometheus-deployment-git
   type: git
   source:
     uri: https://github.com/bosh-prometheus/prometheus-boshrelease.git
+
+- name: rabbitmq-broker-deployment-git
+  type: git
+  source:
+    uri: https://github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release.git
 
 - name: cf-tests-git
   type: git
@@ -794,8 +799,8 @@ jobs:
     trigger: true
     passed: [deploy-cf]
   - get: paas-bootstrap-git
-    passed: [deploy-cf]
-    trigger: true
+    # passed: [deploy-cf]
+    # trigger: true
   - aggregate:
     - task: ensure CF api responds
       file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
@@ -826,6 +831,23 @@ jobs:
     - get: bosh-manifest-s3
   - task: ensure smoke tests pass
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
+
+- name: rabbitmq-broker
+  plan:
+  - aggregate:
+    - get: trigger-weekday-morning
+      trigger: true
+      passed: [verify-cf-endpoints]
+    - get: paas-bootstrap-git
+      passed: [verify-cf-endpoints]
+      trigger: true
+    - get: rabbitmq-broker-deployment-git
+      version: { ref: ((prometheus_commit_ref)) }
+  - task: interpolate-rabbitmq-broker
+    file: paas-bootstrap-git/ci/tasks/rabbitmq_broker/deploy/task.yml
+    params:
+      ENVIRONMENT: ((environment))
+      DOMAIN: ((domain))
 
 - name: cats
   serial: true
@@ -953,12 +975,12 @@ jobs:
   - get: paas-bootstrap-git
     trigger: true
     passed: [verify-cf-endpoints]
-  - get: cf-vars-s3  
+  - get: cf-vars-s3
   - task: get management variables
     file: paas-bootstrap-git/ci/tasks/cf/get_management_vars/task.yml
     params:
       ENVIRONMENT: ((environment))
-      DOMAIN: ((domain))  
+      DOMAIN: ((domain))
   - task: create orgs spaces etc
     file: paas-bootstrap-git/ci/tasks/cf/management/task.yml
     params:
@@ -979,6 +1001,6 @@ jobs:
   - task: get cf credentials
     file: paas-bootstrap-git/ci/tasks/common/get_cf_tester_credentials/task.yml
     params:
-      DOMAIN: ((domain)) 
+      DOMAIN: ((domain))
   - task: create service and test useability
     file: paas-bootstrap-git/ci/tasks/rds_broker/test_shared/task.yml
