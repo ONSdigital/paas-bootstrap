@@ -13,7 +13,7 @@ BROKER_UUID=568725FD-AD46-44CA-9853-621416E983A4
 
 bosh -d rabbitmq deploy -n "$RABBITMQ_MANIFESTS"/cf-rabbitmq-broker-template.yml \
   -o "$RABBITMQ_MANIFESTS"/add-cf-rabbitmq.yml \
-  -o ./operations/rabbitmq/release.yml \
+  -o paas-bootstrap-git/operations/rabbitmq/release.yml \
   -v deployment-name=rabbitmq \
   -v stemcell-version="'$RABBITMQ_STEMCELL_VERSION'" \
   -v system-domain="$SYSTEM_DOMAIN" \

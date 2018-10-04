@@ -66,6 +66,7 @@ resources:
   type: git
   source:
     uri: https://github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release.git
+    tag_filter: v*
 
 - name: cf-tests-git
   type: git
@@ -796,8 +797,8 @@ jobs:
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
   - get: trigger-weekday-morning
-    trigger: true
-    passed: [deploy-cf]
+    # trigger: true
+    # passed: [deploy-cf]
   - get: paas-bootstrap-git
     # passed: [deploy-cf]
     # trigger: true
@@ -842,7 +843,7 @@ jobs:
       passed: [verify-cf-endpoints]
       trigger: true
     - get: rabbitmq-broker-deployment-git
-      version: { ref: ((prometheus_commit_ref)) }
+      version: { ref: ((rabbitmq_broker_tag)) }
   - task: interpolate-rabbitmq-broker
     file: paas-bootstrap-git/ci/tasks/rabbitmq_broker/deploy/task.yml
     params:
