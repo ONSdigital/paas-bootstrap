@@ -1,3 +1,7 @@
 [submodule "concourse-bosh-deployment"]
 	path = concourse-bosh-deployment
 	url = https://github.com/concourse/concourse-bosh-deployment.git
+
+[submodule "cf-rabbitmq-multitenant-broker-release"]
+	path = cf-rabbitmq-multitenant-broker-release
+	url = https://github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release.git

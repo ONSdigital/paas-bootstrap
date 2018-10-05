@@ -26,3 +26,9 @@ variable "az3" {
 variable "s3_prefix" {
   default = "ons-paas"
 }
+
+variable "vpc_cidr_block" {}
+
+variable "cidr_blocks" {
+  type = "map"
+}

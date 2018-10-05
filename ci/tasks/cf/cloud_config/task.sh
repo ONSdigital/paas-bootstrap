@@ -41,6 +41,16 @@ bosh update-cloud-config -n \
   -v private_subnet_az1_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json)" \
   -v private_subnet_az2_cidr="$(jq -r '.cf_internal_subnet_az2_cidr' < cf-vars.json)" \
   -v private_subnet_az3_cidr="$(jq -r '.cf_internal_subnet_az3_cidr' < cf-vars.json)" \
+  -v services_subnet_az1_cidr="$(output base .services_subnet_cidr_blocks[0])" \
+  -v services_subnet_az1_gateway="$(output base .services_subnet_gateway_ips[0])" \
+  -v reserved_services_az1_cidr="$(output base .services_subnet_reserved_cidr_blocks[0])" \
+  -v services_subnet_az1_id="$(output base .services_subnet_ids[0])" \
+  -v services_subnet_az2_cidr="$(output base .services_subnet_cidr_blocks[1])" \
+  -v services_subnet_az2_gateway="$(output base .services_subnet_gateway_ips[1])" \
+  -v reserved_services_az2_cidr="$(output base .services_subnet_reserved_cidr_blocks[1])" \
+  -v services_subnet_az2_id="$(output base .services_subnet_ids[1])" \
+  -v services_subnet_az3_cidr="$(output base .services_subnet_cidr_blocks[2])" \
+  -v services_subnet_az3_gateway="$(output base .services_subnet_gateway_ips[2])" \
   -v cf-router-target-group-name="$(jq -r '.cf_router_target_group_name' < cf-vars.json)" \
   -v cf-router-lb-internal-security-group-id="$(jq -r '.cf_router_lb_internal_security_group_id' < cf-vars.json)" \
   -v cf-internal-security-group-id="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \

@@ -25,12 +25,15 @@ You'll need to create a `<env>_vpc.tfvars` file with `az1`, `az2`, `region` and 
 
 ```json
 {
-"az1": "eu-west-1a",
-"az2": "eu-west-1b",
-"region": "eu-west-1",
-"parent_dns_zone": "<domain>",
-"ingress_whitelist": ["0.0.0.0/0"],
-"slack_webhook_uri": "https://hooks.slack.com/services/<generated uri>"
+  "az1": "eu-west-1a",
+  "az2": "eu-west-1b",
+  "region": "eu-west-1",
+  "parent_dns_zone": "<domain>",
+  "ingress_whitelist": ["0.0.0.0/0"],
+  "slack_webhook_uri": "https://hooks.slack.com/services/<generated uri>",
+  "cidr_blocks": {
+    "services":   ["10.121.28.0/22", "10.121.32.0/22", "10.121.36.0/22"],
+  }
 }
 ```
 

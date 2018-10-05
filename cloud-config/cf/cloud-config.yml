@@ -93,7 +93,37 @@ networks:
     cloud_properties:
       subnet: ((private_subnet_az3_id))
       security_groups: [ ((internal_security_group))]
-  
+- name: services
+  type: manual
+  subnets:
+  - range: ((services_subnet_az1_cidr))
+    gateway: ((services_subnet_az1_gateway))
+    az: z1
+    dns:
+    - ((private_dns_nameserver))
+    - 1.1.1.1
+    reserved: [((reserved_services_az1_cidr))]
+    cloud_properties:
+      subnet: ((services_subnet_az1_id))
+  - range: ((services_subnet_az2_cidr))
+    gateway: ((services_subnet_az2_gateway))
+    az: z2
+    dns:
+    - ((private_dns_nameserver))
+    - 1.1.1.1
+    reserved: [((reserved_services_az2_cidr))]
+    cloud_properties:
+      subnet: ((services_subnet_az2_id))
+  - range: ((services_subnet_az3_cidr))
+    gateway: ((services_subnet_az3_gateway))
+    az: z3
+    dns:
+    - ((private_dns_nameserver))
+    - 1.1.1.1
+    reserved: [((reserved_services_az3_cidr))]
+    cloud_properties:
+      subnet: ((services_subnet_az3_id))
+
 
 compilation:
   workers: 8

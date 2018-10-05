@@ -105,3 +105,29 @@ output "cf_traffic_controller_port" {
 output "cf_dummy_db" {
   value = "${aws_db_instance.cf_rds.name}"
 }
+
+output "services_subnet_gateway_ips" {
+  value = [
+      "${cidrhost(aws_subnet.services.*.cidr_block[0],1)}",
+      "${cidrhost(aws_subnet.services.*.cidr_block[1],1)}",
+      "${cidrhost(aws_subnet.services.*.cidr_block[2],1)}"
+  ]
+}
+
+# NASTY HACK ALERT - we cannot find a way in terraform to perform an action on all elements of a list
+#                    so you will have to change this if you add more AZs
+output "services_subnet_reserved_cidr_blocks" {
+  value = [
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[0],7,0)}",
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[1],7,0)}",
+      "${cidrsubnet(aws_subnet.services.*.cidr_block[2],7,0)}"
+  ]
+}
+
+output "services_subnet_ids" {
+    value = ["${aws_subnet.services.*.id}"]
+}
+
+output "services_subnet_cidr_blocks" {
+    value = ["${aws_subnet.services.*.cidr_block}"]
+}
