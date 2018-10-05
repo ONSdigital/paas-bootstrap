@@ -1,0 +1,20 @@
+---
+- type: replace
+  path: /vm_types/-
+  value:
+    name: n1-standard-1
+    cloud_properties:
+      instance_type: t2.micro
+      security_groups:
+      - ((rabbitmq-broker-security-group-id))
+      - ((bosh-managed-security-group-id))
+
+- type: replace
+  path: /vm_types/-
+  value:
+    name: n1-highmem-2
+    cloud_properties:
+      instance_type: m4.large
+      security_groups:
+      - ((rabbitmq-server-security-group-id))
+      - ((bosh-managed-security-group-id))

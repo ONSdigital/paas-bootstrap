@@ -23,6 +23,7 @@ bosh update-cloud-config -n \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-rds-sec-group.yml \
   -o paas-bootstrap-git/operations/cloud-config/prometheus.yml \
+  -o paas-bootstrap-git/operations/cloud-config/rabbitmq.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v az2="$(jq -r .az2 < vpc-vars.json)" \
   -v az3="$(jq -r .az3 < vpc-vars.json)" \
@@ -53,6 +54,6 @@ bosh update-cloud-config -n \
   -v prometheus_subnet_az1_gateway="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json | sed 's#0/24#1#')" \
   -v grafana_target_group_name="$(jq -r .grafana_target_group_name < prometheus-vars.json)" \
   -v prometheus_target_group_name="$(jq -r .prometheus_target_group_name < prometheus-vars.json)" \
-  -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)" 
+  -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)"
 
 bosh cloud-config > cf-manifests/cloud-config.yml
