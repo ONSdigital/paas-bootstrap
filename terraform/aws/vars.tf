@@ -27,8 +27,14 @@ variable "s3_prefix" {
   default = "ons-paas"
 }
 
+variable "availability_zones" {
+  type = "list"
+  default = []
+}
+
 variable "vpc_cidr_block" {}
 
 variable "cidr_blocks" {
   type = "map"
 }
+
