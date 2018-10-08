@@ -79,5 +79,5 @@ output "bosh_director_fqdn" {
 }
 
 output "cidr_blocks" {
-  value = "${va.cidr_blocks}"
+  value = "${var.cidr_blocks}"
 }
