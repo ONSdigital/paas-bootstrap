@@ -73,7 +73,7 @@ resource "aws_subnet" "rds_az3" {
 
 resource "aws_subnet" "services" {
   count = "${local.num_azs}"
-  vpc_id            = "${aws_vpc.default.id}"
+  vpc_id            = "${var.vpc_id}"
   cidr_block        = "${element(local.services_subnets, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
