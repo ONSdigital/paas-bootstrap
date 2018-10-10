@@ -49,6 +49,4 @@ variable "availability_zones" {
   default = []
 }
 
-variable "cidr_blocks" {
-  type = "map"
-}
+variable "services_cidr_block" {}

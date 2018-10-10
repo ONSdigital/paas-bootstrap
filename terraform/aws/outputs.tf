@@ -69,3 +69,7 @@ output "private_dns_zone" {
 output "cidr_blocks" {
   value = "${var.cidr_blocks}"
 }
+
+output "services_cidr_block" {
+  value = "${var.cidr_blocks["services"]}"
+}
