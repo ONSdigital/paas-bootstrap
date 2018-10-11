@@ -43,6 +43,9 @@ disk_types:
 - name: 10GB
   disk_size: 10_000
   cloud_properties: {encrypted: true, type: gp2}
+- name: 50GB
+  disk_size: 50_000
+  cloud_properties: {encrypted: true, type: gp2}
 - name: 100GB
   disk_size: 100_000
   cloud_properties: {encrypted: true, type: gp2}
