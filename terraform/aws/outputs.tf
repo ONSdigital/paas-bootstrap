@@ -73,3 +73,7 @@ output "cidr_blocks" {
 output "services_cidr_block" {
   value = "${var.cidr_blocks["services"]}"
 }
+
+output "availability_zones" {
+  value = ["${var.availability_zones}"]
+}
