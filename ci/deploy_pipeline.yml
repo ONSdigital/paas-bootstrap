@@ -62,17 +62,6 @@ resources:
   source:
     uri: https://github.com/bosh-prometheus/prometheus-boshrelease.git
 
-- name: rabbitmq-broker-deployment-git
-  type: git
-  source:
-    uri: https://github.com/pivotal-cf/cf-rabbitmq-multitenant-broker-release.git
-    tag_filter: v*
-
-- name: cf-tests-git
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/cf-tests
-
 - name: jumpbox-terraform
   type: terraform
   source:
@@ -797,11 +786,11 @@ jobs:
   serial_groups: [rds,prometheus,smoke-tests,cats]
   plan:
   - get: trigger-weekday-morning
-    # trigger: true
-    # passed: [deploy-cf]
+    trigger: true
+    passed: [deploy-cf]
   - get: paas-bootstrap-git
-    # passed: [deploy-cf]
-    # trigger: true
+    passed: [deploy-cf]
+    trigger: true
   - aggregate:
     - task: ensure CF api responds
       file: paas-bootstrap-git/ci/tasks/common/test_endpoint/task.yml
@@ -832,23 +821,6 @@ jobs:
     - get: bosh-manifest-s3
   - task: ensure smoke tests pass
     file: paas-bootstrap-git/ci/tasks/cf/smoke_tests/task.yml
-
-- name: rabbitmq-broker
-  plan:
-  - aggregate:
-    - get: trigger-weekday-morning
-      trigger: true
-      passed: [verify-cf-endpoints]
-    - get: paas-bootstrap-git
-      passed: [verify-cf-endpoints]
-      trigger: true
-    - get: rabbitmq-broker-deployment-git
-      version: { ref: ((rabbitmq_broker_tag)) }
-  - task: interpolate-rabbitmq-broker
-    file: paas-bootstrap-git/ci/tasks/rabbitmq_broker/deploy/task.yml
-    params:
-      ENVIRONMENT: ((environment))
-      DOMAIN: ((domain))
 
 - name: cats
   serial: true
@@ -987,21 +959,3 @@ jobs:
     params:
       ENVIRONMENT: ((environment))
 
-- name: verify-shared-rds
-  serial: true
-  serial_groups: [rds]
-  plan:
-  - get: cf-tests-git
-  - get: trigger-weekday-morning
-    trigger: true
-    passed: [cf-management]
-  - get: paas-bootstrap-git
-    trigger: true
-    passed: [cf-management]
-  - get: cf-vars-s3
-  - task: get cf credentials
-    file: paas-bootstrap-git/ci/tasks/common/get_cf_tester_credentials/task.yml
-    params:
-      DOMAIN: ((domain))
-  - task: create service and test useability
-    file: paas-bootstrap-git/ci/tasks/rds_broker/test_shared/task.yml

@@ -25,7 +25,7 @@ APPS_DOMAIN="apps.$(output base .domain)"
 
 export BOSH_CA_CERT=$(bosh int --path /default_ca/ca "data/$ENVIRONMENT-bosh-variables.yml")
 
-RABBITMQ_STEMCELL_VERSION=3586.40
+RABBITMQ_STEMCELL_VERSION=3586.16
 BROKER_PLAN_UUID=22F0B28C-B886-4123-B01B-95E54D3DE6DA
 BROKER_UUID=568725FD-AD46-44CA-9853-621416E983A4
 
@@ -51,7 +51,8 @@ $BOSH -d rabbitmq deploy -n cf-rabbitmq-multitenant-broker-release/manifests/cf-
   -v cluster-partition-handling-strategy=autoheal \
   -v haproxy-instances=1 \
   -v haproxy-stats-username=admin \
-  -v rabbitmq-hosts=[]
+  -v rabbitmq-hosts=[] \
+  --vars-store "${ENVIRONMENT}_rabbitmq_broker.creds.yml"
 
 # NB: passwords are auto-generated in the deployment manifest - see operations/rabbitmq/release.yml
 
