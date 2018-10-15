@@ -11,13 +11,13 @@ resource_types:
     repository: governmentpaas/s3-resource
 
 resources:
-- name: trigger-weekday-evening
-  type: time
-  source:
-    start: 7:30 PM
-    stop: 8:00 PM
-    location: Europe/London
-    days: [Monday, Tuesday, Wednesday, Thursday, Friday]
+# - name: trigger-weekday-evening
+#   type: time
+#   source:
+#     start: 7:30 PM
+#     stop: 8:00 PM
+#     location: Europe/London
+#     days: [Monday, Tuesday, Wednesday, Thursday, Friday]
 
 - name: paas-bootstrap-git
   type: git
@@ -221,8 +221,8 @@ jobs:
   - get: manual-force
     trigger: true
     passed: [trigger-destroy]
-  - get: trigger-weekday-evening
-    trigger: true
+  # - get: trigger-weekday-evening
+  #   trigger: true
   - aggregate:
     - get: paas-bootstrap-git
     - get: bosh-vars-s3
@@ -237,9 +237,9 @@ jobs:
   serial_groups: [destruction]
   serial: true
   plan:
-  - get: trigger-weekday-evening
-    trigger: true
-    passed: [destroy-prometheus]
+  # - get: trigger-weekday-evening
+  #   trigger: true
+  #   passed: [destroy-prometheus]
   - get: manual-force
     trigger: true
     passed: [destroy-prometheus]
@@ -256,9 +256,9 @@ jobs:
   serial_groups: [destruction]
   serial: true
   plan:
-  - get: trigger-weekday-evening
-    trigger: true
-    passed: [destroy-cf]
+  # - get: trigger-weekday-evening
+  #   trigger: true
+  #   passed: [destroy-cf]
   - get: manual-force
     trigger: true
     passed: [destroy-cf]
@@ -277,9 +277,9 @@ jobs:
   serial_groups: [destruction]
   serial: true
   plan:
-  - get: trigger-weekday-evening
-    trigger: true
-    passed: [destroy-bosh]
+  # - get: trigger-weekday-evening
+  #   trigger: true
+  #   passed: [destroy-bosh]
   - get: manual-force
     trigger: true
     passed: [destroy-bosh]
@@ -303,9 +303,9 @@ jobs:
   - get: manual-force
     trigger: true
     passed: [destroy-jumpbox]
-  - get: trigger-weekday-evening
-    trigger: true
-    passed: [destroy-jumpbox]
+  # - get: trigger-weekday-evening
+  #   trigger: true
+  #   passed: [destroy-jumpbox]
   - get: paas-bootstrap-git
   - task: prometheus-empty-buckets
     file: paas-bootstrap-git/ci/tasks/destroy/empty_buckets/task.yml
@@ -336,9 +336,9 @@ jobs:
   serial_groups: [destruction]
   serial: true
   plan:
-  - get: trigger-weekday-evening
-    trigger: true
-    passed: [delete-buckets]
+  # - get: trigger-weekday-evening
+  #   trigger: true
+  #   passed: [delete-buckets]
   - get: manual-force
     trigger: true
     passed: [delete-buckets]
