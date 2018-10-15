@@ -131,3 +131,11 @@ output "services_subnet_ids" {
 output "services_subnet_cidr_blocks" {
     value = ["${aws_subnet.services.*.cidr_block}"]
 }
+
+output "rabbitmq_broker_security_group_id" {
+  value = "${aws_security_group.rabbitmq_broker.id}"
+}
+
+output "rabbitmq_server_security_group_id" {
+  value = "${aws_security_group.rabbitmq_server.id}"
+}
