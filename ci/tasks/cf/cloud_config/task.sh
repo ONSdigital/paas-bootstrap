@@ -66,7 +66,7 @@ bosh update-cloud-config -n \
   -v grafana_target_group_name="$(jq -r .grafana_target_group_name < prometheus-vars.json)" \
   -v prometheus_target_group_name="$(jq -r .prometheus_target_group_name < prometheus-vars.json)" \
   -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)"
-  -v rabbitmq-broker-security-group-id="($jq -r .rabbitmq_broker_security_group_id < cf-vars.json)" \
-  -v rabbitmq-server-security-group-id="($jq -r .rabbitmq_server_security_group_id < cf-vars.json)"
+  -v rabbitmq-broker-security-group-id="$(jq -r .rabbitmq_broker_security_group_id < cf-vars.json)" \
+  -v rabbitmq-server-security-group-id="$(jq -r .rabbitmq_server_security_group_id < cf-vars.json)"
 
 bosh cloud-config > cf-manifests/cloud-config.yml
