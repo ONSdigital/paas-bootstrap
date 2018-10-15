@@ -65,7 +65,7 @@ bosh update-cloud-config -n \
   -v prometheus_subnet_az1_gateway="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json | sed 's#0/24#1#')" \
   -v grafana_target_group_name="$(jq -r .grafana_target_group_name < prometheus-vars.json)" \
   -v prometheus_target_group_name="$(jq -r .prometheus_target_group_name < prometheus-vars.json)" \
-  -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)"
+  -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)" \
   -v rabbitmq-broker-security-group-id="$(jq -r .rabbitmq_broker_security_group_id < cf-vars.json)" \
   -v rabbitmq-server-security-group-id="$(jq -r .rabbitmq_server_security_group_id < cf-vars.json)"
 
