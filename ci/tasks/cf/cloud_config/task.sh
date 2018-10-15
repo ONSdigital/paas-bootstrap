@@ -53,6 +53,7 @@ bosh update-cloud-config -n \
   -v services_subnet_az3_cidr="$(jq -r .services_subnet_cidr_blocks[2] < cf-vars.json)" \
   -v services_subnet_az3_gateway="$(jq -r .services_subnet_gateway_ips[2] < cf-vars.json)" \
   -v reserved_services_az3_cidr="$(jq -r .services_subnet_reserved_cidr_blocks[2] < cf-vars.json)" \
+  -v services_subnet_az3_id="$(jq -r .services_subnet_ids[2] < cf-vars.json)" \
   -v cf-router-target-group-name="$(jq -r '.cf_router_target_group_name' < cf-vars.json)" \
   -v cf-router-lb-internal-security-group-id="$(jq -r '.cf_router_lb_internal_security_group_id' < cf-vars.json)" \
   -v cf-internal-security-group-id="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
