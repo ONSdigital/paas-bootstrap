@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < bosh-tfstate-s3/tfstate.json > bosh-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < concourse-tfstate-s3/tfstate.json > concourse-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
@@ -67,6 +68,7 @@ bosh update-cloud-config -n \
   -v prometheus_target_group_name="$(jq -r .prometheus_target_group_name < prometheus-vars.json)" \
   -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)" \
   -v rabbitmq-broker-security-group-id="$(jq -r .rabbitmq_broker_security_group_id < cf-vars.json)" \
-  -v rabbitmq-server-security-group-id="$(jq -r .rabbitmq_server_security_group_id < cf-vars.json)"
+  -v rabbitmq-server-security-group-id="$(jq -r .rabbitmq_server_security_group_id < cf-vars.json)" \
+  -v bosh-managed-security-group-id="$(jq -r .bosh_security_group_id < bosh-vars.json)"
 
 bosh cloud-config > cf-manifests/cloud-config.yml
