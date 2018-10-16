@@ -65,3 +65,15 @@ output "s3_prefix" {
 output "private_dns_zone" {
   value = "${aws_route53_zone.private.name}"
 }
+
+output "cidr_blocks" {
+  value = "${var.cidr_blocks}"
+}
+
+output "services_cidr_block" {
+  value = "${var.cidr_blocks["services"]}"
+}
+
+output "availability_zones" {
+  value = ["${var.availability_zones}"]
+}

@@ -43,3 +43,13 @@ variable "concourse_public_ip" {
 }
 
 variable "s3_prefix" {}
+
+variable "availability_zones" {
+  type = "list"
+  default = []
+}
+
+variable "services_cidr_block" {
+  type = "list"
+  default = []
+}

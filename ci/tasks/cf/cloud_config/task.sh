@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+jq '.modules[0].outputs | with_entries(.value = .value.value)' < "bosh-tfstate-s3/${ENVIRONMENT}.tfstate" > bosh-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < vpc-tfstate-s3/tfstate.json > vpc-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < concourse-tfstate-s3/tfstate.json > concourse-vars.json
 jq '.modules[0].outputs | with_entries(.value = .value.value)' < "cf-tfstate-s3/${ENVIRONMENT}.tfstate" > cf-vars.json
@@ -23,6 +24,7 @@ bosh update-cloud-config -n \
   -o paas-bootstrap-git/operations/cloud-config/cf-s3-blobstore.yml \
   -o paas-bootstrap-git/operations/cloud-config/cf-rds-sec-group.yml \
   -o paas-bootstrap-git/operations/cloud-config/prometheus.yml \
+  -o paas-bootstrap-git/operations/cloud-config/rabbitmq.yml \
   -v az1="$(jq -r .az1 < vpc-vars.json)" \
   -v az2="$(jq -r .az2 < vpc-vars.json)" \
   -v az3="$(jq -r .az3 < vpc-vars.json)" \
@@ -40,6 +42,18 @@ bosh update-cloud-config -n \
   -v private_subnet_az1_cidr="$(jq -r '.cf_internal_subnet_az1_cidr' < cf-vars.json)" \
   -v private_subnet_az2_cidr="$(jq -r '.cf_internal_subnet_az2_cidr' < cf-vars.json)" \
   -v private_subnet_az3_cidr="$(jq -r '.cf_internal_subnet_az3_cidr' < cf-vars.json)" \
+  -v services_subnet_az1_cidr="$(jq -r .services_subnet_cidr_blocks[0] < cf-vars.json)" \
+  -v services_subnet_az1_gateway="$(jq -r .services_subnet_gateway_ips[0] < cf-vars.json)" \
+  -v reserved_services_az1_cidr="$(jq -r .services_subnet_reserved_cidr_blocks[0] < cf-vars.json)" \
+  -v services_subnet_az1_id="$(jq -r .services_subnet_ids[0] < cf-vars.json)" \
+  -v services_subnet_az2_cidr="$(jq -r .services_subnet_cidr_blocks[1] < cf-vars.json)" \
+  -v services_subnet_az2_gateway="$(jq -r .services_subnet_gateway_ips[1] < cf-vars.json)" \
+  -v reserved_services_az2_cidr="$(jq -r .services_subnet_reserved_cidr_blocks[1] < cf-vars.json)" \
+  -v services_subnet_az2_id="$(jq -r .services_subnet_ids[1] < cf-vars.json)" \
+  -v services_subnet_az3_cidr="$(jq -r .services_subnet_cidr_blocks[2] < cf-vars.json)" \
+  -v services_subnet_az3_gateway="$(jq -r .services_subnet_gateway_ips[2] < cf-vars.json)" \
+  -v reserved_services_az3_cidr="$(jq -r .services_subnet_reserved_cidr_blocks[2] < cf-vars.json)" \
+  -v services_subnet_az3_id="$(jq -r .services_subnet_ids[2] < cf-vars.json)" \
   -v cf-router-target-group-name="$(jq -r '.cf_router_target_group_name' < cf-vars.json)" \
   -v cf-router-lb-internal-security-group-id="$(jq -r '.cf_router_lb_internal_security_group_id' < cf-vars.json)" \
   -v cf-internal-security-group-id="$(jq -r '.cf_internal_security_group_id' < cf-vars.json)" \
@@ -53,6 +67,9 @@ bosh update-cloud-config -n \
   -v prometheus_subnet_az1_gateway="$(jq -r .prometheus_subnet_az1_cidr < prometheus-vars.json | sed 's#0/24#1#')" \
   -v grafana_target_group_name="$(jq -r .grafana_target_group_name < prometheus-vars.json)" \
   -v prometheus_target_group_name="$(jq -r .prometheus_target_group_name < prometheus-vars.json)" \
-  -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)" 
+  -v alertmanager_target_group_name="$(jq -r .alertmanager_target_group_name < prometheus-vars.json)" \
+  -v rabbitmq-broker-security-group-id="$(jq -r .rabbitmq_broker_security_group_id < cf-vars.json)" \
+  -v rabbitmq-server-security-group-id="$(jq -r .rabbitmq_server_security_group_id < cf-vars.json)" \
+  -v bosh-managed-security-group-id="$(jq -r .bosh_security_group_id < bosh-vars.json)"
 
 bosh cloud-config > cf-manifests/cloud-config.yml

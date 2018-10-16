@@ -13,6 +13,7 @@ jumpbox_commit_ref="32c162b16f2a5a2639c78d905ba852487b93d507"
 bosh_commit_ref="04c85a5c79a9fa6b92775386a334104b9a165013"
 prometheus_commit_ref="a381c0af550550fc1d740ef409c2e2f22a589202"
 cf_tag="v2.7.0"
+rabbitmq_broker_tag="v37.0.0"
 
 node_exporter_version="4.0.0"
 
@@ -38,6 +39,7 @@ fly -t "$ENVIRONMENT" set-pipeline \
     -v slack_webhook_uri="$slack_webhook_uri" \
     -v prometheus_commit_ref="$prometheus_commit_ref" \
     -v node_exporter_version="$node_exporter_version" \
+    -v rabbitmq_broker_tag="$rabbitmq_broker_tag" \
     -v cf_deployment_name="cf" \
     -c ci/deploy_pipeline.yml -p deploy_pipeline -n
 

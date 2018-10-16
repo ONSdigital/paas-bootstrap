@@ -40,3 +40,7 @@ variable jumpbox_security_group_id {}
 variable "nat_az1_id" {}
 
 variable "private_dns_zone" {}
+
+variable "cidr_blocks" {
+  type = "map"
+}
