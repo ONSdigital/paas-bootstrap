@@ -1,6 +1,6 @@
 
 .EXPORT_ALL_VARIABLES:
-.PHONY: terraform
+.PHONY: terraform bosh cf
 
 # Environment variables that you have to set yourself:
 #
